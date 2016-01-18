@@ -1,0 +1,26 @@
+{
+	"name": "git-project-manager",
+	"displayName": "gitProjectManager",
+	"description": "Let you load your git projects in a easy way",
+	"version": "0.0.1",
+	"publisher": "FelipeCaputo",
+	"engines": {
+		"vscode": "^0.10.1"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:extension.sayHello"
+	],
+	"main": "./extension",
+	"contributes": {
+		"commands": [{
+			"command": "extension.sayHello",
+			"title": "Hello World"
+		}]
+	},
+	"devDependencies": {
+		"vscode": "0.10.x"
+	}
+}
