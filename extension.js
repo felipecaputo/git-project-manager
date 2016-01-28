@@ -10,9 +10,8 @@ function activate(context) {
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "git-project-manager" is now active!');
 	var dirList = [];
-	var done = false;
 	
-	var projectLocator = require('./lib/gitProjectManager');
+	var projectManager = require('./lib/gitProjectManager');
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with  registerCommand
@@ -26,20 +25,16 @@ function activate(context) {
 		});
 		
 		function onResolve(selected) {
-			vscode.window.showInformationMessage(selected);
-			var exec = require('child_process').execFile;
-			exec('code ', selected.label, (error, stdout, stderr) => {
-				if(error){
-					vscode.window.showErrorMessage('Error while opening code. Is code in path?');
-				}
-			});
+			projectManager.openProject(selected)
 		}
 		
 		function onReject(reason) {
 			vscode.window.showInformationMessage(reason);
 		}
 		
-		vscode.window.showQuickPick(projectLocator.getProjectsList('/home/felipe/src')).then( onResolve, onReject);
+        var dir = 'D:\\private\\node'; //'/home/felipe/src';
+
+		vscode.window.showQuickPick(projectManager.getProjectsList(dir)).then( onResolve, onReject);
 		
 	});
 	
