@@ -12,11 +12,7 @@ function activate(context) {
 	var dirList = [];
 	var done = false;
 	
-	var projectLocator = require('./gitProjectLocator');
-	projectLocator.locateGitProjects('~/src', (projList) => {
-		dirList = projList;
-		done = true;
-	});
+	var projectLocator = require('./lib/gitProjectManager');
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with  registerCommand
@@ -24,7 +20,27 @@ function activate(context) {
 	var disposable = vscode.commands.registerCommand('extension.sayHello', function () {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
-		vscode.window.showInformationMessage(JSON.stringify(dirList));
+		var pickList = [];
+		dirList.forEach( (entry) => {
+			pickList.push(entry.repo);
+		});
+		
+		function onResolve(selected) {
+			vscode.window.showInformationMessage(selected);
+			var exec = require('child_process').execFile;
+			exec('code ', selected.label, (error, stdout, stderr) => {
+				if(error){
+					vscode.window.showErrorMessage('Error while opening code. Is code in path?');
+				}
+			});
+		}
+		
+		function onReject(reason) {
+			vscode.window.showInformationMessage(reason);
+		}
+		
+		vscode.window.showQuickPick(projectLocator.getProjectsList('/home/felipe/src')).then( onResolve, onReject);
+		
 	});
 	
 	context.subscriptions.push(disposable);
