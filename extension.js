@@ -9,7 +9,6 @@ function activate(context) {
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "git-project-manager" is now active!');
-	var dirList = [];
 	
 	var projectManager = require('./lib/gitProjectManager');
 
@@ -24,10 +23,7 @@ function activate(context) {
 	});
     
 	var refreshDisposable = vscode.commands.registerCommand('gitProjectManager.refreshProjects', function () {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-        vscode.window.showInformationMessage('UhuW!!!!')
-		
+        projectManager.refreshList();	
 	});    
 	
 	context.subscriptions.push(disposable, refreshDisposable);
