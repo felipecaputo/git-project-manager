@@ -16,29 +16,21 @@ function activate(context) {
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with  registerCommand
 	// The commandId parameter must match the command field in package.json
-	var disposable = vscode.commands.registerCommand('extension.sayHello', function () {
+	var disposable = vscode.commands.registerCommand('gitProjectManager.openProject', function () {
 		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		var pickList = [];
-		dirList.forEach( (entry) => {
-			pickList.push(entry.repo);
-		});
-		
-		function onResolve(selected) {
-			projectManager.openProject(selected)
-		}
-		
-		function onReject(reason) {
-			vscode.window.showInformationMessage(reason);
-		}
-		
-        var dir = 'D:\\private\\node'; //'/home/felipe/src';
-
-		vscode.window.showQuickPick(projectManager.getProjectsList(dir)).then( onResolve, onReject);
+		// Display a message box to the user       		
+        projectManager.showProjectList();
 		
 	});
+    
+	var refreshDisposable = vscode.commands.registerCommand('gitProjectManager.refreshProjects', function () {
+		// The code you place here will be executed every time your command is executed
+		// Display a message box to the user
+        vscode.window.showInformationMessage('UhuW!!!!')
+		
+	});    
 	
-	context.subscriptions.push(disposable);
+	context.subscriptions.push(disposable, refreshDisposable);
 }
 exports.activate = activate;
 

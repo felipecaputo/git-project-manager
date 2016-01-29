@@ -11,13 +11,18 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:extension.sayHello"
+    "onCommand:gitProjectManager.openProject",
+    "onCommand:gitProjectManager.refreshProjects"
   ],
   "main": "./extension",
   "contributes": {
     "commands": [{
-        "command": "extension.sayHello",
-        "title": "Hello World"
+        "command": "gitProjectManager.openProject",
+        "title": "GPM: Open Git Project"
+      },
+      {
+        "command": "gitProjectManager.refreshProjects",
+        "title": "GPM: Refresh Projects"          
       }]
   },
   "devDependencies": {
