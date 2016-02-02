@@ -28,20 +28,20 @@ exports.showProjectList = () => {
 			vscode.window.showInformationMessage(reason);
 		}
 		
-        var isFolderConfigured = vscode.workspace.getConfiguration().has('gitProjectManager.baseProjectsFolder');
+        var isFolderConfigured = vscode.workspace.getConfiguration('gitProjectManager').has('baseProjectsFolder');
 
         if (!isFolderConfigured) {
             vscode.window.showWarningMessage('The configuration of "gitProjectManager.baseProjectsFolder" must be done before search for projects.');
             return;
         }
                         
-        var dir = vscode.workspace.getConfiguration().get('gitProjectManager.baseProjectsFolder');
+        var dir = vscode.workspace.getConfiguration('gitProjectManager').get('baseProjectsFolder') + '';
                  
         if (!fs.existsSync(dir)) {            
             vscode.window.showErrorMessage('The specified folder "' + dir + '" is not a valid folder.')
             return;
         }
-        var options = {placeHolder: 'Select a folder to open: *(it may take a few seconds to search the folders)*'}
+        var options = {placeHolder: 'Select a folder to open:      (it may take a few seconds to search the folders the first time)'}
 		vscode.window.showQuickPick(this.getProjectsList(dir), options).then( onResolve, onReject);    
 }
 

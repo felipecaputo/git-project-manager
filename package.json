@@ -29,7 +29,7 @@
         "onCommand:gitProjectManager.openProject",
         "onCommand:gitProjectManager.refreshProjects"
     ],
-    "main": "./extension",    
+    "main": "./src/extension",    
     "contributes": {
         "configuration": {
             "type": "object",
