@@ -19,6 +19,15 @@ function handleError(error) {
     vscode.window.showErrorMessage(error);
 }
 
+function addRepoInRepoList(repoInfo) {
+    var map = repoList.map( (info) => {
+        return info.dir;
+    } );
+    if (map.indexOf(repoInfo.dir) == -1) {
+        repoList.push(repoInfo);
+    } 
+}
+
 function getProjectsFolders () {
     return new Promise( (resolve, reject) => {
         try {
@@ -65,7 +74,7 @@ exports.getProjectsList = (directories) => {
                 resolve(getQuickPickList());
             } else {
                 projectLocator.locateGitProjects(directories, (dirList) => {
-                    repoList = dirList;
+                    dirList.forEach(addRepoInRepoList);
                     listAlreadyDone = true;
                     resolve(getQuickPickList());
                 });
