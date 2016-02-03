@@ -27,7 +27,8 @@
     ],
     "activationEvents": [
         "onCommand:gitProjectManager.openProject",
-        "onCommand:gitProjectManager.refreshProjects"
+        "onCommand:gitProjectManager.refreshProjects",
+        "onCommand:gitProjectManager.refreshFolder"
     ],
     "main": "./src/extension",    
     "contributes": {
@@ -35,10 +36,10 @@
             "type": "object",
             "title": "Git Project Manager configuration",
             "properties": {
-                "gitProjectManager.baseProjectsFolder": {
-                    "type": "string",
+                "gitProjectManager.baseProjectsFolders": {
+                    "type": "array",
                     "default": null,
-                    "description": "Specifies the base folder to search for git repositories"
+                    "description": "Specifies the base folders to search for git repositories"
                 },
                 "gitProjectManager.storeRepositoriesBetweenSessions": {
                     "type": "boolean",
@@ -55,6 +56,10 @@
             {
                 "command": "gitProjectManager.refreshProjects",
                 "title": "GPM: Refresh Projects"
+            },
+            {
+                "command": "gitProjectManager.refreshFolder",
+                "title": "GPM: Refresh specific project folder"
             }
         ],
         "keybindings": [

@@ -1,7 +1,7 @@
 
 var vscode = require('vscode');
 
-exports.locateGitProjects = (basePath, callBack) => {
+exports.locateGitProjects = (projectsDirList, callBack) => {
     var locator = require('filewalker');
     var path = require('path');
     var dirList = [];
@@ -32,7 +32,7 @@ exports.locateGitProjects = (basePath, callBack) => {
                 addToList(path.normalize(basePath + path.sep + '..'), line.trim().replace(repoPath, ''));
                 break;
             }
-        })
+        });
     }
 
     function processDirectory(relPath, fsOptions, absPath) {
@@ -45,7 +45,7 @@ exports.locateGitProjects = (basePath, callBack) => {
             fs.exists(fileName, (exists) => {
                 if (!exists) return;
                 extractRepoInfo(absPath);
-            })
+            });
 
         }
     }
@@ -54,11 +54,34 @@ exports.locateGitProjects = (basePath, callBack) => {
         console.log('Error walker:', err);
     }
 
-    locator(basePath)
-        .on('dir', processDirectory)
-        .on('error', handleError)
-        .on('done', () => {
-            callBack(dirList);
-        })
-        .walk();
-}
+
+    var promises = [];
+
+    var fs = require('fs');
+    projectsDirList.forEach((projectBasePath) => {
+        if (!fs.existsSync(projectBasePath)) {
+            vscode.window.showWarningMessage('Directory ' + projectBasePath + ' do not exists.');
+        }
+        
+        var promise = new Promise((resolve, reject) => {
+            try {
+                locator(projectBasePath)
+                    .on('dir', processDirectory)
+                    .on('error', handleError)
+                    .on('done', () => {
+                        resolve();
+                    })
+                    .walk();                  
+            } catch (error) {
+                reject(error);
+            }
+          
+        });
+        promises.push(promise);
+    });
+    
+    Promise.all(promises).then(
+        () => { callBack(dirList); }, 
+        (error) => { vscode.window.showErrorMessage('Error while loading Git Projects.');});
+
+};
