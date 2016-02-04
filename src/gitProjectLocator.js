@@ -17,22 +17,21 @@ exports.locateGitProjects = (projectsDirList, callBack) => {
 
     function extractRepoInfo(basePath) {
         var cp = require('child_process');
-        cp.exec('git remote show origin -n', { cwd: basePath }, (error, stdout, stderr) => {
-            if (error) {
-                return;
-            };
-
-            var arr = stdout.toString('utf-8').split('\n');
+        var stdout = cp.execSync('git remote show origin -n', { cwd: basePath, encoding: 'utf8' });
+        if (stdout.indexOf('Fetch URL:') == -1) {
+            return '';
+        } else {
+            var arr = stdout.split('\n');
             for (var i = 0; i < arr.length; i++) {
                 var line = arr[i];
                 var repoPath = 'Fetch URL: ';
                 var idx = line.indexOf(repoPath);
                 if (idx == -1) continue;
 
-                addToList(path.normalize(basePath + path.sep + '..'), line.trim().replace(repoPath, ''));
+                return line.trim().replace(repoPath, ''); 
                 break;
-            }
-        });
+            }                
+        }
     }
 
     function processDirectory(relPath, fsOptions, absPath) {
@@ -44,7 +43,8 @@ exports.locateGitProjects = (projectsDirList, callBack) => {
 
             fs.exists(fileName, (exists) => {
                 if (!exists) return;
-                extractRepoInfo(absPath);
+                var originPath = path.normalize(absPath + path.sep + '..');
+                addToList(originPath, extractRepoInfo(originPath));
             });
 
         }

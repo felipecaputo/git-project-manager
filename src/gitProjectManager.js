@@ -1,7 +1,14 @@
+"use strict";
+
 var repoList = [];
 var vscode = require('vscode');
 var listAlreadyDone = false;
 var fs = require('fs');
+var path = require('path');
+var loadedRepoListFromFile = false;
+
+let appdata = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : '/var/local');
+let gpmRepoListFile = path.join(appdata, "Code/User/gpm_projects.json");
 
 function getQuickPickList() {
     var qp = [];
@@ -19,17 +26,43 @@ function handleError(error) {
     vscode.window.showErrorMessage(error);
 }
 
-function addRepoInRepoList(repoInfo) {
-    var map = repoList.map( (info) => {
-        return info.dir;
-    } );
-    if (map.indexOf(repoInfo.dir) == -1) {
-        repoList.push(repoInfo);
-    } 
+function storeDataBetweenSessions() {
+    return vscode.workspace.getConfiguration('gitProjectManager').has('storeRepositoriesBetweenSessions')
+        && vscode.workspace.getConfiguration('gitProjectManager').get('storeRepositoriesBetweenSessions');
 }
 
-function getProjectsFolders () {
-    return new Promise( (resolve, reject) => {
+function saveRepositoryInfo() {
+    if (storeDataBetweenSessions()) {
+        fs.writeFileSync(gpmRepoListFile, JSON.stringify(repoList), { encoding: 'utf8' });
+    }
+}
+
+function loadRepositoryInfo() {
+    if (loadedRepoListFromFile) {
+        return false;
+    }
+    
+    if ((storeDataBetweenSessions()) && (fs.existsSync(gpmRepoListFile))) {
+        repoList = JSON.parse(fs.readFileSync(gpmRepoListFile, 'utf8'));
+        loadedRepoListFromFile = true;
+        listAlreadyDone = true;
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function addRepoInRepoList(repoInfo) {
+    var map = repoList.map((info) => {
+        return info.dir;
+    });
+    if (map.indexOf(repoInfo.dir) == -1) {
+        repoList.push(repoInfo);
+    }
+}
+
+function getProjectsFolders() {
+    return new Promise((resolve, reject) => {
         try {
             var isFolderConfigured = vscode.workspace.getConfiguration('gitProjectManager').has('baseProjectsFolders');
 
@@ -37,34 +70,34 @@ function getProjectsFolders () {
                 reject('You need to configure at least on folder in "gitProjectManager.baseProjectsFolders" before search for projects.');
                 return;
             }
-                            
-            resolve(vscode.workspace.getConfiguration('gitProjectManager').get('baseProjectsFolders'));            
+
+            resolve(vscode.workspace.getConfiguration('gitProjectManager').get('baseProjectsFolders'));
         } catch (error) {
             reject(error);
-        }        
+        }
     });
 }
 
 exports.showProjectList = () => {
-        var self = this;
-        
-		function onResolve(selected) {
-            if (!!selected) {
-			 self.openProject(selected);
-            }
-		}
-		
-		function onReject(reason) {
-			vscode.window.showInformationMessage(reason);
-		}
-                 
-        var options = {placeHolder: 'Select a folder to open:      (it may take a few seconds to search the folders the first time)'};
-        getProjectsFolders()
-            .then((folders) => {
-                vscode.window.showQuickPick(
-                    this.getProjectsList(folders), options).then( onResolve, onReject);
-            })
-            .catch(handleError);    
+    var self = this;
+
+    function onResolve(selected) {
+        if (!!selected) {
+            self.openProject(selected);
+        }
+    }
+
+    function onReject(reason) {
+        vscode.window.showInformationMessage(reason);
+    }
+
+    var options = { placeHolder: 'Select a folder to open:      (it may take a few seconds to search the folders the first time)' };
+    getProjectsFolders()
+        .then((folders) => {
+            vscode.window.showQuickPick(
+                this.getProjectsList(folders), options).then(onResolve, onReject);
+        })
+        .catch(handleError);
 };
 
 
@@ -76,18 +109,24 @@ exports.getProjectsList = (directories) => {
             if (listAlreadyDone) {
                 resolve(getQuickPickList());
             } else {
+                if (loadRepositoryInfo()) {
+                    resolve(getQuickPickList());
+                    return;
+                }
+                
                 projectLocator.locateGitProjects(directories, (dirList) => {
                     dirList.forEach(addRepoInRepoList);
                     listAlreadyDone = true;
+                    saveRepositoryInfo();
                     resolve(getQuickPickList());
                 });
-            }            
+            }
         } catch (error) {
             reject(error);
         }
 
     }
-    
+
     var promise = new Promise(getProjectListPromised);
     return promise;
 };
@@ -95,8 +134,8 @@ exports.getProjectsList = (directories) => {
 exports.openProject = (pickedObj) => {
     var cp = require('child_process');
 
-    var cmdLine = 'code "' + pickedObj.label + '"';
-        
+    var cmdLine = 'code "' + pickedObj.label + '" -r';
+
     cp.exec(cmdLine, (error, stdout, stderr) => {
         if (error) {
             console.log(error, stdout, stderr);
@@ -107,32 +146,32 @@ exports.openProject = (pickedObj) => {
     });
 };
 
-function internalRefresh (folders) {
+function internalRefresh(folders) {
     listAlreadyDone = false;
     exports.getProjectsList(folders)
-        .then( ()=>{
+        .then(() => {
             vscode.window.showInformationMessage('GPM ProjectList refreshed');
         })
-        .catch(handleError);        
+        .catch(handleError);
 }
 
-exports.refreshList = () => {    
+exports.refreshList = () => {
     repoList = [];
 
     getProjectsFolders()
-        .then( internalRefresh )
-        .catch(handleError);        
+        .then(internalRefresh)
+        .catch(handleError);
 };
 
 exports.refreshSpecificFolder = () => {
-    var options = {placeHolder: 'Select a folder to open:      (it may take a few seconds to search the folders the first time)'};
+    var options = { placeHolder: 'Select a folder to open:      (it may take a few seconds to search the folders the first time)' };
     getProjectsFolders()
-        .then((list)=>{
+        .then((list) => {
             vscode.window.showQuickPick(list, options)
-                .then( (selection) => {
+                .then((selection) => {
                     if (!selection) return;
                     internalRefresh([selection]);
                 });
         });
-    
+
 };

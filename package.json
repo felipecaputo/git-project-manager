@@ -2,7 +2,7 @@
     "name": "git-project-manager",
     "displayName": "gitProjectManager",
     "description": "Let you load your git projects in a easy way",
-    "icon": "https://github.com/felipecaputo/git-project-manager/blob/master/img/icon.png",
+    "icon": "img/icon.png",
     "version": "0.1.1",
     "publisher": "felipecaputo",
     "galleryBanner": {
