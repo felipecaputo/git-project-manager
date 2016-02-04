@@ -4,7 +4,7 @@
     "description": "Let you load your git projects in a easy way",
     "icon": "./img/icon.png",
     "version": "0.1.0",
-    "publisher": "Felipe Caputo",
+    "publisher": "felipecaputo",
     "galleryBanner": {
         "color": "#0000FF",
         "theme": "dark"
