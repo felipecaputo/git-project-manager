@@ -16,8 +16,8 @@ exports.locateGitProjects = (projectsDirList, callBack) => {
     }
 
     function extractRepoInfo(basePath) {
-        var exec = require('child_process').exec;
-        exec('git remote show origin -n', { cwd: basePath }, (error, stdout, stderr) => {
+        var cp = require('child_process');
+        cp.exec('git remote show origin -n', { cwd: basePath }, (error, stdout, stderr) => {
             if (error) {
                 return;
             };

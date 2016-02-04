@@ -1,13 +1,48 @@
-# README
-## This is the README for your extension "git-project-manager" 
-You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
+# Git Project Manager
 
-* Split the editor (`Cmd+\` on OSX or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on OSX or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (OSX) to see a list of Markdown snippets
+Git Project Manager (GPM) is a Microsoft VSCode extension that allows you to open a **new window targeting a git repository** directly from VSCode window.
 
-### For more information
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+##Available settings
 
-** Enjoy!**
+Before start using GPM you need to configure the base folders that the extension will
+search for git repositories. you need to open **File -> Preferences -> User Settings**  
+
+
+    {
+        "gitProjectManager.baseProjectsFolders": [
+            "/home/user/nodeProjects",
+            "/home/user/personal/pocs"
+        ]
+    }
+
+Another available configuration is **gitProjectManager.storeRepositoriesBetweenSessions** that allows
+git repositories information to be stored between sessions, avoiding the waiting time in the first
+time you load the repositories list. It's **false** by default.
+
+
+    {
+        "gitProjectManager.storeRepositoriesBetweenSessions": true
+    }
+
+
+##Available commands
+
+Currently there are 3 avaliable commands, all of them can be accessed via **Ctrl+Shift+P** 
+*(Cmd+Shift+P on Mac)* typing **GPM**
+
+###GPM: Open Git Project *(Ctrl+Alt+P)*
+Show a list of the available git repositories in all folders configured in **gitProjectManager.baseProjectsFolders**.
+The first time it searchs all folders, after that it uses a cached repository info.
+![open Git Project](/img/openProject.gif)
+
+
+###GPM: Refresh Projects
+This commands refresh the cached repositories info for all configured folders.
+
+###GPM: Refresh specific project folder
+This commands allows you to select a specific foledr to refresh its repositories, without
+refreshing all folders.
+
+##Participate
+
+If you have any idea, feel free to create issues and pull requests.

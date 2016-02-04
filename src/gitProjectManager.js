@@ -60,7 +60,10 @@ exports.showProjectList = () => {
                  
         var options = {placeHolder: 'Select a folder to open:      (it may take a few seconds to search the folders the first time)'};
         getProjectsFolders()
-            .then((folders) => {vscode.window.showQuickPick(this.getProjectsList(folders), options).then( onResolve, onReject)})
+            .then((folders) => {
+                vscode.window.showQuickPick(
+                    this.getProjectsList(folders), options).then( onResolve, onReject);
+            })
             .catch(handleError);    
 };
 
@@ -91,14 +94,9 @@ exports.getProjectsList = (directories) => {
 
 exports.openProject = (pickedObj) => {
     var cp = require('child_process');
-    
-    var p = require('path');
 
     var cmdLine = 'code "' + pickedObj.label + '"';
-    
-    //var cmdLine = '"' + process.execPath + '" "' + pickedObj.label + '"';
-    
-    console.log('---> ', require('path').normalize(process.execPath));
+        
     cp.exec(cmdLine, (error, stdout, stderr) => {
         if (error) {
             console.log(error, stdout, stderr);

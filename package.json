@@ -2,8 +2,8 @@
     "name": "git-project-manager",
     "displayName": "gitProjectManager",
     "description": "Let you load your git projects in a easy way",
-    "icon": "",
-    "version": "0.0.1",
+    "icon": "./img/icon.png",
+    "version": "0.1.0",
     "publisher": "Felipe Caputo",
     "galleryBanner": {
         "color": "#0000FF",
