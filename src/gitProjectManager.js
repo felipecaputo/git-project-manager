@@ -171,7 +171,13 @@ exports.refreshSpecificFolder = () => {
                 .then((selection) => {
                     if (!selection) return;
                     internalRefresh([selection]);
+                })
+                .catch((error)=>{
+                   console.log(error); 
                 });
+        })
+        .catch((error)=>{
+            console.log(error);
         });
 
 };
