@@ -1,79 +1,83 @@
 {
-    "name": "git-project-manager",
-    "displayName": "gitProjectManager",
-    "description": "Let you load your git projects in a easy way",
-    "icon": "img/icon.png",
-    "version": "0.1.2",
-    "publisher": "felipecaputo",
-    "galleryBanner": {
-        "color": "#0000FF",
-        "theme": "dark"
-    },
-    "license": "SEE LICENSE IN LICENSE.md",
-    "bugs": {
-        "url": "https://github.com/felipecaputo/git-project-manager/issues",
-        "email": "felipe.caputo@gmail.com"
-    },
-    "homepage": "https://github.com/felipecaputo/git-project-manager/blob/master/README.md",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/felipecaputo/git-project-manager.git"
-    },    
-    "engines": {
-        "vscode": "^0.10.1"
-    },
-    "categories": [
-        "Other"
-    ],
-    "activationEvents": [
-        "onCommand:gitProjectManager.openProject",
-        "onCommand:gitProjectManager.refreshProjects",
-        "onCommand:gitProjectManager.refreshFolder"
-    ],
-    "main": "./src/extension",    
-    "contributes": {
-        "configuration": {
-            "type": "object",
-            "title": "Git Project Manager configuration",
-            "properties": {
-                "gitProjectManager.baseProjectsFolders": {
-                    "type": "array",
-                    "default": null,
-                    "description": "Specifies the base folders to search for git repositories"
-                },
-                "gitProjectManager.storeRepositoriesBetweenSessions": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Specifies whether saves repository folders' data between sessions"
-                }
-            }
+  "name": "git-project-manager",
+  "displayName": "gitProjectManager",
+  "description": "Let you load your git projects in a easy way",
+  "icon": "img/icon.png",
+  "version": "0.1.2",
+  "publisher": "felipecaputo",
+  "galleryBanner": {
+    "color": "#0000FF",
+    "theme": "dark"
+  },
+  "license": "SEE LICENSE IN LICENSE.md",
+  "bugs": {
+    "url": "https://github.com/felipecaputo/git-project-manager/issues",
+    "email": "felipe.caputo@gmail.com"
+  },
+  "homepage": "https://github.com/felipecaputo/git-project-manager/blob/master/README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/felipecaputo/git-project-manager.git"
+  },
+  "engines": {
+    "vscode": "^0.10.1"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:gitProjectManager.openProject",
+    "onCommand:gitProjectManager.refreshProjects",
+    "onCommand:gitProjectManager.refreshFolder"
+  ],
+  "main": "./src/extension",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "Git Project Manager configuration",
+      "properties": {
+        "gitProjectManager.baseProjectsFolders": {
+          "type": "array",
+          "default": null,
+          "description": "Specifies the base folders to search for git repositories"
         },
-        "commands": [
-            {
-                "command": "gitProjectManager.openProject",
-                "title": "GPM: Open Git Project"
-            },
-            {
-                "command": "gitProjectManager.refreshProjects",
-                "title": "GPM: Refresh Projects"
-            },
-            {
-                "command": "gitProjectManager.refreshFolder",
-                "title": "GPM: Refresh specific project folder"
-            }
-        ],
-        "keybindings": [
-            {
-                "key": "ctrl+alt+p",
-                "mac": "cmd+alt+p",
-                "command": "gitProjectManager.openProject"
-            }
-        ]
+        "gitProjectManager.storeRepositoriesBetweenSessions": {
+          "type": "boolean",
+          "default": false,
+          "description": "Specifies whether saves repository folders' data between sessions"
+        }
+      }
     },
-    "devDependencies": {
-        "vscode": "0.10.x"
-    },
-    "dependencies": {
-        "filewalker": "^0.1.2"
-    }
+    "commands": [
+      {
+        "command": "gitProjectManager.openProject",
+        "title": "GPM: Open Git Project"
+      },
+      {
+        "command": "gitProjectManager.refreshProjects",
+        "title": "GPM: Refresh Projects"
+      },
+      {
+        "command": "gitProjectManager.refreshFolder",
+        "title": "GPM: Refresh specific project folder"
+      }
+    ],
+    "keybindings": [
+      {
+        "key": "ctrl+alt+p",
+        "mac": "cmd+alt+p",
+        "command": "gitProjectManager.openProject"
+      }
+    ]
+  },
+  "devDependencies": {
+    "mocha": "^2.4.5",
+    "vscode": "0.10.x"
+  },
+  "dependencies": {
+    "filewalker": "^0.1.2"
+  },
+  "scripts": {
+      "test": "node ./node_modules/vscode/bin/test"
+  }
 }

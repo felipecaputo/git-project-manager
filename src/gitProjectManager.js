@@ -1,19 +1,19 @@
 "use strict";
 
-var repoList = [];
-var vscode = require('vscode');
-var listAlreadyDone = false;
-var fs = require('fs');
-var path = require('path');
-var loadedRepoListFromFile = false;
+let repoList = [];
+let vscode = require('vscode');
+let listAlreadyDone = false;
+let fs = require('fs');
+let path = require('path');
+let loadedRepoListFromFile = false;
 
-let appdata = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : '/var/local');
-let gpmRepoListFile = path.join(appdata, "Code/User/gpm_projects.json");
+const appdata = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : '/var/local');
+const gpmRepoListFile = path.join(appdata, "Code/User/gpm_projects.json");
 
 function getQuickPickList() {
-    var qp = [];
-    for (var i = 0; i < repoList.length; i++) {
-        var qpItem = {
+    let qp = [];
+    for (let i = 0; i < repoList.length; i++) {
+        let qpItem = {
             label: repoList[i].dir,
             description: repoList[i].repo
         };
@@ -53,8 +53,8 @@ function loadRepositoryInfo() {
 }
 
 function addRepoInRepoList(repoInfo) {
-    var map = repoList.map((info) => {
-        return info.dir;
+    let map = repoList.map((info) => {
+        return info.dir;        
     });
     if (map.indexOf(repoInfo.dir) == -1) {
         repoList.push(repoInfo);
