@@ -14,19 +14,32 @@ var vscode = require('vscode');
 var projectLocator = require('../src/gitProjectLocator');
 
 // Defines a Mocha test suite to group tests of similar kind together
-suite("gitProjectLocator Tests", function() {
-
-	// Defines a Mocha unit test
-	test("Should export locateGitProjects function", function(done) {
-		assert.equal(typeof projectLocator.locateGitProjects, "function");
-        done();
-	});
+describe("gitProjectLocator Tests", function() {
+    describe("#Available functions", function () {
+        // Defines a Mocha unit test
+        it("Should export locateGitProjects function", function(done) {
+            assert.equal(typeof projectLocator.locateGitProjects, "function");
+            done();
+        });
+    });
     
-    test("Should find 2 repositories", (done) => {
-        this.timeout(5000);
-        projectLocator.locateGitProjects(['./test'], (repoList) => {
-                assert.equal(repoList.length,2);
-                done();
+    describe("#Searching without repos", function () {       
+        it("Shouldn't find any repositories", function(done)  {
+            this.timeout(5000);
+            projectLocator.locateGitProjects(['./test/noGit'], function(repoList) {
+                    assert.equal(repoList.length,0);
+                    done();
+            });
+        });
+    });       
+    
+    describe("#Searching repos", function () {       
+        it("Should find 2 repositories", function(done)  {
+            this.timeout(5000);
+            projectLocator.locateGitProjects(['./test'], function(repoList) {
+                    assert.equal(repoList.length,2);
+                    done();
+            });
         });
     });
 });

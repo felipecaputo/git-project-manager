@@ -14,14 +14,14 @@ var vscode = require('vscode');
  var myExtension = require('../src/extension');
 
 // Defines a Mocha test suite to group tests of similar kind together
-suite("Extension Tests", function() {
+describe("Extension Tests", function() {
 
 	// Defines a Mocha unit test
-	test("Should export activate function", function() {
+	it("Should export activate function", function() {
 		assert.equal(typeof myExtension.activate, "function");
 	});
     
-    test("Should export deactivate function", function() {
+    it("Should export deactivate function", function() {
 		assert.equal(typeof myExtension.deactivate, "function");
 	});
 });

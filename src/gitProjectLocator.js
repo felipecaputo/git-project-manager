@@ -29,7 +29,7 @@ exports.locateGitProjects = (projectsDirList, callBack) => {
         });
         promises.push(promise);
     });
-    
+   
     Promise.all(promises).then(
         () => { callBack(dirList); }, 
         (error) => { vscode.window.showErrorMessage('Error while loading Git Projects.');});
