@@ -78,6 +78,6 @@
     "filewalker": "^0.1.2"
   },
   "scripts": {
-      "test": "node ./node_modules/vscode/bin/test"
+      "tested": "node ./node_modules/vscode/bin/test"
   }
 }
