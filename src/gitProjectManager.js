@@ -7,8 +7,15 @@ let fs = require('fs');
 let path = require('path');
 let loadedRepoListFromFile = false;
 
-const appdata = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : '/var/local');
-const gpmRepoListFile = path.join(appdata, "Code/User/gpm_projects.json");
+let baseDir = '';
+if (process.platform == "linux") {
+    let os = require('os');
+    baseDir = path.join(os.homedir(), '.config');     
+} else {
+    baseDir = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : '/var/local');
+}
+
+const gpmRepoListFile = path.join(baseDir, "Code/User/gpm_projects.json");
 
 function getQuickPickList() {
     let qp = [];
@@ -134,16 +141,18 @@ exports.getProjectsList = (directories) => {
 exports.openProject = (pickedObj) => {
     var cp = require('child_process');
 
-    var cmdLine = 'code "' + pickedObj.label + '" -r';
+    var cmdLine = 'code -n "' + pickedObj.label + '" -r';
 
-    cp.exec(cmdLine, (error, stdout, stderr) => {
-        if (error) {
-            console.log(error, stdout, stderr);
-        }
-        cp.exec('cd ..', (a, b, c) => {
-            console.log('->', a, b, c);
-        });
-    });
+    cp.spawn(process.execPath, ['-n', pickedObj.label]);
+
+    // cp.exec(cmdLine, (error, stdout, stderr) => {
+    //     if (error) {
+    //         console.log(error, stdout, stderr);
+    //     }
+    //     cp.exec('cd ..', (a, b, c) => {
+    //         console.log('->', a, b, c);
+    //     });
+    // });
 };
 
 function internalRefresh(folders) {
