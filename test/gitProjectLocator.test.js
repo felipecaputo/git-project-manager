@@ -12,6 +12,7 @@ var assert = require('assert');
 // as well as import your extension to test it
 var vscode = require('vscode');
 var projectLocator = require('../src/gitProjectLocator');
+var path = require('path');
 
 // Defines a Mocha test suite to group tests of similar kind together
 describe("gitProjectLocator Tests", function() {
@@ -26,7 +27,7 @@ describe("gitProjectLocator Tests", function() {
     describe("#Searching without repos", function () {       
         it("Shouldn't find any repositories", function(done)  {
             this.timeout(5000);
-            projectLocator.locateGitProjects(['./test/noGit'], function(repoList) {
+            projectLocator.locateGitProjects([path.join(vscode.extensions.getExtension('felipecaputo.git-project-manager').extensionPath, '/test/noGit')], function(repoList) {
                     assert.equal(repoList.length,0);
                     done();
             });
@@ -36,7 +37,7 @@ describe("gitProjectLocator Tests", function() {
     describe("#Searching repos", function () {       
         it("Should find 2 repositories", function(done)  {
             this.timeout(5000);
-            projectLocator.locateGitProjects(['./test'], function(repoList) {
+            projectLocator.locateGitProjects([path.join(vscode.extensions.getExtension('felipecaputo.git-project-manager').extensionPath, '/test')], function(repoList) {
                     assert.equal(repoList.length,2);
                     done();
             });

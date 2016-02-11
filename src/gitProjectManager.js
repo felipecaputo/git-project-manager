@@ -141,18 +141,16 @@ exports.getProjectsList = (directories) => {
 exports.openProject = (pickedObj) => {
     var cp = require('child_process');
 
-    var cmdLine = 'code -n "' + pickedObj.label + '" -r';
+    var cmdLine = 'code -n "' + pickedObj.label + '"';
 
-    cp.spawn(process.execPath, ['-n', pickedObj.label]);
-
-    // cp.exec(cmdLine, (error, stdout, stderr) => {
-    //     if (error) {
-    //         console.log(error, stdout, stderr);
-    //     }
-    //     cp.exec('cd ..', (a, b, c) => {
-    //         console.log('->', a, b, c);
-    //     });
-    // });
+    cp.exec(cmdLine, (error, stdout, stderr) => {
+        if (error) {
+            console.log(error, stdout, stderr);
+        }
+        cp.exec('cd ..', (a, b, c) => {
+            console.log('->', a, b, c);
+        });
+    });
 };
 
 function internalRefresh(folders) {
