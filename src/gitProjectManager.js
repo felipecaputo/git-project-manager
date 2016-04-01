@@ -140,17 +140,23 @@ exports.getProjectsList = (directories) => {
 
 exports.openProject = (pickedObj) => {
     var cp = require('child_process');
-
-    var cmdLine = 'code -n "' + pickedObj.label + '"';
-
-    cp.exec(cmdLine, (error, stdout, stderr) => {
-        if (error) {
-            console.log(error, stdout, stderr);
-        }
-        cp.exec('cd ..', (a, b, c) => {
-            console.log('->', a, b, c);
-        });
-    });
+    var cmdLine = 'code "' + pickedObj.label + '" -r';
+        
+    if (process.platform == 'linux') {
+        cp.spawn(process.execPath, ['.'], {cwd: path.dirname(process.execPath), detached: true}, (err, stdout, stdErr) => {
+                console.log(err, stdout, stdErr);
+            })
+    } else {
+        cp.exec(cmdLine, (error, stdout, stderr) => {
+            if (error) {
+                console.log(error, stdout, stderr);
+            }
+            cp.exec('cd ..', (a, b, c) => {
+                console.log('->', a, b, c);
+            });
+        });        
+    }
+    
 };
 
 function internalRefresh(folders) {
