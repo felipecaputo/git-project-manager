@@ -183,7 +183,7 @@ exports.refreshSpecificFolder = () => {
             vscode.window.showQuickPick(list, options)
                 .then((selection) => {
                     if (!selection) return;
-                    internalRefresh([selection]);
+                        internalRefresh([selection]);
                 })
                 .catch((error)=>{
                    console.log(error); 
