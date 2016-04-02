@@ -45,6 +45,11 @@
           "type": "boolean",
           "default": false,
           "description": "Specifies whether saves repository folders' data between sessions"
+        },
+        "gitProjectManager.codePath": {
+            "type": "string",
+            "default": "code",
+            "description": "Specifies full path to Code command to use when opening a project." 
         }
       }
     },
