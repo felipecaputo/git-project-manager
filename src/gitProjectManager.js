@@ -140,7 +140,12 @@ exports.getProjectsList = (directories) => {
 
 exports.openProject = (pickedObj) => {
     var cp = require('child_process');
-    var cmdLine = 'code "' + pickedObj.label + '" -r';
+    var codePath = vscode.workspace.getConfiguration(
+        'gitProjectManager'
+    ).get(
+        'codePath', 'code'
+    );
+    var cmdLine = '"' + codePath + '" "' + pickedObj.label + '" -r';
         
     if (process.platform == 'linux') {
         cp.spawn(process.execPath, ['.'], {cwd: path.dirname(process.execPath), detached: true}, (err, stdout, stdErr) => {
