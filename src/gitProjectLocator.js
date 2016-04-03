@@ -1,7 +1,7 @@
 
 var vscode = require('vscode');
 var dirList = [];
-var locator = require('filewalker');
+var walker = require('walker');
 var path = require('path');
     
 exports.locateGitProjects = (projectsDirList, callBack) => {
@@ -10,18 +10,21 @@ exports.locateGitProjects = (projectsDirList, callBack) => {
     var fs = require('fs');
     projectsDirList.forEach((projectBasePath) => {
         if (!fs.existsSync(projectBasePath)) {
-            vscode.window.showWarningMessage('Directory ' + projectBasePath + ' do not exists.');
+            vscode.window.showWarningMessage('Directory ' + projectBasePath + ' does not exists.');
+            return;
         }
+        
+        var depth = projectBasePath.split(path.sep).length;
         
         var promise = new Promise((resolve, reject) => {
             try {
-                locator(projectBasePath)
+                walker(projectBasePath)
+                    .filterDir(shouldIgnoreFolder)
                     .on('dir', processDirectory)
                     .on('error', handleError)
-                    .on('done', () => {
+                    .on('end', () => {
                         resolve();
-                    })
-                    .walk();                  
+                    });            
             } catch (error) {
                 reject(error);
             }
@@ -35,6 +38,8 @@ exports.locateGitProjects = (projectsDirList, callBack) => {
         (error) => { vscode.window.showErrorMessage('Error while loading Git Projects.');});
 
 };
+
+// function (path)
 
 function addToList(dirPath, repoName) {
     var obj = {
@@ -58,13 +63,12 @@ function extractRepoInfo(basePath) {
             var idx = line.indexOf(repoPath);
             if (idx == -1) continue;
 
-            return line.trim().replace(repoPath, ''); 
-            break;
+            return line.trim().replace(repoPath, '');
         }                
     }
 }
 
-function processDirectory(relPath, fsOptions, absPath) {
+function processDirectory(absPath, fsOptions) {
     var currentDir = path.basename(absPath);
     vscode.window.setStatusBarMessage(absPath);
     if (currentDir == '.git') {
