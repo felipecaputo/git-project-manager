@@ -3,9 +3,40 @@ var vscode = require('vscode');
 var dirList = [];
 var walker = require('walker');
 var path = require('path');
+var maxDepth = -1;
+var ignoredFolders = [];
     
+/**
+ * Returns the depth of the directory path
+ * 
+ * @param {string} s The path to be processed
+ * @returns Number
+ */
+function getPathDepth(s) {
+    return s.split(path.sep).length;
+}
+
+function isMaxDeptReached(currentDepth, initialDepth) { 
+    return (maxDepth > 0) && ((currentDepth - initialDepth) > maxDepth);
+ }
+ 
+ function isFolderIgnored(folder) {
+     return ignoredFolders.indexOf(folder) != -1;
+ }
+ 
+ function initializeCfg() {
+     if (vscode.workspace.getConfiguration('gitProjectManager').has('ignoredFolders')) {
+         ignoredFolders = vscode.workspace.getConfiguration('gitProjectManager').get('ignoredFolders') || [];
+     }
+     
+     if (vscode.workspace.getConfiguration('gitProjectManager').has('maxDepthRecursion')) {
+         maxDepth = vscode.workspace.getConfiguration('gitProjectManager').get('maxDepthRecursion') || -1;
+     }
+ }
+
 exports.locateGitProjects = (projectsDirList, callBack) => {
     var promises = [];
+    initializeCfg();
 
     var fs = require('fs');
     projectsDirList.forEach((projectBasePath) => {
@@ -14,12 +45,15 @@ exports.locateGitProjects = (projectsDirList, callBack) => {
             return;
         }
         
-        var depth = projectBasePath.split(path.sep).length;
+        var depth = getPathDepth(projectBasePath);
         
         var promise = new Promise((resolve, reject) => {
             try {
                 walker(projectBasePath)
-                    .filterDir(shouldIgnoreFolder)
+                    /*.filterDir(  (dir, stat) => {
+                        return !isFolderIgnored(path.basename(dir)) || 
+                            !isMaxDeptReached(getPathDepth(dir), depth); 
+                    } )*/
                     .on('dir', processDirectory)
                     .on('error', handleError)
                     .on('end', () => {
@@ -38,8 +72,6 @@ exports.locateGitProjects = (projectsDirList, callBack) => {
         (error) => { vscode.window.showErrorMessage('Error while loading Git Projects.');});
 
 };
-
-// function (path)
 
 function addToList(dirPath, repoName) {
     var obj = {

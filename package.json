@@ -93,6 +93,6 @@
     "walker": "^1.0.7"
   },
   "scripts": {
-    "tested": "node ./node_modules/vscode/bin/test"
+    "teste": "node ./node_modules/vscode/bin/test"
   }
 }

@@ -7,6 +7,9 @@ sudo: false
 
 os:
   - linux
+
+script:
+  - npm test --silent
     
 #before_install:
 #  - if [ $TRAVIS_OS_NAME == "linux" ]; then
