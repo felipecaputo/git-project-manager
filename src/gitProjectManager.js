@@ -145,22 +145,19 @@ exports.openProject = (pickedObj) => {
     ).get(
         'codePath', 'code'
     );
-    var cmdLine = '"' + codePath + '" "' + pickedObj.label + '" -r';
+    if (codePath.indexOf(' ') != -1) 
+        codePath = `"${codePath}"`;
         
-    if (process.platform == 'linux') {
-        cp.spawn(process.execPath, ['.'], {cwd: path.dirname(process.execPath), detached: true}, (err, stdout, stdErr) => {
-                console.log(err, stdout, stdErr);
-            })
-    } else {
-        cp.exec(cmdLine, (error, stdout, stderr) => {
-            if (error) {
-                console.log(error, stdout, stderr);
-            }
-            cp.exec('cd ..', (a, b, c) => {
-                console.log('->', a, b, c);
-            });
-        });        
-    }
+    var cmdLine = `${codePath} ${pickedObj.label}`;
+        
+    cp.exec(cmdLine, (error, stdout, stderr) => {
+        if (error) {
+            console.log(error, stdout, stderr);
+        }
+        cp.exec('cd ..', (a, b, c) => {
+            console.log('->', a, b, c);
+        });
+    });
     
 };
 
