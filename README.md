@@ -69,6 +69,9 @@ refreshing all folders.
 
 ##Change log
 
+### 0.1.6
+  - Fixed issue #2 that wasn't working on **0.1.5**
+
 ### 0.1.5
   - Added two new configs to fix issue #2 and improve perfomance that are:
     - maxDepthRecursion

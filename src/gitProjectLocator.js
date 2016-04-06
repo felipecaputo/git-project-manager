@@ -3,6 +3,7 @@ var vscode = require('vscode');
 var dirList = [];
 var walker = require('walker');
 var path = require('path');
+var fs = require('fs');
 var maxDepth = -1;
 var ignoredFolders = [];
     
@@ -50,10 +51,10 @@ exports.locateGitProjects = (projectsDirList, callBack) => {
         var promise = new Promise((resolve, reject) => {
             try {
                 walker(projectBasePath)
-                    /*.filterDir(  (dir, stat) => {
-                        return !isFolderIgnored(path.basename(dir)) || 
-                            !isMaxDeptReached(getPathDepth(dir), depth); 
-                    } )*/
+                    .filterDir(  (dir, stat) => {
+                        return !(isFolderIgnored(path.basename(dir)) || 
+                            isMaxDeptReached(getPathDepth(dir), depth)); 
+                    } )
                     .on('dir', processDirectory)
                     .on('error', handleError)
                     .on('end', () => {
@@ -100,19 +101,11 @@ function extractRepoInfo(basePath) {
     }
 }
 
-function processDirectory(absPath, fsOptions) {
-    var currentDir = path.basename(absPath);
+function processDirectory(absPath, fsOptions) {    
     vscode.window.setStatusBarMessage(absPath);
-    if (currentDir == '.git') {
-        var fileName = path.join(absPath, 'config');
-        var fs = require('fs');
+    if (fs.existsSync(path.join(absPath, '.git', 'config'))) {
 
-        fs.exists(fileName, (exists) => {
-            if (!exists) return;
-            var originPath = path.normalize(absPath + path.sep + '..');
-            addToList(originPath, extractRepoInfo(originPath));
-        });
-
+        addToList(absPath, extractRepoInfo(absPath));
     }
 }
 
