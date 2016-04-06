@@ -30,7 +30,7 @@ function getQuickPickList() {
 }
 
 function handleError(error) {
-    vscode.window.showErrorMessage(error);
+    vscode.window.showErrorMessage(`Error in GPM Manager ${error}`);
 }
 
 function storeDataBetweenSessions() {
@@ -95,7 +95,7 @@ exports.showProjectList = () => {
     }
 
     function onReject(reason) {
-        vscode.window.showInformationMessage(reason);
+        vscode.window.showInformationMessage(`Error while showing Project list: ${reason}`);
     }
 
     var options = { placeHolder: 'Select a folder to open:      (it may take a few seconds to search the folders the first time)' };

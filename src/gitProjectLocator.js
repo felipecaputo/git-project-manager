@@ -104,7 +104,6 @@ function extractRepoInfo(basePath) {
 function processDirectory(absPath, fsOptions) {    
     vscode.window.setStatusBarMessage(absPath);
     if (fs.existsSync(path.join(absPath, '.git', 'config'))) {
-
         addToList(absPath, extractRepoInfo(absPath));
     }
 }
