@@ -69,6 +69,9 @@ refreshing all folders.
 
 ##Change log
 
+### 0.1.7
+  - Fixed problem with VSCode configuration that changed array config default value
+
 ### 0.1.6
   - Fixed issue #2 that wasn't working on **0.1.5**
 

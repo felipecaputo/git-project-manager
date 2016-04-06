@@ -3,7 +3,7 @@
   "displayName": "Git Project Manager",
   "description": "Allows you to change fast between git projects.",
   "icon": "img/icon.png",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "publisher": "felipecaputo",
   "galleryBanner": {
     "color": "#0000FF",
@@ -38,7 +38,7 @@
       "properties": {
         "gitProjectManager.baseProjectsFolders": {
           "type": "array",
-          "default": null,
+          "default": [],
           "description": "Specifies the base folders to search for git repositories"
         },
         "gitProjectManager.storeRepositoriesBetweenSessions": {
@@ -53,7 +53,7 @@
         },
         "gitProjectManager.ignoredFolders": {
           "type": "array",
-          "default": null,
+          "default": [],
           "description": "Specifies folders to be ignored. (node_modules for example), improving search performance"
         },
         "gitProjectManager.maxDepthRecursion": {
