@@ -69,6 +69,9 @@ refreshing all folders.
 
 ##Change log
 
+### 0.1.9
+  - Fixed error in dependency management in VSCode
+
 ### 0.1.8
   - Improved error messages
 
