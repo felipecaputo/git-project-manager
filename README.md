@@ -49,6 +49,15 @@ To improve performance there are 2 new and important configurations that are:
         "gitProjectManager.maxDepthRecursion": 4
     }
     
+
+In version 0.1.10 we also added the **"gitProjectManager.checkRemoteOrigin"** 
+configuration that allows users to not check remote repository origin 
+to improve performance
+
+    {
+        "gitProjectManager.checkRemoteOrigin": false
+    }
+    
 ##Available commands
 
 Currently there are 3 avaliable commands, all of them can be accessed via **Ctrl+Shift+P** 
@@ -68,6 +77,10 @@ This commands allows you to select a specific foledr to refresh its repositories
 refreshing all folders.
 
 ##Change log
+
+### 0.1.10
+  - Added new configuration "gitProjectManager.checkRemoteOrigin" that allows users to
+  not check remote repository origin to improve performance
 
 ### 0.1.9
   - Fixed error in dependency management in VSCode
