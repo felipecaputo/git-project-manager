@@ -30,7 +30,7 @@ function isMaxDeptReached(currentDepth, initialDepth) {
      
      ignoredFolders = vscode.workspace.getConfiguration('gitProjectManager').get('ignoredFolders', []);
      maxDepth = vscode.workspace.getConfiguration('gitProjectManager').get('maxDepthRecursion', -1);
-     checkForGitRepo = vscode.workspace.getConfiguration('gitProjectManager').get('checkRemoteOrigin', false);
+     checkForGitRepo = vscode.workspace.getConfiguration('gitProjectManager').get('checkRemoteOrigin', true);
  }
 
 exports.locateGitProjects = (projectsDirList, callBack) => {
@@ -102,7 +102,7 @@ function extractRepoInfo(basePath) {
 function processDirectory(absPath, fsOptions) {    
     vscode.window.setStatusBarMessage(absPath);
     if (fs.existsSync(path.join(absPath, '.git', 'config'))) {
-        addToList(absPath, extractRepoInfo(absPath));
+        addToList(absPath, checkForGitRepo ? extractRepoInfo(absPath) : 'not available');
     }
 }
 

@@ -145,6 +145,11 @@ exports.openProject = (pickedObj) => {
     ).get(
         'codePath', 'code'
     );
+    
+    // It will be released after 1.0
+    // let uri = vscode.Uri.parse('file:///Users/bpasero/Development/Microsoft/monaco');
+    //     vscode.commands.executeCommand('vscode.openFolder', uri);
+    
     if (codePath.indexOf(' ') != -1) 
         codePath = `"${codePath}"`;
         

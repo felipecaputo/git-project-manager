@@ -60,6 +60,11 @@
           "type": "integer",
           "default": 0,
           "description": "Indicate the maximum depth of folder recursion to search for projects. Any value below 1 means there is no limit"
+        },
+        "gitProjectManager.checkRemoteOrigin": {
+          "type": "boolean",
+          "default": true,
+          "description": "Indicates if extension will validate and get the remote origin of the git repository"
         }
       }
     },
