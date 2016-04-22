@@ -34,8 +34,8 @@ function handleError(error) {
 }
 
 function storeDataBetweenSessions() {
-    return vscode.workspace.getConfiguration('gitProjectManager').has('storeRepositoriesBetweenSessions')
-        && vscode.workspace.getConfiguration('gitProjectManager').get('storeRepositoriesBetweenSessions');
+    return vscode.workspace.getConfiguration('gitProjectManager')
+        .get('storeRepositoriesBetweenSessions', false);
 }
 
 function saveRepositoryInfo() {

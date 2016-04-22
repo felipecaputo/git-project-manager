@@ -5,6 +5,7 @@ var walker = require('walker');
 var path = require('path');
 var maxDepth = -1;
 var ignoredFolders = [];
+var checkForGitRepo = false;
     
 /**
  * Returns the depth of the directory path
@@ -25,13 +26,10 @@ function isMaxDeptReached(currentDepth, initialDepth) {
  }
  
  function initializeCfg() {
-     if (vscode.workspace.getConfiguration('gitProjectManager').has('ignoredFolders')) {
-         ignoredFolders = vscode.workspace.getConfiguration('gitProjectManager').get('ignoredFolders') || [];
-     }
      
-     if (vscode.workspace.getConfiguration('gitProjectManager').has('maxDepthRecursion')) {
-         maxDepth = vscode.workspace.getConfiguration('gitProjectManager').get('maxDepthRecursion') || -1;
-     }
+     ignoredFolders = vscode.workspace.getConfiguration('gitProjectManager').get('ignoredFolders', []);
+     maxDepth = vscode.workspace.getConfiguration('gitProjectManager').get('maxDepthRecursion', -1);
+     checkForGitRepo = vscode.workspace.getConfiguration('gitProjectManager').get('checkRemoteOrigin', false);
  }
 
 exports.locateGitProjects = (projectsDirList, callBack) => {

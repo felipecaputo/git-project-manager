@@ -43,4 +43,6 @@ describe("gitProjectLocator Tests", function() {
             });
         });
     });
+    
+    
 });
