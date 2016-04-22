@@ -69,6 +69,18 @@ refreshing all folders.
 
 ##Change log
 
+### 0.1.9
+  - Fixed error in dependency management in VSCode
+
+### 0.1.8
+  - Improved error messages
+
+### 0.1.7
+  - Fixed problem with VSCode configuration that changed array config default value
+
+### 0.1.6
+  - Fixed issue #2 that wasn't working on **0.1.5**
+
 ### 0.1.5
   - Added two new configs to fix issue #2 and improve perfomance that are:
     - maxDepthRecursion
