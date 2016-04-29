@@ -19,11 +19,11 @@ const gpmRepoListFile = path.join(baseDir, "Code/User/gpm_projects.json");
 
 function getQuickPickList() {
     let qp = [];
+    let checkRemoteCfg = vscode.workspace.getConfiguration('gitProjectManager').get('checkRemoteOrigin', false);
     for (let i = 0; i < repoList.length; i++) {
         let qpItem = {
             label: repoList[i].name,
-            description: vscode.workspace.getConfiguration('gitProjectManager')
-                .get('checkRemoteOrigin', false) ? repoList[i].repo : repoList[i].dir 
+            description: checkRemoteCfg ? repoList[i].repo : repoList[i].dir
         };
         qp.push(qpItem);
     }
@@ -141,11 +141,8 @@ exports.getProjectsList = (directories) => {
 
 exports.openProject = (pickedObj) => {
     var cp = require('child_process');
-    var codePath = vscode.workspace.getConfiguration(
-        'gitProjectManager'
-    ).get(
-        'codePath', 'code'
-    );
+    var codePath = getCodePath();
+    let projectPath = getProjectPath(pickedObj);
     
     // It will be released after 1.0
     // let uri = vscode.Uri.parse('file:///Users/bpasero/Development/Microsoft/monaco');
@@ -154,7 +151,7 @@ exports.openProject = (pickedObj) => {
     if (codePath.indexOf(' ') != -1) 
         codePath = `"${codePath}"`;
         
-    var cmdLine = `${codePath} ${pickedObj.label}`;
+    var cmdLine = `${codePath} ${projectPath}`;
         
     cp.exec(cmdLine, (error, stdout, stderr) => {
         if (error) {
@@ -166,6 +163,39 @@ exports.openProject = (pickedObj) => {
     });
     
 };
+
+function getCodePath () {
+    let cfg =  vscode.workspace.getConfiguration(
+        'gitProjectManager'
+    ).get(
+        'codePath', 'code'
+    );
+    
+    let codePath  = 'code'
+    if (typeof cfg === 'string') {
+        codePath = cfg;
+    } else if (cfg.prototype.toString == {}.prototype.toString) {
+        codePath = cfg[process.platform];
+    } else if (cfg.prototype.toString == [].prototype.toString) {
+        for (let i = 0; i < cfg.length; i++) {
+            if (fs.existsSync(cfg[i])) {
+                codePath =  cfg[i];
+                break;
+            }
+        }
+    }
+    
+    return codePath;        
+}
+
+function getProjectPath(pickedObj) {
+    let checkRemoteCfg = vscode.workspace.getConfiguration('gitProjectManager').get('checkRemoteOrigin', false);
+    if (!checkRemoteCfg) 
+        return pickedObj.description;
+        
+    let map = repoList.map( proj => { return checkRemoteCfg ? `${proj.name}.${proj.repo}` : `${proj.name}.${proj.dir}`});
+    return repoList[map.indexOf(`${pickedObj.label}.${pickedObj.description}`)].dir;
+}
 
 function internalRefresh(folders) {
     listAlreadyDone = false;
