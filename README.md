@@ -78,6 +78,10 @@ refreshing all folders.
 
 ##Change log
 
+###0.1.11
+  - Now it only shows the folder name instead of the complete path, and also, if *checkRemoteOrigin* is
+  false, then it show the path as pick list description instead of remote origin
+
 ### 0.1.10
   - Added new configuration "gitProjectManager.checkRemoteOrigin" that allows users to
   not check remote repository origin to improve performance

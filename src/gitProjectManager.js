@@ -21,8 +21,9 @@ function getQuickPickList() {
     let qp = [];
     for (let i = 0; i < repoList.length; i++) {
         let qpItem = {
-            label: repoList[i].dir,
-            description: repoList[i].repo
+            label: repoList[i].name,
+            description: vscode.workspace.getConfiguration('gitProjectManager')
+                .get('checkRemoteOrigin', false) ? repoList[i].repo : repoList[i].dir 
         };
         qp.push(qpItem);
     }
