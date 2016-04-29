@@ -1,4 +1,4 @@
-
+var cp = require('child_process');
 var vscode = require('vscode');
 var dirList = [];
 var walker = require('walker');
@@ -23,7 +23,7 @@ function isMaxDeptReached(currentDepth, initialDepth) {
  }
  
  function isFolderIgnored(folder) {
-     return ignoredFolders.indexOf(folder) != -1;
+     return ignoredFolders.indexOf(folder) !== -1;
  }
  
  function initializeCfg() {
@@ -37,7 +37,6 @@ exports.locateGitProjects = (projectsDirList, callBack) => {
     var promises = [];
     initializeCfg();
 
-    var fs = require('fs');
     projectsDirList.forEach((projectBasePath) => {
         if (!fs.existsSync(projectBasePath)) {
             vscode.window.showWarningMessage('Directory ' + projectBasePath + ' does not exists.');
@@ -83,9 +82,8 @@ function addToList(dirPath, repoName) {
 }
 
 function extractRepoInfo(basePath) {
-    var cp = require('child_process');
     var stdout = cp.execSync('git remote show origin -n', { cwd: basePath, encoding: 'utf8' });
-    if (stdout.indexOf('Fetch URL:') == -1) {
+    if (stdout.indexOf('Fetch URL:') === -1) {
         return '';
     } else {
         var arr = stdout.split('\n');
@@ -93,7 +91,7 @@ function extractRepoInfo(basePath) {
             var line = arr[i];
             var repoPath = 'Fetch URL: ';
             var idx = line.indexOf(repoPath);
-            if (idx == -1) continue;
+            if (idx === -1) continue;
 
             return line.trim().replace(repoPath, '');
         }                

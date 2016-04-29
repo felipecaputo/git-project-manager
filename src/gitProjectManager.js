@@ -6,13 +6,14 @@ let listAlreadyDone = false;
 let fs = require('fs');
 let path = require('path');
 let loadedRepoListFromFile = false;
-
+let projectLocator = require('./gitProjectLocator');
 let baseDir = '';
+let os = require('os');
+
 if (process.platform == "linux") {
-    let os = require('os');
     baseDir = path.join(os.homedir(), '.config');     
 } else {
-    baseDir = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : '/var/local');
+    baseDir = process.env.APPDATA || (process.platform === 'darwin' ? process.env.HOME + '/Library/Application Support' : '/var/local');
 }
 
 const gpmRepoListFile = path.join(baseDir, "Code/User/gpm_projects.json");
@@ -64,7 +65,7 @@ function addRepoInRepoList(repoInfo) {
     let map = repoList.map((info) => {
         return info.dir;        
     });
-    if (map.indexOf(repoInfo.dir) == -1) {
+    if (map.indexOf(repoInfo.dir) === -1) {
         repoList.push(repoInfo);
     }
 }
@@ -90,7 +91,7 @@ exports.showProjectList = () => {
     var self = this;
 
     function onResolve(selected) {
-        if (!!selected) {
+        if (selected) {
             self.openProject(selected);
         }
     }
@@ -112,8 +113,6 @@ exports.showProjectList = () => {
 exports.getProjectsList = (directories) => {
     function getProjectListPromised(resolve, reject) {
         try {
-            var projectLocator = require('./gitProjectLocator');
-            
             if (listAlreadyDone) {
                 resolve(getQuickPickList());
             } else {
@@ -148,7 +147,7 @@ exports.openProject = (pickedObj) => {
     // let uri = vscode.Uri.parse('file:///Users/bpasero/Development/Microsoft/monaco');
     //     vscode.commands.executeCommand('vscode.openFolder', uri);
     
-    if (codePath.indexOf(' ') != -1) 
+    if (codePath.indexOf(' ') !== -1) 
         codePath = `"${codePath}"`;
         
     var cmdLine = `${codePath} ${projectPath}`;
@@ -174,9 +173,9 @@ function getCodePath () {
     let codePath  = 'code'
     if (typeof cfg === 'string') {
         codePath = cfg;
-    } else if (cfg.prototype.toString == {}.prototype.toString) {
+    } else if (cfg.prototype.toString === {}.prototype.toString) {
         codePath = cfg[process.platform];
-    } else if (cfg.prototype.toString == [].prototype.toString) {
+    } else if (cfg.prototype.toString === [].prototype.toString) {
         for (let i = 0; i < cfg.length; i++) {
             if (fs.existsSync(cfg[i])) {
                 codePath =  cfg[i];

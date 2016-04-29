@@ -1,14 +1,11 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 var vscode = require('vscode');
+var projectManager = require('./gitProjectManager');
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 function activate(context) {
-
-	console.log('"git-project-manager" is now active!');
-	
-	var projectManager = require('./gitProjectManager');
 
 	var disposable = vscode.commands.registerCommand('gitProjectManager.openProject', function () {       		
         projectManager.showProjectList();
