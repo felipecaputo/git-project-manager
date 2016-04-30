@@ -1,9 +1,11 @@
 language: node_js
 node_js:
   - "node"
-  - "5.1.x"
-  - "4.2.x"
-  - "4.1.x"
+  - "5.1"
+  - "5"
+  - "4.2"
+  - "4.1"
+  - "4"
   
 sudo: false
 
