@@ -173,9 +173,9 @@ function getCodePath () {
     let codePath  = 'code'
     if (typeof cfg === 'string') {
         codePath = cfg;
-    } else if (cfg.prototype.toString === {}.prototype.toString) {
+    } else if (cfg.toString() === '[object Object]') {
         codePath = cfg[process.platform];
-    } else if (cfg.prototype.toString === [].prototype.toString) {
+    } else if (cfg.length) {
         for (let i = 0; i < cfg.length; i++) {
             if (fs.existsSync(cfg[i])) {
                 codePath =  cfg[i];
