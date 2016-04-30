@@ -24,7 +24,10 @@ time you load the repositories list. It's **false** by default.
         "gitProjectManager.storeRepositoriesBetweenSessions": true
     }
 
-If nothing happens when trying to open a found project it could be due to the Code command being used. To work around this issue set **gitProjectManager.codePath** to the full path of the Code command to use when launching new instances. For example:
+If nothing happens when trying to open a found project it could be due to the Code command being used. To work around this issue set **gitProjectManager.codePath** to the full path of the Code command to use when launching new instances.
+This configuration can be defined in 3 formats (*this was done to solve issue #7*):
+
+**First:** Define it as a simple string, with the path to code app
 
     //Windows
     {
@@ -34,6 +37,24 @@ If nothing happens when trying to open a found project it could be due to the Co
     //Linux
     {
         "gitProjectManager.codePath": "/usr/local/bin/code"
+    }
+    
+**Second:** Use a object notation to define the path to code path on each platform
+
+    {
+        "gitProjectManager.codePath" : {
+            "windows": "C:\\Program Files (x86)\\Microsoft VS Code\\bin\\code.cmd",
+            "linux": "/usr/local/bin/code"
+        }
+    }
+    
+**Third:** An array of file paths, where at least one is a valid path
+
+    {
+        "gitProjectManager.codePath" : [
+            "C:\\Program Files (x86)\\Microsoft VS Code\\bin\\code.cmd",
+            "/usr/local/bin/code"
+        ]
     }
     
 To improve performance there are 2 new and important configurations that are:  
@@ -81,6 +102,7 @@ refreshing all folders.
 ###0.1.11
   - Now it only shows the folder name instead of the complete path, and also, if *checkRemoteOrigin* is
   false, then it show the path as pick list description instead of remote origin
+  - Changed the way we can configure codePath
 
 ### 0.1.10
   - Added new configuration "gitProjectManager.checkRemoteOrigin" that allows users to
