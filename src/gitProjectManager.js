@@ -160,7 +160,11 @@ function openProjectViaShell(projPath){
 exports.openProject = (pickedObj) => {
     let projectPath = getProjectPath(pickedObj),
         uri = vscode.Uri.file(projectPath),
-        newWindow = false; // read config
+        newWindow = vscode.workspace.getConfiguration(
+            'gitProjectManager'
+            ).get(
+                'openInNewWindow', false
+            );
     
     vscode.commands.executeCommand('vscode.openFolder', uri, newWindow)
         .then() //done

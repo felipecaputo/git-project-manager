@@ -106,6 +106,9 @@ refreshing all folders.
 
 ##Change log
 
+###0.1.13
+  - Hotfix for 0.1.12, that was not considering **gitProjectManager.openInNewWindow** configuration
+
 ###0.1.12
   - Now uses the new VSCode api to open folders, avoiding problems with path and configuration
   - Added configuration to define if the selected project will be opened in the same window or in a new window
