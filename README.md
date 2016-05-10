@@ -79,6 +79,13 @@ to improve performance
         "gitProjectManager.checkRemoteOrigin": false
     }
     
+Added in version 0.1.12, you can configure the behavior when opening a project if it'll be opened in the same window
+or in a new window:
+
+    {
+        "gitProjectManager.openInNewWindow": false
+    }
+    
 ##Available commands
 
 Currently there are 3 avaliable commands, all of them can be accessed via **Ctrl+Shift+P** 
@@ -98,6 +105,10 @@ This commands allows you to select a specific foledr to refresh its repositories
 refreshing all folders.
 
 ##Change log
+
+###0.1.12
+  - Now uses the new VSCode api to open folders, avoiding problems with path and configuration
+  - Added configuration to define if the selected project will be opened in the same window or in a new window
 
 ###0.1.11
   - Now it only shows the folder name instead of the complete path, and also, if *checkRemoteOrigin* is

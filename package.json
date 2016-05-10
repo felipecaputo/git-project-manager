@@ -3,7 +3,7 @@
   "displayName": "Git Project Manager",
   "description": "Allows you to change fast between git projects.",
   "icon": "img/icon.png",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "publisher": "felipecaputo",
   "galleryBanner": {
     "color": "#0000FF",
@@ -58,13 +58,18 @@
         },
         "gitProjectManager.maxDepthRecursion": {
           "type": "integer",
-          "default": 0,
+          "default": 4,
           "description": "Indicate the maximum depth of folder recursion to search for projects. Any value below 1 means there is no limit"
         },
         "gitProjectManager.checkRemoteOrigin": {
           "type": "boolean",
           "default": true,
           "description": "Indicates if extension will validate and get the remote origin of the git repository"
+        },
+        "gitProjectManager.openInNewWindow": {
+          "type": "boolean",
+          "default": false,
+          "description": "Define the behavior when opening a new project, if true a new VSCode will be opened with the selected project"
         }
       }
     },

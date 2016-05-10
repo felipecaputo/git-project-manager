@@ -1,14 +1,15 @@
 "use strict";
 
-let repoList = [];
-let vscode = require('vscode');
-let listAlreadyDone = false;
 let fs = require('fs');
+let vscode = require('vscode');
 let path = require('path');
-let loadedRepoListFromFile = false;
-let projectLocator = require('./gitProjectLocator');
-let baseDir = '';
+let cp = require('child_process');
 let os = require('os');
+let projectLocator = require('./gitProjectLocator');
+let loadedRepoListFromFile = false;
+let baseDir = '';
+let repoList = [];
+let listAlreadyDone = false;
 
 if (process.platform == "linux") {
     baseDir = path.join(os.homedir(), '.config');     
@@ -138,28 +139,32 @@ exports.getProjectsList = (directories) => {
     return promise;
 };
 
+function openProjectViaShell(projPath){
+    
+            let codePath = getCodePath();    
+            if (codePath.indexOf(' ') !== -1) 
+                codePath = `"${codePath}"`;
+                
+            let cmdLine = `${codePath} ${projPath}`;
+        
+            cp.exec(cmdLine, (error, stdout, stderr) => {
+                if (error) {
+                    console.log(error, stdout, stderr);
+                }
+                cp.exec('cd ..', (a, b, c) => {
+                    console.log('->', a, b, c);
+                });
+            });    
+}
+
 exports.openProject = (pickedObj) => {
-    var cp = require('child_process');
-    var codePath = getCodePath();
-    let projectPath = getProjectPath(pickedObj);
+    let projectPath = getProjectPath(pickedObj),
+        uri = vscode.Uri.file(projectPath),
+        newWindow = false; // read config
     
-    // It will be released after 1.0
-    // let uri = vscode.Uri.parse('file:///Users/bpasero/Development/Microsoft/monaco');
-    //     vscode.commands.executeCommand('vscode.openFolder', uri);
-    
-    if (codePath.indexOf(' ') !== -1) 
-        codePath = `"${codePath}"`;
-        
-    var cmdLine = `${codePath} ${projectPath}`;
-        
-    cp.exec(cmdLine, (error, stdout, stderr) => {
-        if (error) {
-            console.log(error, stdout, stderr);
-        }
-        cp.exec('cd ..', (a, b, c) => {
-            console.log('->', a, b, c);
-        });
-    });
+    vscode.commands.executeCommand('vscode.openFolder', uri, newWindow)
+        .then() //done
+        .catch( () => openProjectViaShell(projectPath));
     
 };
 
