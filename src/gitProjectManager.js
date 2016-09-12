@@ -104,15 +104,16 @@ exports.showProjectList = () => {
     var options = { placeHolder: 'Select a folder to open:      (it may take a few seconds to search the folders the first time)' };
     getProjectsFolders()
         .then((folders) => {
-            vscode.window.showQuickPick(
-                this.getProjectsList(folders), options).then(onResolve, onReject);
+            this.getProjectsList(folders)
+                .then(items => vscode.window.showQuickPick(items, options)
+                .then(onResolve, onReject));
         })
         .catch(handleError);
 };
 
 
 exports.getProjectsList = (directories) => {
-    function getProjectListPromised(resolve, reject) {
+    return new Promise((resolve, reject) => {
         try {
             if (listAlreadyDone) {
                 resolve(getQuickPickList());
@@ -132,11 +133,7 @@ exports.getProjectsList = (directories) => {
         } catch (error) {
             reject(error);
         }
-
-    }
-
-    var promise = new Promise(getProjectListPromised);
-    return promise;
+    });
 };
 
 function openProjectViaShell(projPath){
