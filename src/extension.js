@@ -18,9 +18,10 @@ function activate(context) {
     
     var specificRefreshDisposable = vscode.commands.registerCommand('gitProjectManager.refreshFolder', function () {
         projectManager.refreshSpecificFolder();	
-	});        
-	
+	});
+
 	context.subscriptions.push(disposable, refreshDisposable, specificRefreshDisposable);
+	context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(projectManager.refreshList.bind(projectManager, true)));
 }
 exports.activate = activate;
 

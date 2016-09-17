@@ -202,21 +202,33 @@ function getProjectPath(pickedObj) {
     return repoList[map.indexOf(`${pickedObj.label}.${pickedObj.description}`)].dir;
 }
 
-function internalRefresh(folders) {
+function internalRefresh(folders, suppressMessage) {
     listAlreadyDone = false;
     exports.getProjectsList(folders)
         .then(() => {
-            vscode.window.showInformationMessage('GPM ProjectList refreshed');
+            if (!suppressMessage) {
+                vscode.window.showInformationMessage('GPM ProjectList refreshed');
+            }
         })
-        .catch(handleError);
+        .catch((error) => {
+            if (!suppressMessage) {
+                handleError(error);
+            }
+        });
 }
 
-exports.refreshList = () => {
+exports.refreshList = (suppressMessage) => {
     repoList = [];
 
     getProjectsFolders()
-        .then(internalRefresh)
-        .catch(handleError);
+        .then((folders) => {
+            internalRefresh(folders, suppressMessage);
+        })
+        .catch((error) => {
+            if (!suppressMessage) {
+                handleError(error);
+            }
+        });
 };
 
 exports.refreshSpecificFolder = () => {
