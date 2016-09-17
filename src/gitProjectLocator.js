@@ -71,6 +71,10 @@ exports.locateGitProjects = (projectsDirList, callBack) => {
 
 };
 
+exports.clearDirList = () => {
+    dirList = [];
+};
+
 function addToList(dirPath, repoName) {
     var obj = {
         dir: dirPath,

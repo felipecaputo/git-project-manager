@@ -213,6 +213,7 @@ function internalRefresh(folders) {
 
 exports.refreshList = () => {
     repoList = [];
+    projectLocator.clearDirList();
 
     getProjectsFolders()
         .then(internalRefresh)
