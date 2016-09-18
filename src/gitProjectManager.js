@@ -81,12 +81,23 @@ function getProjectsFolders() {
                 return;
             }
 
-            resolve(vscode.workspace.getConfiguration('gitProjectManager').get('baseProjectsFolders'));
+            var baseProjectsFolders = vscode.workspace.getConfiguration('gitProjectManager').get('baseProjectsFolders');
+            var resolvedProjectsFolders = baseProjectsFolders.map(path => {
+                return resolveEnvironmentVariables(process.platform, path);
+            })
+            resolve(resolvedProjectsFolders);
         } catch (error) {
             reject(error);
         }
     });
 }
+
+function resolveEnvironmentVariables = (processPlatform, path) => {
+    var envVarMatcher = processPlatform === 'win32' ? /%([^%]+)%/g : /\$([^\/]+)/g;
+    return path.replace(envVarMatcher, function(_, key) {
+        return process.env[key];
+    });
+};
 
 exports.showProjectList = () => {
     var self = this;
