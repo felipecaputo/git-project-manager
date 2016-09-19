@@ -22,6 +22,9 @@ const gpmRepoListFile = path.join(baseDir, "Code/User/gpm_projects.json");
 function getQuickPickList() {
     let qp = [];
     let checkRemoteCfg = vscode.workspace.getConfiguration('gitProjectManager').get('checkRemoteOrigin', false);
+    repoList = repoList.sort((a, b) => {
+        return a.name > b.name ? 1 : -1
+    });
     for (let i = 0; i < repoList.length; i++) {
         let qpItem = {
             label: repoList[i].name,
