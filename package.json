@@ -70,6 +70,11 @@
           "type": "boolean",
           "default": false,
           "description": "Define the behavior when opening a new project, if true a new VSCode will be opened with the selected project"
+        },
+        "gitProjectManager.warnIfFolderNotFound": {
+          "type": "boolean",
+          "default": false,
+          "description": "Define if extension should show a warn if a configured project folder is not found while searching for projects"
         }
       }
     },

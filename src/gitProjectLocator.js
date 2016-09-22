@@ -1,12 +1,13 @@
-var cp = require('child_process');
-var vscode = require('vscode');
-var dirList = [];
-var walker = require('walker');
-var path = require('path');
-var fs = require('fs');
-var maxDepth = -1;
-var ignoredFolders = [];
-var checkForGitRepo = false;
+let cp = require('child_process');
+let vscode = require('vscode');
+let dirList = [];
+let walker = require('walker');
+let path = require('path');
+let fs = require('fs');
+let maxDepth = -1;
+let ignoredFolders = [];
+let checkForGitRepo = false;
+let warnFoldersNotFound = false;
     
 /**
  * Returns the depth of the directory path
@@ -31,6 +32,7 @@ function isMaxDeptReached(currentDepth, initialDepth) {
      ignoredFolders = vscode.workspace.getConfiguration('gitProjectManager').get('ignoredFolders', []);
      maxDepth = vscode.workspace.getConfiguration('gitProjectManager').get('maxDepthRecursion', -1);
      checkForGitRepo = vscode.workspace.getConfiguration('gitProjectManager').get('checkRemoteOrigin', true);
+     warnFoldersNotFound = vscode.workspace.getConfiguration('gitProjectManager').get('warnIfFolderNotFound', false);
  }
 
 exports.locateGitProjects = (projectsDirList, callBack) => {
@@ -39,7 +41,9 @@ exports.locateGitProjects = (projectsDirList, callBack) => {
 
     projectsDirList.forEach((projectBasePath) => {
         if (!fs.existsSync(projectBasePath)) {
-            vscode.window.showWarningMessage('Directory ' + projectBasePath + ' does not exists.');
+            if (warnFoldersNotFound)
+                vscode.window.showWarningMessage('Directory ' + projectBasePath + ' does not exists.');
+
             return;
         }
         
@@ -66,7 +70,10 @@ exports.locateGitProjects = (projectsDirList, callBack) => {
     });
    
     Promise.all(promises)
-        .then(() => { callBack(dirList); } ) 
+        .then(() => {
+            vscode.window.setStatusBarMessage('GPM: Searching folders completed', 1500); 
+            callBack(dirList); 
+        } ) 
         .catch( error => { vscode.window.showErrorMessage('Error while loading Git Projects.');});
 
 };
@@ -103,7 +110,7 @@ function extractRepoInfo(basePath) {
 }
 
 function processDirectory(absPath, fsOptions) {    
-    vscode.window.setStatusBarMessage(absPath);
+    vscode.window.setStatusBarMessage(absPath, 600);
     if (fs.existsSync(path.join(absPath, '.git', 'config'))) {
         addToList(absPath, checkForGitRepo ? extractRepoInfo(absPath) : 'not available');
     }
