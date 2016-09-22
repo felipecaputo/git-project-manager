@@ -8,7 +8,7 @@ var projectManager = require('./gitProjectManager');
 function activate(context) {
 
 	var disposable = vscode.commands.registerCommand('gitProjectManager.openProject', function () {       		
-        projectManager.showProjectList();
+          projectManager.showProjectList();
 		
 	});
     

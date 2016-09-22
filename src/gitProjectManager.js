@@ -1,5 +1,3 @@
-"use strict";
-
 let fs = require('fs');
 let vscode = require('vscode');
 let path = require('path');
@@ -95,7 +93,7 @@ function getProjectsFolders() {
     });
 }
 
-function resolveEnvironmentVariables = (processPlatform, path) => {
+function resolveEnvironmentVariables (processPlatform, path) {
     var envVarMatcher = processPlatform === 'win32' ? /%([^%]+)%/g : /\$([^\/]+)/g;
     return path.replace(envVarMatcher, function(_, key) {
         return process.env[key];
