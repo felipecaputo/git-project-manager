@@ -106,6 +106,10 @@ refreshing all folders.
 
 ##Change log
 
+###0.1.14
+  - Temporary fix to #8 and #9, ShowQuickPick is not working when receive promises. As a side efect, quick pick will not be shown until
+  all folders had been searched
+
 ###0.1.13
   - Hotfix for 0.1.12, that was not considering **gitProjectManager.openInNewWindow** configuration
 
