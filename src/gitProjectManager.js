@@ -114,13 +114,11 @@ exports.showProjectList = () => {
     }
 
     var options = { placeHolder: 'Select a folder to open:      (it may take a few seconds to search the folders the first time)' };
-    getProjectsFolders()
-        .then((folders) => {
-            this.getProjectsList(folders)
-                .then(items => vscode.window.showQuickPick(items, options)
-                .then(onResolve, onReject));
-        })
-        .catch(handleError);
+    
+    var projectsPromise = getProjectsFolders().then((folders) => {
+        return this.getProjectsList(folders);
+    }).catch(handleError);
+    vscode.window.showQuickPick(projectsPromise, options).then(onResolve, onReject);
 };
 
 
