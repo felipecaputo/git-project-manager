@@ -8,10 +8,10 @@ let maxDepth = -1;
 let ignoredFolders = [];
 let checkForGitRepo = false;
 let warnFoldersNotFound = false;
-    
+
 /**
  * Returns the depth of the directory path
- * 
+ *
  * @param {string} s The path to be processed
  * @returns Number
  */
@@ -19,16 +19,15 @@ function getPathDepth(s) {
     return s.split(path.sep).length;
 }
 
-function isMaxDeptReached(currentDepth, initialDepth) { 
+function isMaxDeptReached(currentDepth, initialDepth) {
     return (maxDepth > 0) && ((currentDepth - initialDepth) > maxDepth);
- }
- 
- function isFolderIgnored(folder) {
+}
+
+function isFolderIgnored(folder) {
      return ignoredFolders.indexOf(folder) !== -1;
- }
- 
- function initializeCfg() {
-     
+}
+
+function initializeCfg() {
      ignoredFolders = vscode.workspace.getConfiguration('gitProjectManager').get('ignoredFolders', []);
      maxDepth = vscode.workspace.getConfiguration('gitProjectManager').get('maxDepthRecursion', -1);
      checkForGitRepo = vscode.workspace.getConfiguration('gitProjectManager').get('checkRemoteOrigin', true);
@@ -46,34 +45,34 @@ exports.locateGitProjects = (projectsDirList, callBack) => {
 
             return;
         }
-        
+
         var depth = getPathDepth(projectBasePath);
-        
+
         var promise = new Promise((resolve, reject) => {
             try {
                 walker(projectBasePath)
                     .filterDir(  (dir, stat) => {
-                        return !(isFolderIgnored(path.basename(dir)) || 
-                            isMaxDeptReached(getPathDepth(dir), depth)); 
+                        return !(isFolderIgnored(path.basename(dir)) ||
+                            isMaxDeptReached(getPathDepth(dir), depth));
                     } )
                     .on('dir', processDirectory)
                     .on('error', handleError)
                     .on('end', () => {
                         resolve();
-                    });            
+                    });
             } catch (error) {
                 reject(error);
             }
-          
+
         });
         promises.push(promise);
     });
-   
+
     Promise.all(promises)
         .then(() => {
-            vscode.window.setStatusBarMessage('GPM: Searching folders completed', 1500); 
-            callBack(dirList); 
-        } ) 
+            vscode.window.setStatusBarMessage('GPM: Searching folders completed', 1500);
+            callBack(dirList);
+        } )
         .catch( error => { vscode.window.showErrorMessage('Error while loading Git Projects.');});
 
 };
@@ -105,11 +104,11 @@ function extractRepoInfo(basePath) {
             if (idx === -1) continue;
 
             return line.trim().replace(repoPath, '');
-        }                
+        }
     }
 }
 
-function processDirectory(absPath, fsOptions) {    
+function processDirectory(absPath, fsOptions) {
     vscode.window.setStatusBarMessage(absPath, 600);
     if (fs.existsSync(path.join(absPath, '.git', 'config'))) {
         addToList(absPath, checkForGitRepo ? extractRepoInfo(absPath) : 'not available');

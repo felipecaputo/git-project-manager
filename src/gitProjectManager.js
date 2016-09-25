@@ -10,7 +10,7 @@ let repoList = [];
 let listAlreadyDone = false;
 
 if (process.platform == "linux") {
-    baseDir = path.join(os.homedir(), '.config');     
+    baseDir = path.join(os.homedir(), '.config');
 } else {
     baseDir = process.env.APPDATA || (process.platform === 'darwin' ? process.env.HOME + '/Library/Application Support' : '/var/local');
 }
@@ -52,7 +52,7 @@ function loadRepositoryInfo() {
     if (loadedRepoListFromFile) {
         return false;
     }
-    
+
     if ((storeDataBetweenSessions()) && (fs.existsSync(gpmRepoListFile))) {
         repoList = JSON.parse(fs.readFileSync(gpmRepoListFile, 'utf8'));
         loadedRepoListFromFile = true;
@@ -65,7 +65,7 @@ function loadRepositoryInfo() {
 
 function addRepoInRepoList(repoInfo) {
     let map = repoList.map((info) => {
-        return info.dir;        
+        return info.dir;
     });
     if (map.indexOf(repoInfo.dir) === -1) {
         repoList.push(repoInfo);
@@ -123,7 +123,6 @@ exports.showProjectList = () => {
         .catch(handleError);
 };
 
-
 exports.getProjectsList = (directories) => {
     return new Promise((resolve, reject) => {
         try {
@@ -134,7 +133,7 @@ exports.getProjectsList = (directories) => {
                     resolve(getQuickPickList());
                     return;
                 }
-                
+
                 projectLocator.locateGitProjects(directories, (dirList) => {
                     dirList.forEach(addRepoInRepoList);
                     listAlreadyDone = true;
@@ -149,13 +148,13 @@ exports.getProjectsList = (directories) => {
 };
 
 function openProjectViaShell(projPath){
-    
-            let codePath = getCodePath();    
-            if (codePath.indexOf(' ') !== -1) 
+
+            let codePath = getCodePath();
+            if (codePath.indexOf(' ') !== -1)
                 codePath = `"${codePath}"`;
-                
+
             let cmdLine = `${codePath} ${projPath}`;
-        
+
             cp.exec(cmdLine, (error, stdout, stderr) => {
                 if (error) {
                     console.log(error, stdout, stderr);
@@ -163,7 +162,7 @@ function openProjectViaShell(projPath){
                 cp.exec('cd ..', (a, b, c) => {
                     console.log('->', a, b, c);
                 });
-            });    
+            });
 }
 
 exports.openProject = (pickedObj) => {
@@ -174,11 +173,11 @@ exports.openProject = (pickedObj) => {
             ).get(
                 'openInNewWindow', false
             );
-    
+
     vscode.commands.executeCommand('vscode.openFolder', uri, newWindow)
         .then() //done
         .catch( () => openProjectViaShell(projectPath));
-    
+
 };
 
 function getCodePath () {
@@ -187,7 +186,7 @@ function getCodePath () {
     ).get(
         'codePath', 'code'
     );
-    
+
     let codePath  = 'code'
     if (typeof cfg === 'string') {
         codePath = cfg;
@@ -201,15 +200,15 @@ function getCodePath () {
             }
         }
     }
-    
-    return codePath;        
+
+    return codePath;
 }
 
 function getProjectPath(pickedObj) {
     let checkRemoteCfg = vscode.workspace.getConfiguration('gitProjectManager').get('checkRemoteOrigin', false);
-    if (!checkRemoteCfg) 
+    if (!checkRemoteCfg)
         return pickedObj.description;
-        
+
     let map = repoList.map( proj => { return checkRemoteCfg ? `${proj.name}.${proj.repo}` : `${proj.name}.${proj.dir}`});
     return repoList[map.indexOf(`${pickedObj.label}.${pickedObj.description}`)].dir;
 }
@@ -254,7 +253,7 @@ exports.refreshSpecificFolder = () => {
                         internalRefresh([selection]);
                 })
                 .catch((error)=>{
-                   console.log(error); 
+                   console.log(error);
                 });
         })
         .catch((error)=>{
