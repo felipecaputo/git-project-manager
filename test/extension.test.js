@@ -1,6 +1,6 @@
 /* global suite, test */
 
-// 
+//
 // Note: This example test is leveraging the Mocha test framework.
 // Please refer to their documentation on https://mochajs.org/ for help.
 //
@@ -16,12 +16,12 @@ var vscode = require('vscode');
 // Defines a Mocha test suite to group tests of similar kind together
 describe("Extension Tests", function() {
 
-	// Defines a Mocha unit test
-	it("Should export activate function", function() {
-		assert.equal(typeof myExtension.activate, "function");
-	});
-    
+    // Defines a Mocha unit test
+    it("Should export activate function", function() {
+        assert.equal(typeof myExtension.activate, "function");
+    });
+
     it("Should export deactivate function", function() {
-		assert.equal(typeof myExtension.deactivate, "function");
-	});
+        assert.equal(typeof myExtension.deactivate, "function");
+    });
 });

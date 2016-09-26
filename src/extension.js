@@ -7,21 +7,20 @@ var projectManager = require('./gitProjectManager');
 // your extension is activated the very first time the command is executed
 function activate(context) {
 
-	var disposable = vscode.commands.registerCommand('gitProjectManager.openProject', function () {       		
-          projectManager.showProjectList();
-		
-	});
-    
-	var refreshDisposable = vscode.commands.registerCommand('gitProjectManager.refreshProjects', function () {
-        projectManager.refreshList();	
-	});
-    
-    var specificRefreshDisposable = vscode.commands.registerCommand('gitProjectManager.refreshFolder', function () {
-        projectManager.refreshSpecificFolder();	
-	});
+    var disposable = vscode.commands.registerCommand('gitProjectManager.openProject', function () {               
+        projectManager.showProjectList();
+    });
 
-	context.subscriptions.push(disposable, refreshDisposable, specificRefreshDisposable);
-	context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(projectManager.refreshList.bind(projectManager, true)));
+    var refreshDisposable = vscode.commands.registerCommand('gitProjectManager.refreshProjects', function () {
+        projectManager.refreshList();    
+    });
+
+    var specificRefreshDisposable = vscode.commands.registerCommand('gitProjectManager.refreshFolder', function () {
+        projectManager.refreshSpecificFolder();    
+    });
+
+    context.subscriptions.push(disposable, refreshDisposable, specificRefreshDisposable);
+    context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(projectManager.refreshList.bind(projectManager, true)));
 }
 exports.activate = activate;
 
