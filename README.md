@@ -106,6 +106,19 @@ refreshing all folders.
 
 ##Change log
 
+###0.1.15
+  - Great contribuitions from [@Tyriar](https://github.com/Tyriar) with issues. Thanks a lot Daniel:
+    - [#24](https://github.com/felipecaputo/git-project-manager/issues/24) - Restored promised QuickPick after version 0.1.14 removed it
+    - [#21](https://github.com/felipecaputo/git-project-manager/issues/21) - Sorted project list
+    - [#16](https://github.com/felipecaputo/git-project-manager/issues/16) - Fixed behavior that project list was keeping old repos removed from config
+    - [#13](https://github.com/felipecaputo/git-project-manager/issues/13) - Parse environment variables in project folders config
+    - [#11](https://github.com/felipecaputo/git-project-manager/issues/11) - Auto refresh project list after configuration changed
+
+
+  - [#10](https://github.com/felipecaputo/git-project-manager/issues/10) - Auto refresh project list after configuration changed
+  - [#12](https://github.com/felipecaputo/git-project-manager/issues/12) [#14](https://github.com/felipecaputo/git-project-manager/issues/14) - UX improvements
+
+
 ###0.1.14
   - Temporary fix to #8 and #9, ShowQuickPick is not working when receive promises. As a side efect, quick pick will not be shown until
   all folders had been searched
