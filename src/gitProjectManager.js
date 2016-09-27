@@ -1,8 +1,10 @@
-let fs = require('fs');
-let vscode = require('vscode');
-let path = require('path');
-let cp = require('child_process');
-let os = require('os');
+const fs = require('fs');
+const vscode = require('vscode');
+const path = require('path');
+const cp = require('child_process');
+const os = require('os');
+const DirList = require('./dirList');
+
 let projectLocator = require('./gitProjectLocator');
 let loadedRepoListFromFile = false;
 let baseDir = '';
@@ -121,24 +123,42 @@ exports.showProjectList = () => {
     vscode.window.showQuickPick(projectsPromise, options).then(onResolve, onReject);
 };
 
+
+/**
+ * 
+ * 
+ * @param {DirList} dirList
+ */
+function addUnversionedProjects(dirList) {
+    let unversioned = vscode.workspace.getConfiguration('gitProjectManager').get('unversionedProjects', []);
+    unversioned.forEach( proj => dirList.add(proj));
+    return dirList.dirs;
+}
+
+function updateRepoList(dirList) {
+    dirList.forEach(addRepoInRepoList);
+    listAlreadyDone = true;
+    saveRepositoryInfo();
+    return dirList;
+}
+
 exports.getProjectsList = (directories) => {
     return new Promise((resolve, reject) => {
         try {
             if (listAlreadyDone) {
                 resolve(getQuickPickList());
-            } else {
-                if (loadRepositoryInfo()) {
-                    resolve(getQuickPickList());
-                    return;
-                }
+                return;
+            } 
 
-                projectLocator.locateGitProjects(directories, (dirList) => {
-                    dirList.forEach(addRepoInRepoList);
-                    listAlreadyDone = true;
-                    saveRepositoryInfo();
-                    resolve(getQuickPickList());
-                });
+            if (loadRepositoryInfo()) {
+                resolve(getQuickPickList());
+                return;
             }
+
+            projectLocator.locateGitProjects(directories)
+                .then(addUnversionedProjects)
+                .then(updateRepoList)
+                .then( () => resolve(getQuickPickList()) );
         } catch (error) {
             reject(error);
         }

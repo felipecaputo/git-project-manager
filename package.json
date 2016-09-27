@@ -75,6 +75,11 @@
           "type": "boolean",
           "default": false,
           "description": "Define if extension should show a warn if a configured project folder is not found while searching for projects"
+        },
+        "gitProjectManager.unversionedProjects": {
+          "type": "array",
+          "default": [],
+          "description": "Allows to list projects that are not versioned in \"List Repositories\" command"
         }
       }
     },
@@ -110,6 +115,6 @@
     "walker": "^1.0.7"
   },
   "scripts": {
-    "teste": "node ./node_modules/vscode/bin/test"
+    "test": "node ./node_modules/vscode/bin/test"
   }
 }
