@@ -13,11 +13,17 @@ const assert = require('assert');
 const vscode = require('vscode');
 const projectLocator = require('../src/gitProjectLocator');
 const path = require('path');
+const fs = require('fs');
 const chai = require('chai');
 const expect = chai.expect;
 
+const noGitFolder = path.join(vscode.extensions.getExtension('felipecaputo.git-project-manager').extensionPath, '/test/noGit');
+const gitProjFolder = path.join(vscode.extensions.getExtension('felipecaputo.git-project-manager').extensionPath, '/test/projects');
+const bothFolders = [noGitFolder, gitProjFolder];
+
 // Defines a Mocha test suite to group tests of similar kind together
 describe("gitProjectLocator Tests", function() {
+
     describe("#Available functions", function () {
         // Defines a Mocha unit test
         it("Should export locateGitProjects function", function(done) {
@@ -29,7 +35,7 @@ describe("gitProjectLocator Tests", function() {
     describe("#Searching without repos", function () {       
         it("Shouldn't find any repositories", function(done)  {
             this.timeout(20000);
-            projectLocator.locateGitProjects([path.join(vscode.extensions.getExtension('felipecaputo.git-project-manager').extensionPath, '/test/noGit')])
+            projectLocator.locateGitProjects([noGitFolder])
                 .then(repoList => {
                     expect(repoList.dirList.length).to.be.equal(0);
                     done();
@@ -37,10 +43,21 @@ describe("gitProjectLocator Tests", function() {
         });
     });       
     
-    describe("#Searching repos", function () {       
+    describe("#Searching repos", function () {      
         it("Should find 2 repositories", function(done)  {
             this.timeout(20000);
-            projectLocator.locateGitProjects([path.join(vscode.extensions.getExtension('felipecaputo.git-project-manager').extensionPath, '/test')])
+            
+            [
+                path.join(gitProjFolder, 'project1/.git'),
+                path.join(gitProjFolder, 'project2/.git')
+            ].forEach( dir => {
+                if(!fs.existsSync(dir)){
+                    fs.mkdirSync(dir);
+                    fs.writeFileSync(path.join(dir, 'config'), 'fake', {encoding: 'utf8'});
+                }
+            });
+
+            projectLocator.locateGitProjects(bothFolders)
                 .then( repoList => {
                     try {
                         expect(repoList.dirList.length).to.be.equal(2);
