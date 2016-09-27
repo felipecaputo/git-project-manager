@@ -47,7 +47,11 @@
           "description": "Specifies whether saves repository folders' data between sessions"
         },
         "gitProjectManager.codePath": {
-          "type": ["string", "array", "object"],
+          "type": [
+            "string",
+            "array",
+            "object"
+          ],
           "default": "code",
           "description": "Specifies full path to Code command to use when opening a project."
         },
@@ -106,6 +110,7 @@
     ]
   },
   "devDependencies": {
+    "chai": "^3.5.0",
     "mocha": "^2.4.5",
     "vscode": "0.10.x"
   },
