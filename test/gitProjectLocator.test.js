@@ -10,15 +10,15 @@ const assert = require('assert');
 
 // You can import and use all API from the 'vscode' module
 // as well as import your extension to test it
-const vscode = require('vscode');
+// const vscode = require('vscode');
 const projectLocator = require('../src/gitProjectLocator');
 const path = require('path');
 const fs = require('fs');
 const chai = require('chai');
 const expect = chai.expect;
 
-const noGitFolder = path.join(vscode.extensions.getExtension('felipecaputo.git-project-manager').extensionPath, '/test/noGit');
-const gitProjFolder = path.join(vscode.extensions.getExtension('felipecaputo.git-project-manager').extensionPath, '/test/projects');
+const noGitFolder = path.join(__dirname, '/noGit'); 
+const gitProjFolder = path.join (__dirname, '/projects');
 const bothFolders = [noGitFolder, gitProjFolder];
 
 // Defines a Mocha test suite to group tests of similar kind together
