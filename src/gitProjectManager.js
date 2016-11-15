@@ -46,7 +46,9 @@ function storeDataBetweenSessions() {
 
 function saveRepositoryInfo() {
     if (storeDataBetweenSessions()) {
-        fs.writeFileSync(gpmRepoListFile, JSON.stringify(repoList), { encoding: 'utf8' });
+        fs.writeFileSync(gpmRepoListFile, JSON.stringify(repoList), {
+            encoding: 'utf8'
+        });
     }
 }
 
@@ -95,11 +97,13 @@ function getProjectsFolders() {
     });
 }
 
-function resolveEnvironmentVariables (processPlatform, path) {
+function resolveEnvironmentVariables(processPlatform, aPath) {
     var envVarMatcher = processPlatform === 'win32' ? /%([^%]+)%/g : /\$([^\/]+)/g;
-    return path.replace(envVarMatcher, function(_, key) {
+    let resolvedPath = aPath.replace(envVarMatcher, function (_, key) {
         return process.env[key];
     });
+
+    return resolvedPath.charAt(0) == '~' ? path.join(process.env.HOME, resolvedPath.substr(1)) : resolvedPath;
 };
 
 exports.showProjectList = () => {
@@ -115,8 +119,10 @@ exports.showProjectList = () => {
         vscode.window.showInformationMessage(`Error while showing Project list: ${reason}`);
     }
 
-    var options = { placeHolder: 'Select a folder to open:      (it may take a few seconds to search the folders the first time)' };
-    
+    var options = {
+        placeHolder: 'Select a folder to open:      (it may take a few seconds to search the folders the first time)'
+    };
+
     var projectsPromise = getProjectsFolders().then((folders) => {
         return this.getProjectsList(folders);
     }).catch(handleError);
@@ -131,7 +137,7 @@ exports.showProjectList = () => {
  */
 function addUnversionedProjects(dirList) {
     let unversioned = vscode.workspace.getConfiguration('gitProjectManager').get('unversionedProjects', []);
-    unversioned.forEach( proj => dirList.add(proj));
+    unversioned.forEach(proj => dirList.add(proj));
     return dirList.dirs;
 }
 
@@ -148,7 +154,7 @@ exports.getProjectsList = (directories) => {
             if (listAlreadyDone) {
                 resolve(getQuickPickList());
                 return;
-            } 
+            }
 
             if (loadRepositoryInfo()) {
                 resolve(getQuickPickList());
@@ -158,29 +164,29 @@ exports.getProjectsList = (directories) => {
             projectLocator.locateGitProjects(directories)
                 .then(addUnversionedProjects)
                 .then(updateRepoList)
-                .then( () => resolve(getQuickPickList()) );
+                .then(() => resolve(getQuickPickList()));
         } catch (error) {
             reject(error);
         }
     });
 };
 
-function openProjectViaShell(projPath){
+function openProjectViaShell(projPath) {
 
-            let codePath = getCodePath();
-            if (codePath.indexOf(' ') !== -1)
-                codePath = `"${codePath}"`;
+    let codePath = getCodePath();
+    if (codePath.indexOf(' ') !== -1)
+        codePath = `"${codePath}"`;
 
-            let cmdLine = `${codePath} ${projPath}`;
+    let cmdLine = `${codePath} ${projPath}`;
 
-            cp.exec(cmdLine, (error, stdout, stderr) => {
-                if (error) {
-                    console.log(error, stdout, stderr);
-                }
-                cp.exec('cd ..', (a, b, c) => {
-                    console.log('->', a, b, c);
-                });
-            });
+    cp.exec(cmdLine, (error, stdout, stderr) => {
+        if (error) {
+            console.log(error, stdout, stderr);
+        }
+        cp.exec('cd ..', (a, b, c) => {
+            console.log('->', a, b, c);
+        });
+    });
 }
 
 exports.openProject = (pickedObj) => {
@@ -188,24 +194,24 @@ exports.openProject = (pickedObj) => {
         uri = vscode.Uri.file(projectPath),
         newWindow = vscode.workspace.getConfiguration(
             'gitProjectManager'
-            ).get(
-                'openInNewWindow', false
-            );
+        ).get(
+            'openInNewWindow', false
+        );
 
     vscode.commands.executeCommand('vscode.openFolder', uri, newWindow)
         .then() //done
-        .catch( () => openProjectViaShell(projectPath));
+        .catch(() => openProjectViaShell(projectPath));
 
 };
 
-function getCodePath () {
-    let cfg =  vscode.workspace.getConfiguration(
+function getCodePath() {
+    let cfg = vscode.workspace.getConfiguration(
         'gitProjectManager'
     ).get(
         'codePath', 'code'
     );
 
-    let codePath  = 'code'
+    let codePath = 'code'
     if (typeof cfg === 'string') {
         codePath = cfg;
     } else if (cfg.toString() === '[object Object]') {
@@ -213,7 +219,7 @@ function getCodePath () {
     } else if (cfg.length) {
         for (let i = 0; i < cfg.length; i++) {
             if (fs.existsSync(cfg[i])) {
-                codePath =  cfg[i];
+                codePath = cfg[i];
                 break;
             }
         }
@@ -227,7 +233,9 @@ function getProjectPath(pickedObj) {
     if (!checkRemoteCfg)
         return pickedObj.description;
 
-    let map = repoList.map( proj => { return checkRemoteCfg ? `${proj.name}.${proj.repo}` : `${proj.name}.${proj.dir}`});
+    let map = repoList.map(proj => {
+        return checkRemoteCfg ? `${proj.name}.${proj.repo}` : `${proj.name}.${proj.dir}`
+    });
     return repoList[map.indexOf(`${pickedObj.label}.${pickedObj.description}`)].dir;
 }
 
@@ -262,19 +270,21 @@ exports.refreshList = (suppressMessage) => {
 };
 
 exports.refreshSpecificFolder = () => {
-    var options = { placeHolder: 'Select a folder to open:      (it may take a few seconds to search the folders the first time)' };
+    var options = {
+        placeHolder: 'Select a folder to open:      (it may take a few seconds to search the folders the first time)'
+    };
     getProjectsFolders()
         .then((list) => {
             vscode.window.showQuickPick(list, options)
                 .then((selection) => {
                     if (!selection) return;
-                        internalRefresh([selection]);
+                    internalRefresh([selection]);
                 })
-                .catch((error)=>{
-                   console.log(error);
+                .catch((error) => {
+                    console.log(error);
                 });
         })
-        .catch((error)=>{
+        .catch((error) => {
             console.log(error);
         });
 

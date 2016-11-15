@@ -3,10 +3,10 @@
   "displayName": "Git Project Manager",
   "description": "Allows you to change easily between git projects.",
   "icon": "img/icon.png",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "publisher": "felipecaputo",
   "galleryBanner": {
-    "color": "#0000FF",
+    "color": "#202040",
     "theme": "dark"
   },
   "license": "SEE LICENSE IN LICENSE.md",
@@ -20,7 +20,7 @@
     "url": "https://github.com/felipecaputo/git-project-manager.git"
   },
   "engines": {
-    "vscode": "^0.10.1"
+    "vscode": "^0.11.x"
   },
   "categories": [
     "Other"
@@ -87,32 +87,26 @@
         }
       }
     },
-    "commands": [
-      {
-        "command": "gitProjectManager.openProject",
-        "title": "GPM: Open Git Project"
-      },
-      {
-        "command": "gitProjectManager.refreshProjects",
-        "title": "GPM: Refresh Projects"
-      },
-      {
-        "command": "gitProjectManager.refreshFolder",
-        "title": "GPM: Refresh specific project folder"
-      }
-    ],
-    "keybindings": [
-      {
-        "key": "ctrl+alt+p",
-        "mac": "cmd+alt+p",
-        "command": "gitProjectManager.openProject"
-      }
-    ]
+    "commands": [{
+      "command": "gitProjectManager.openProject",
+      "title": "GPM: Open Git Project"
+    }, {
+      "command": "gitProjectManager.refreshProjects",
+      "title": "GPM: Refresh Projects"
+    }, {
+      "command": "gitProjectManager.refreshFolder",
+      "title": "GPM: Refresh specific project folder"
+    }],
+    "keybindings": [{
+      "key": "ctrl+alt+p",
+      "mac": "cmd+alt+p",
+      "command": "gitProjectManager.openProject"
+    }]
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "mocha": "^2.4.5",
-    "vscode": "0.10.x"
+    "vscode": "^0.10.7"
   },
   "dependencies": {
     "makeerror": "^1.0.11",
