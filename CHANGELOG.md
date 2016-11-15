@@ -1,3 +1,6 @@
+###0.1.17
+  - Fixed the release 0.1.16 that didn't got the source changes
+
 ###0.1.16
   - [#31](https://github.com/felipecaputo/git-project-manager/issues/31) - Linux tilde alinas (~) was not considered an environment variable 
 
