@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs');
 
 
-const RECENT_FILE_NAME = 'recentItems.json'; 
+const RECENT_FILE_NAME = 'gpm-recentItems.json'; 
 
 class RecentItems {
     /**
@@ -15,6 +15,7 @@ class RecentItems {
         this.listSize = 5;
         /** @type {[]{projectPath: string}} */
         this.list = [];
+        this.loadFromFile();
     }
     /**
      * Returns the full path to recent projects file
@@ -41,19 +42,20 @@ class RecentItems {
     addProject(projectPath, gitRepo) {
         const idx = this.list.findIndex( p => p.projectPath === projectPath);
         if(idx >= 0){
-            this.list[idx].lastUsed = new Date();
+            this.list[idx].lastUsed = new Date().getTime();
         } else {
             this.list.push({
                 projectPath,
                 gitRepo,
-                lastUsed: new Date()
+                lastUsed: new Date().getTime()
             })
         };
 
         this.sortList();
+        this.saveToFile();
     }
     sortList() {
-        this.list.sort( (a,b) => b.lastUsed - a.lastUsed)
+        this.list = this.list.sort((a,b) => b.lastUsed - a.lastUsed);
         if(this.list.length > this.listSize)
             this.list = this.list.slice(0, this.listSize - 1);
     }

@@ -4,12 +4,15 @@ const path = require('path');
 const cp = require('child_process');
 const os = require('os');
 const DirList = require('./dirList');
+const RecentItems = new require('./recentItems');
 
 let projectLocator = require('./gitProjectLocator');
 let loadedRepoListFromFile = false;
 let baseDir = '';
 let repoList = [];
 let listAlreadyDone = false;
+let recentList;
+
 
 if (process.platform == "linux") {
     baseDir = path.join(os.homedir(), '.config');
@@ -18,6 +21,7 @@ if (process.platform == "linux") {
 }
 
 const gpmRepoListFile = path.join(baseDir, "Code/User/gpm_projects.json");
+recentList = new RecentItems(path.join(baseDir, "Code/User/"));
 
 function getQuickPickList() {
     let qp = [];
@@ -198,10 +202,10 @@ exports.openProject = (pickedObj) => {
             'openInNewWindow', false
         );
 
+    recentList.addProject(projectPath, '');
     vscode.commands.executeCommand('vscode.openFolder', uri, newWindow)
-        .then() //done
+        .then()
         .catch(() => openProjectViaShell(projectPath));
-
 };
 
 function getCodePath() {
