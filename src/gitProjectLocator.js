@@ -59,6 +59,7 @@ exports.locateGitProjects = (projectsDirList) => {
                                 isMaxDeptReached(getPathDepth(dir), depth));
                         } )
                         .on('dir', processDirectory)
+                        .on('symlink', processDirectory)
                         .on('error', handleError)
                         .on('end', () => {
                             resolve();

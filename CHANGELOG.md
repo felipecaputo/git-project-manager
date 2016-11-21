@@ -1,5 +1,8 @@
+##0.1.18
+  - [#32](https://github.com/felipecaputo/git-project-manager/issues/32) - Extension was not following symlinks
+  
 ###0.1.17
-  - Fixed the release 0.1.16 that didn't got the source changes
+  - Hot fix for 0.1.16, that was with a publish error
 
 ###0.1.16
   - [#31](https://github.com/felipecaputo/git-project-manager/issues/31) - Linux tilde alinas (~) was not considered an environment variable 
