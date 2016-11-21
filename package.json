@@ -87,25 +87,32 @@
         }
       }
     },
-    "commands": [{
-      "command": "gitProjectManager.openProject",
-      "title": "GPM: Open Git Project"
-    }, {
-      "command": "gitProjectManager.refreshProjects",
-      "title": "GPM: Refresh Projects"
-    }, {
-      "command": "gitProjectManager.refreshFolder",
-      "title": "GPM: Refresh specific project folder"
-    }],
-    "keybindings": [{
-      "key": "ctrl+alt+p",
-      "mac": "cmd+alt+p",
-      "command": "gitProjectManager.openProject"
-    }]
+    "commands": [
+      {
+        "command": "gitProjectManager.openProject",
+        "title": "GPM: Open Git Project"
+      },
+      {
+        "command": "gitProjectManager.refreshProjects",
+        "title": "GPM: Refresh Projects"
+      },
+      {
+        "command": "gitProjectManager.refreshFolder",
+        "title": "GPM: Refresh specific project folder"
+      }
+    ],
+    "keybindings": [
+      {
+        "key": "ctrl+alt+p",
+        "mac": "cmd+alt+p",
+        "command": "gitProjectManager.openProject"
+      }
+    ]
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "mocha": "^2.4.5",
+    "rmdir": "^1.2.0",
     "vscode": "^1.0.0"
   },
   "dependencies": {

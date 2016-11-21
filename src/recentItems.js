@@ -32,12 +32,7 @@ class RecentItems {
         }
     }
     saveToFile() {
-        return new Promise((resolve, reject) => {
-            fs.writeFile(this.getPathToFile(), JSON.stringify(this.list), err => {
-                if(err) reject(err)
-                else resolve();
-            })
-        });
+        fs.writeFileSync(this.getPathToFile(), JSON.stringify(this.list), {encoding: 'utf8'});
     }
     addProject(projectPath, gitRepo) {
         const idx = this.list.findIndex( p => p.projectPath === projectPath);
