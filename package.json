@@ -3,7 +3,7 @@
   "displayName": "Git Project Manager",
   "description": "Allows you to change easily between git projects.",
   "icon": "img/icon.png",
-  "version": "0.1.18",
+  "version": "1.0.0",
   "publisher": "felipecaputo",
   "galleryBanner": {
     "color": "#202040",
@@ -104,7 +104,7 @@
       "title": "GPM: Refresh specific project folder"
     }, {
       "command": "gitProjectManager.openRecents",
-      "title": "GPM: Open recent git project"
+      "title": "GPM: Open Recent Git Project"
     }],
     "keybindings": [{
       "key": "ctrl+alt+p",

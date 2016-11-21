@@ -1,8 +1,33 @@
-# Git Project Manager [![Build Status](https://travis-ci.org/felipecaputo/git-project-manager.svg?branch=master)](https://travis-ci.org/felipecaputo/git-project-manager)
+# Git Project Manager 
+
+[![Build Status](https://travis-ci.org/felipecaputo/git-project-manager.svg?branch=master)](https://travis-ci.org/felipecaputo/git-project-manager)
 
 Git Project Manager (GPM) is a Microsoft VSCode extension that allows you to open a **new window targeting a git repository** directly from VSCode window.
 
-##Available settings
+## Available commands
+
+Currently there are 3 avaliable commands, all of them can be accessed via **Ctrl+Shift+P** 
+*(Cmd+Shift+P on Mac)* typing **GPM**
+
+### GPM: Open Git Project *(Defaults to: Ctrl+Alt+P)*
+Show a list of the available git repositories in all folders configured in **gitProjectManager.baseProjectsFolders**.
+The first time it searchs all folders, after that it uses a cached repository info.
+![open Git Project](/img/openProject.gif)
+
+
+### GPM: Refresh Projects
+This commands refresh the cached repositories info for all configured folders.
+
+### GPM: Refresh specific project folder
+This commands allows you to select a specific foledr to refresh its repositories, without
+refreshing all folders.
+
+### GPM: Open Recent Git Project *(Defaults to Ctrl+Shift+Q)*
+This command will bring a list of your most recent git projects, leting you swap even faster between them.
+
+The size of the list if configured in `gitProjectManager.recentProjectsListSize`
+
+## Available settings
 
 Before start using GPM you need to configure the base folders that the extension will
 search for git repositories. you need to open **File -> Preferences -> User Settings**  
@@ -86,24 +111,7 @@ or in a new window:
         "gitProjectManager.openInNewWindow": false
     }
     
-##Available commands
 
-Currently there are 3 avaliable commands, all of them can be accessed via **Ctrl+Shift+P** 
-*(Cmd+Shift+P on Mac)* typing **GPM**
-
-###GPM: Open Git Project *(Ctrl+Alt+P)*
-Show a list of the available git repositories in all folders configured in **gitProjectManager.baseProjectsFolders**.
-The first time it searchs all folders, after that it uses a cached repository info.
-![open Git Project](/img/openProject.gif)
-
-
-###GPM: Refresh Projects
-This commands refresh the cached repositories info for all configured folders.
-
-###GPM: Refresh specific project folder
-This commands allows you to select a specific foledr to refresh its repositories, without
-refreshing all folders.
-
-##Participate
+## Participate
 
 If you have any idea, feel free to create issues and pull requests.

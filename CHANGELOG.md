@@ -1,3 +1,6 @@
+##1.0.0
+  - Added new command "GPM - Open Recent Git Project" that lets you open your most recent projects even faster than before
+
 ##0.1.18
   - [#32](https://github.com/felipecaputo/git-project-manager/issues/32) - Extension was not following symlinks
   
