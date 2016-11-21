@@ -1,9 +1,11 @@
+const EXTENSION_NAME = 'gitProjectManager';
+
 const fs = require('fs');
 const vscode = require('vscode');
 const path = require('path');
 const cp = require('child_process');
 const os = require('os');
-const DirList = require('./dirList');
+const RecentItems = require('./recentItems');
 
 let projectLocator = require('./gitProjectLocator');
 let loadedRepoListFromFile = false;
@@ -18,10 +20,12 @@ if (process.platform == "linux") {
 }
 
 const gpmRepoListFile = path.join(baseDir, "Code/User/gpm_projects.json");
+let recentList = new RecentItems(path.join(baseDir, "Code/User/"));
+recentList.listSize = vscode.workspace.getConfiguration(EXTENSION_NAME).get('gitProjectManager.recentProjectsListSize', 5);
 
 function getQuickPickList() {
     let qp = [];
-    let checkRemoteCfg = vscode.workspace.getConfiguration('gitProjectManager').get('checkRemoteOrigin', false);
+    let checkRemoteCfg = vscode.workspace.getConfiguration(EXTENSION_NAME).get('checkRemoteOrigin', false);
     repoList = repoList.sort((a, b) => {
         return a.name > b.name ? 1 : -1
     });
@@ -190,7 +194,7 @@ function openProjectViaShell(projPath) {
 }
 
 exports.openProject = (pickedObj) => {
-    let projectPath = getProjectPath(pickedObj),
+    let projectPath = typeof (pickedObj) == 'string' ? pickedObj : getProjectPath(pickedObj),
         uri = vscode.Uri.file(projectPath),
         newWindow = vscode.workspace.getConfiguration(
             'gitProjectManager'
@@ -198,10 +202,10 @@ exports.openProject = (pickedObj) => {
             'openInNewWindow', false
         );
 
+    recentList.addProject(projectPath, '');
     vscode.commands.executeCommand('vscode.openFolder', uri, newWindow)
-        .then() //done
+        .then()
         .catch(() => openProjectViaShell(projectPath));
-
 };
 
 function getCodePath() {
@@ -289,3 +293,19 @@ exports.refreshSpecificFolder = () => {
         });
 
 };
+
+exports.openRecentProjects = () => {
+    let self = this;
+    if (recentList.list.length === 0) {
+        vscode.window.showInformationMessage('It seems you didn\'t opened any project using Git Project Manager yet!')
+    }
+
+    vscode.window.showQuickPick(recentList.list.map(i => {
+        return {
+            label: path.basename(i.projectPath),
+            description: i.projectPath
+        }
+    })).then(selected => {
+        if (selected) self.openProject(selected.description)
+    });
+}

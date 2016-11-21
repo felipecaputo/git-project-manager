@@ -20,7 +20,7 @@
     "url": "https://github.com/felipecaputo/git-project-manager.git"
   },
   "engines": {
-    "vscode": "^0.11.x"
+    "vscode": "^1.5.0"
   },
   "categories": [
     "Other"
@@ -28,7 +28,8 @@
   "activationEvents": [
     "onCommand:gitProjectManager.openProject",
     "onCommand:gitProjectManager.refreshProjects",
-    "onCommand:gitProjectManager.refreshFolder"
+    "onCommand:gitProjectManager.refreshFolder",
+    "onCommand:gitProjectManager.openRecents"
   ],
   "main": "./src/extension",
   "contributes": {
@@ -84,6 +85,11 @@
           "type": "array",
           "default": [],
           "description": "Allows to list projects that are not versioned in \"List Repositories\" command"
+        },
+        "gitProjectManager.recentProjectsListSize": {
+          "type": "integer",
+          "default": 5,
+          "description": "Number of recent projects to be kept to use with GPM - Open Recent"
         }
       }
     },
@@ -96,17 +102,25 @@
     }, {
       "command": "gitProjectManager.refreshFolder",
       "title": "GPM: Refresh specific project folder"
+    }, {
+      "command": "gitProjectManager.openRecents",
+      "title": "GPM: Open recent git project"
     }],
     "keybindings": [{
       "key": "ctrl+alt+p",
       "mac": "cmd+alt+p",
       "command": "gitProjectManager.openProject"
+    }, {
+      "key": "ctrl+shift+q",
+      "mac": "cmd+shift+q",
+      "command": "gitProjectManager.openRecents"
     }]
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "mocha": "^2.4.5",
-    "vscode": "^0.10.7"
+    "rmdir": "^1.2.0",
+    "vscode": "^1.0.3"
   },
   "dependencies": {
     "makeerror": "^1.0.11",
