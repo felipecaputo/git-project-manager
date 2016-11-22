@@ -93,33 +93,42 @@
         }
       }
     },
-    "commands": [{
-      "command": "gitProjectManager.openProject",
-      "title": "GPM: Open Git Project"
-    }, {
-      "command": "gitProjectManager.refreshProjects",
-      "title": "GPM: Refresh Projects"
-    }, {
-      "command": "gitProjectManager.refreshFolder",
-      "title": "GPM: Refresh specific project folder"
-    }, {
-      "command": "gitProjectManager.openRecents",
-      "title": "GPM: Open Recent Git Project"
-    }],
-    "keybindings": [{
-      "key": "ctrl+alt+p",
-      "mac": "cmd+alt+p",
-      "command": "gitProjectManager.openProject"
-    }, {
-      "key": "ctrl+shift+q",
-      "mac": "cmd+shift+q",
-      "command": "gitProjectManager.openRecents"
-    }]
+    "commands": [
+      {
+        "command": "gitProjectManager.openProject",
+        "title": "GPM: Open Git Project"
+      },
+      {
+        "command": "gitProjectManager.refreshProjects",
+        "title": "GPM: Refresh Projects"
+      },
+      {
+        "command": "gitProjectManager.refreshFolder",
+        "title": "GPM: Refresh specific project folder"
+      },
+      {
+        "command": "gitProjectManager.openRecents",
+        "title": "GPM: Open Recent Git Project"
+      }
+    ],
+    "keybindings": [
+      {
+        "key": "ctrl+alt+p",
+        "mac": "cmd+alt+p",
+        "command": "gitProjectManager.openProject"
+      },
+      {
+        "key": "ctrl+shift+q",
+        "mac": "cmd+shift+q",
+        "command": "gitProjectManager.openRecents"
+      }
+    ]
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "mocha": "^2.4.5",
     "rmdir": "^1.2.0",
+    "sinon": "^1.17.6",
     "vscode": "^1.0.3"
   },
   "dependencies": {

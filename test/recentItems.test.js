@@ -3,24 +3,32 @@ const expect = require('chai').expect;
 const path = require('path');
 const fs = require('fs');
 const rmdir = require('rmdir');
+const sinon = require('sinon');
 
 const TESTING_PATH = path.join(__dirname, 'recents');
 
-function addProjectsToList(recentList, size){
-    switch(size){
-        case 6: recentList.addProject('f','g');
-        case 5: recentList.addProject('e','f');
-        case 4: recentList.addProject('d','e');
-        case 3: recentList.addProject('c','d');
-        case 2: recentList.addProject('b','c');
-        case 1: recentList.addProject('a','b');
+function addProjectsToList(recentList, size) {
+    switch (size) {
+        case 6:
+            recentList.addProject('f', 'g');
+        case 5:
+            recentList.addProject('e', 'f');
+        case 4:
+            recentList.addProject('d', 'e');
+        case 3:
+            recentList.addProject('c', 'd');
+        case 2:
+            recentList.addProject('b', 'c');
+        case 1:
+            recentList.addProject('a', 'b');
     }
 }
 
 describe('RecentItems', () => {
     let recentItems = new RecentItems(TESTING_PATH);
+
     beforeEach(() => {
-        if(fs.existsSync(TESTING_PATH)){
+        if (fs.existsSync(TESTING_PATH)) {
             fs.rmdirSync(TESTING_PATH);
         }
         fs.mkdirSync(TESTING_PATH);
@@ -55,12 +63,25 @@ describe('RecentItems', () => {
     })
 
     it('should be orderer by project added time', () => {
-        recentItems.addProject('first','1');
-        recentItems.addProject('second','2');
-        recentItems.addProject('third','3');
-        expect(recentItems.list[0].projectPath).to.be.equals('third');
-        recentItems.addProject('first','1');
-        expect(recentItems.list[0].projectPath).to.be.equals('first');
+        let clock = sinon.useFakeTimers();
+        try {
+            recentItems.addProject('first', '1');
+
+            clock.tick(200);
+            recentItems.addProject('second', '2');
+
+            clock.tick(200);
+            recentItems.addProject('third', '3');
+            expect(recentItems.list[0].projectPath).to.be.equals('third');
+
+            clock.tick(200);
+            recentItems.addProject('first', '1');
+            expect(recentItems.list[0].projectPath).to.be.equals('first');
+        } finally {
+            clock.restore();
+        }
+
+
     })
 
     it('should not add more projects than limit', () => {
