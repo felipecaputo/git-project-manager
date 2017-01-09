@@ -1,3 +1,5 @@
+/* eslint-env node, mocha */
+
 const RecentItems = require('../src/recentItems');
 const expect = require('chai').expect;
 const path = require('path');
@@ -52,7 +54,7 @@ describe('RecentItems', () => {
     it('should load projects on create', () => {
         addProjectsToList(recentItems, 2);
         const secondInstance = new RecentItems(TESTING_PATH);
-        expect(recentItems.list.length).to.be.equals(2);
+        expect(secondInstance.list.length).to.be.equals(2);
     })
 
     it('should not add the same project twice', () => {

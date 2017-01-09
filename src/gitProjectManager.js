@@ -203,9 +203,7 @@ exports.openProject = (pickedObj) => {
         );
 
     recentList.addProject(projectPath, '');
-    vscode.commands.executeCommand('vscode.openFolder', uri, newWindow)
-        .then()
-        .catch(() => openProjectViaShell(projectPath));
+    vscode.commands.executeCommand('vscode.openFolder', uri, newWindow);
 };
 
 function getCodePath() {

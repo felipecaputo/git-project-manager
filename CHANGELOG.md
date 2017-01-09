@@ -1,3 +1,6 @@
+##1.0.1
+  - Fixed #36, removing the promise callback from execute command, thanks to [@Tyriar](https://github.com/Tyriar)
+
 ##1.0.0
   - Added new command "GPM - Open Recent Git Project" that lets you open your most recent projects even faster than before
 
