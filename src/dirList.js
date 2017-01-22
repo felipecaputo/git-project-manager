@@ -20,5 +20,8 @@ module.exports = class DirList {
     exists(dirPath) {
         return this.dirs.some( info => info.dir == dirPath);
     }
+    clear() {
+        this.dirs = [];
+    }
 }
 

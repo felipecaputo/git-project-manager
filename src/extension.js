@@ -11,6 +11,10 @@ function activate(context) {
         projectManager.showProjectList();
     });
 
+    let subFoldersDisposable = vscode.commands.registerCommand('gitProjectManager.openSubFolder', function () {
+        projectManager.showProjectsFromSubFolder();
+    });
+
     let refreshDisposable = vscode.commands.registerCommand('gitProjectManager.refreshProjects', function () {
         projectManager.refreshList();
     });
@@ -21,9 +25,9 @@ function activate(context) {
 
     let openRecentDisposable = vscode.commands.registerCommand('gitProjectManager.openRecents', function () {
         projectManager.openRecentProjects();
-    })
+    });
 
-    context.subscriptions.push(disposable, refreshDisposable, specificRefreshDisposable, openRecentDisposable);
+    context.subscriptions.push(disposable, refreshDisposable, specificRefreshDisposable, openRecentDisposable, subFoldersDisposable);
     context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(projectManager.refreshList.bind(projectManager, true)));
 }
 exports.activate = activate;

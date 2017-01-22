@@ -29,7 +29,8 @@
     "onCommand:gitProjectManager.openProject",
     "onCommand:gitProjectManager.refreshProjects",
     "onCommand:gitProjectManager.refreshFolder",
-    "onCommand:gitProjectManager.openRecents"
+    "onCommand:gitProjectManager.openRecents",
+    "onCommand:gitProjectManager.openSubFolder"
   ],
   "main": "./src/extension",
   "contributes": {
@@ -109,6 +110,9 @@
       {
         "command": "gitProjectManager.openRecents",
         "title": "GPM: Open Recent Git Project"
+      }, {
+        "command": "gitProjectManager.openSubFolder",
+        "title": "GMP: Open project from subFolder"
       }
     ],
     "keybindings": [
