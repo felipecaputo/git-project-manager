@@ -246,7 +246,7 @@ function internalRefresh(folders, suppressMessage) {
     exports.getProjectsList(folders)
         .then(() => {
             if (!suppressMessage) {
-                vscode.window.setStatusBarMessage('Git Project Manager - Project List Refreshed');
+                vscode.window.setStatusBarMessage('Git Project Manager - Project List Refreshed', 3000);
             }
         })
         .catch((error) => {
