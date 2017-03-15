@@ -3,7 +3,7 @@
   "displayName": "Git Project Manager",
   "description": "Allows you to change easily between git projects.",
   "icon": "img/icon.png",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "publisher": "felipecaputo",
   "galleryBanner": {
     "color": "#202040",
@@ -29,7 +29,8 @@
     "onCommand:gitProjectManager.openProject",
     "onCommand:gitProjectManager.refreshProjects",
     "onCommand:gitProjectManager.refreshFolder",
-    "onCommand:gitProjectManager.openRecents"
+    "onCommand:gitProjectManager.openRecents",
+    "onCommand:gitProjectManager.openProjectNewWindow"
   ],
   "main": "./src/extension",
   "contributes": {
@@ -96,19 +97,28 @@
     "commands": [
       {
         "command": "gitProjectManager.openProject",
-        "title": "GPM: Open Git Project"
+        "title": "GPM: Open Git Project",
+        "category": "Git Project Manager"
+      },
+      {
+        "command": "onCommand:gitProjectManager.openProjectNewWindow",
+        "title": "Open Git Project in a Wew Window",
+        "category": "Git Project Manager"
       },
       {
         "command": "gitProjectManager.refreshProjects",
-        "title": "GPM: Refresh Projects"
+        "title": "GPM: Refresh Projects",
+        "category": "Git Project Manager"
       },
       {
         "command": "gitProjectManager.refreshFolder",
-        "title": "GPM: Refresh specific project folder"
+        "title": "GPM: Refresh specific project folder",
+        "category": "Git Project Manager"
       },
       {
         "command": "gitProjectManager.openRecents",
-        "title": "GPM: Open Recent Git Project"
+        "title": "GPM: Open Recent Git Project",
+        "category": "Git Project Manager"
       }
     ],
     "keybindings": [
@@ -116,6 +126,11 @@
         "key": "ctrl+alt+p",
         "mac": "cmd+alt+p",
         "command": "gitProjectManager.openProject"
+      },
+      {
+        "key": "ctrl+alt+n",
+        "mac": "cmd+alt+n",
+        "command": "gitProjectManager.openProjectNewWindow"
       },
       {
         "key": "ctrl+shift+q",

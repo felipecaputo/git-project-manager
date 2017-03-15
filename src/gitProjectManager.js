@@ -110,12 +110,13 @@ function resolveEnvironmentVariables(processPlatform, aPath) {
     return resolvedPath.charAt(0) == '~' ? path.join(process.env.HOME, resolvedPath.substr(1)) : resolvedPath;
 };
 
-exports.showProjectList = () => {
+
+exports.showProjectList = (openInNewWindow) => {
     var self = this;
 
     function onResolve(selected) {
         if (selected) {
-            self.openProject(selected);
+            self.openProject(selected, openInNewWindow);
         }
     }
 
@@ -123,8 +124,10 @@ exports.showProjectList = () => {
         vscode.window.showInformationMessage(`Error while showing Project list: ${reason}`);
     }
 
+    const placeHolder = `Select a folder to open${openInNewWindow ? ' in a new window' : ''}:      (it may take a few seconds)`
+
     var options = {
-        placeHolder: 'Select a folder to open:      (it may take a few seconds to search the folders the first time)'
+        placeHolder: placeHolder
     };
 
     var projectsPromise = getProjectsFolders().then((folders) => {
@@ -193,14 +196,14 @@ function openProjectViaShell(projPath) {
     });
 }
 
-exports.openProject = (pickedObj) => {
+exports.openProject = (pickedObj, openInNewWindow) => {
     let projectPath = typeof (pickedObj) == 'string' ? pickedObj : getProjectPath(pickedObj),
         uri = vscode.Uri.file(projectPath),
-        newWindow = vscode.workspace.getConfiguration(
+        newWindow = openInNewWindow || vscode.workspace.getConfiguration(
             'gitProjectManager'
         ).get(
             'openInNewWindow', false
-        );
+            );
 
     recentList.addProject(projectPath, '');
     vscode.commands.executeCommand('vscode.openFolder', uri, newWindow);
@@ -211,7 +214,7 @@ function getCodePath() {
         'gitProjectManager'
     ).get(
         'codePath', 'code'
-    );
+        );
 
     let codePath = 'code'
     if (typeof cfg === 'string') {

@@ -1,3 +1,7 @@
+##1.1
+  - Closes #39 Added a new command to open a project in a new window
+  - Merged #38 from @zackschuster to fix a problem where the refresh info in status bar wasn't removed
+
 ##1.0.1
   - Fixed #36, removing the promise callback from execute command, thanks to [@Tyriar](https://github.com/Tyriar)
 
