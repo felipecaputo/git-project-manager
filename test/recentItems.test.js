@@ -69,14 +69,14 @@ describe('RecentItems', () => {
         try {
             recentItems.addProject('first', '1');
 
-            clock.tick(200);
+            clock.tick(1000);
             recentItems.addProject('second', '2');
 
-            clock.tick(200);
+            clock.tick(1000);
             recentItems.addProject('third', '3');
             expect(recentItems.list[0].projectPath).to.be.equals('third');
 
-            clock.tick(200);
+            clock.tick(1000);
             recentItems.addProject('first', '1');
             expect(recentItems.list[0].projectPath).to.be.equals('first');
         } finally {
