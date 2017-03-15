@@ -136,9 +136,10 @@ class GitProjectManager {
             placeHolder: 'Select a folder to open:      (it may take a few seconds to search the folders the first time)'
         };
 
-        var projectsPromise = this.getProjectsFolders(opts).then((folders) => {
-            return this.getProjectsList(folders);
-        }).catch(this.handleError);
+        var projectsPromise = this.getProjectsFolders(opts)
+            .then(folders => this.getProjectsList(folders))
+            .catch(this.handleError);
+
         vscode.window.showQuickPick(projectsPromise, options).then(onResolve, onReject);
     };
 
@@ -176,6 +177,7 @@ class GitProjectManager {
                 projectLocator.locateGitProjects(directories)
                     .then(this.addUnversionedProjects)
                     .then(this.updateRepoList)
+                    .then()
                     .then(() => resolve(this.getQuickPickList()));
             } catch (error) {
                 reject(error);
@@ -323,7 +325,7 @@ class GitProjectManager {
             this.showProjectList({
                 subFolder: folder
             })
-        })
+        });
     }
 
 }
