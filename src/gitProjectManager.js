@@ -5,6 +5,7 @@ const vscode = require('vscode');
 const path = require('path');
 const cp = require('child_process');
 const os = require('os');
+const SHA256 = require('crypto-js').SHA256;
 
 const RecentItems = require('./recentItems');
 let projectLocator = require('./gitProjectLocator');
@@ -13,7 +14,7 @@ class GitProjectManager {
     constructor() {
         this.loadedRepoListFromFile = false;
         this.repoList = [];
-        this.listAlreadyDone = false;
+        this.storedLists = new Map();
         this.baseDir = this.getBaseDir();
         this.gpmRepoListFile = path.join(this.baseDir, "Code/User/gpm_projects.json");
         this.recentList = new RecentItems(path.join(this.baseDir, "Code/User/"));
@@ -55,9 +56,11 @@ class GitProjectManager {
         return vscode.workspace.getConfiguration('gitProjectManager')
             .get('storeRepositoriesBetweenSessions', false);
     }
-    saveRepositoryInfo() {
+    saveRepositoryInfo(directories) {
+        this.storedLists.set(this.getDirectoriesHash(directories), this.repoList);
+
         if (this.storeDataBetweenSessions) {
-            fs.writeFileSync(this.gpmRepoListFile, JSON.stringify(this.repoList), {
+            fs.writeFileSync(this.gpmRepoListFile, JSON.stringify(this.storedLists), {
                 encoding: 'utf8'
             });
         }
@@ -68,9 +71,8 @@ class GitProjectManager {
         }
 
         if ((this.storeDataBetweenSessions) && (fs.existsSync(this.gpmRepoListFile))) {
-            this.repoList = JSON.parse(fs.readFileSync(this.gpmRepoListFile, 'utf8'));
+            this.storedLists = JSON.parse(fs.readFileSync(this.gpmRepoListFile, 'utf8'));
             this.loadedRepoListFromFile = true;
-            this.listAlreadyDone = true;
             return true;
         } else {
             return false;
@@ -154,21 +156,22 @@ class GitProjectManager {
         return dirList.dirs;
     }
 
-    updateRepoList(dirList) {
+    updateRepoList(dirList, directories) {
         dirList.forEach(this.addRepoInRepoList);
-        this.listAlreadyDone = true;
-        this.saveRepositoryInfo();
+        this.saveRepositoryInfo(directories);
         return dirList;
     }
 
     getProjectsList(directories) {
         return new Promise((resolve, reject) => {
             try {
-                if (this.listAlreadyDone) {
+                this.repoList = this.storedLists.get(this.getDirectoriesHash(directories));
+                if (this.repoList) {
                     resolve(this.getQuickPickList());
                     return;
                 }
 
+                this.clearProjectList()
                 if (this.loadRepositoryInfo()) {
                     resolve(this.getQuickPickList());
                     return;
@@ -176,7 +179,7 @@ class GitProjectManager {
 
                 projectLocator.locateGitProjects(directories)
                     .then(this.addUnversionedProjects)
-                    .then(this.updateRepoList)
+                    .then(dirList => this.updateRepoList(dirList, directories))
                     .then()
                     .then(() => resolve(this.getQuickPickList()));
             } catch (error) {
@@ -210,7 +213,7 @@ class GitProjectManager {
                 'gitProjectManager'
             ).get(
                 'openInNewWindow', false
-            );
+                );
 
         this.recentList.addProject(projectPath, '');
         vscode.commands.executeCommand('vscode.openFolder', uri, newWindow);
@@ -221,7 +224,7 @@ class GitProjectManager {
             'gitProjectManager'
         ).get(
             'codePath', 'code'
-        );
+            );
 
         let codePath = 'code'
         if (typeof cfg === 'string') {
@@ -252,7 +255,7 @@ class GitProjectManager {
     }
 
     internalRefresh(folders, suppressMessage) {
-        this.listAlreadyDone = false;
+        this.storedLists = new Map();
         this.getProjectsList(folders)
             .then(() => {
                 if (!suppressMessage) {
@@ -266,10 +269,13 @@ class GitProjectManager {
             });
     }
 
-    refreshList(suppressMessage) {
+    clearProjectList() {
         this.repoList = [];
         projectLocator.clearDirList();
+    }
 
+    refreshList(suppressMessage) {
+        this.clearProjectList();
         this.getProjectsFolders()
             .then((folders) => {
                 this.internalRefresh(folders, suppressMessage);
@@ -318,10 +324,24 @@ class GitProjectManager {
         });
     }
 
+    /**
+     * Calculate a hash of directories list
+     * 
+     * @param {String[]} directories 
+     * @returns {string} The hash of directories list
+     * 
+     * @memberOf GitProjectManager
+     */
+    getDirectoriesHash(directories) {
+        return SHA256(directories.join(''));
+    }
+
     showProjectsFromSubFolder() {
         vscode.window.showQuickPick(this.getProjectsFolders(), {
             placeHolder: 'Pick a folder to see the subfolder projects'
         }).then(folder => {
+            if (!folder) return;
+
             this.showProjectList({
                 subFolder: folder
             })
@@ -329,6 +349,5 @@ class GitProjectManager {
     }
 
 }
-
 
 module.exports = new GitProjectManager();

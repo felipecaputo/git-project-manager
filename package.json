@@ -110,9 +110,10 @@
       {
         "command": "gitProjectManager.openRecents",
         "title": "GPM: Open Recent Git Project"
-      }, {
+      },
+      {
         "command": "gitProjectManager.openSubFolder",
-        "title": "GMP: Open project from subFolder"
+        "title": "GPM: Open project from subFolder"
       }
     ],
     "keybindings": [
@@ -120,6 +121,11 @@
         "key": "ctrl+alt+p",
         "mac": "cmd+alt+p",
         "command": "gitProjectManager.openProject"
+      },
+      {
+        "key": "alt+shift+p",
+        "mac": "alt+shift+p",
+        "command": "gitProjectManager.openSubFolder"
       },
       {
         "key": "ctrl+shift+q",
@@ -136,6 +142,7 @@
     "vscode": "^1.0.3"
   },
   "dependencies": {
+    "crypto-js": "^3.1.9-1",
     "makeerror": "^1.0.11",
     "tmpl": "^1.0.4",
     "walker": "^1.0.7"
