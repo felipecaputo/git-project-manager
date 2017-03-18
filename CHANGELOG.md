@@ -1,4 +1,8 @@
-##1.1
+##1.2.0
+  - Added support to subfolders (#34)
+  - Lots of refactorings to improve stability and performance
+
+##1.1.0
   - Closes #39 Added a new command to open a project in a new window
   - Merged #38 from @zackschuster to fix a problem where the refresh info in status bar wasn't removed
 
