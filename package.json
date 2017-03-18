@@ -102,8 +102,8 @@
         "category": "GPM"
       },
       {
-        "command": "onCommand:gitProjectManager.openProjectNewWindow",
-        "title": "Open Git Project in a Wew Window",
+        "command": "gitProjectManager.openProjectNewWindow",
+        "title": "Open Git Project in a New Window",
         "category": "GPM"
       },
       {
@@ -113,7 +113,7 @@
       },
       {
         "command": "gitProjectManager.refreshFolder",
-        "title": "Refresh specific project folder",
+        "title": "Refresh specific projects folder",
         "category": "GPM"
       },
       {
@@ -123,7 +123,7 @@
       },
       {
         "command": "gitProjectManager.openSubFolder",
-        "title": "GPM: Open project from subFolder",
+        "title": "Open Git Project from SubFolder",
         "category": "GPM"
       }
     ],
