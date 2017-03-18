@@ -8,7 +8,11 @@ const projectManager = require('./gitProjectManager');
 function activate(context) {
 
     let disposable = vscode.commands.registerCommand('gitProjectManager.openProject', function () {
-        projectManager.showProjectList();
+        projectManager.showProjectList(false);
+    });
+
+    let newWindowdisposable = vscode.commands.registerCommand('gitProjectManager.openProjectNewWindow', function () {
+        projectManager.showProjectList(true);
     });
 
     let subFoldersDisposable = vscode.commands.registerCommand('gitProjectManager.openSubFolder', function () {
@@ -27,7 +31,7 @@ function activate(context) {
         projectManager.openRecentProjects();
     });
 
-    context.subscriptions.push(disposable, refreshDisposable, specificRefreshDisposable, openRecentDisposable, subFoldersDisposable);
+    context.subscriptions.push(disposable, refreshDisposable, specificRefreshDisposable, openRecentDisposable, subFoldersDisposable, newWindowdisposable);
     context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(projectManager.refreshList.bind(projectManager, true)));
 }
 exports.activate = activate;

@@ -3,7 +3,7 @@
   "displayName": "Git Project Manager",
   "description": "Allows you to change easily between git projects.",
   "icon": "img/icon.png",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "publisher": "felipecaputo",
   "galleryBanner": {
     "color": "#202040",
@@ -30,7 +30,8 @@
     "onCommand:gitProjectManager.refreshProjects",
     "onCommand:gitProjectManager.refreshFolder",
     "onCommand:gitProjectManager.openRecents",
-    "onCommand:gitProjectManager.openSubFolder"
+    "onCommand:gitProjectManager.openSubFolder",
+    "onCommand:gitProjectManager.openProjectNewWindow"
   ],
   "main": "./src/extension",
   "contributes": {
@@ -97,23 +98,33 @@
     "commands": [
       {
         "command": "gitProjectManager.openProject",
-        "title": "GPM: Open Git Project"
+        "title": "Open Git Project",
+        "category": "GPM"
+      },
+      {
+        "command": "onCommand:gitProjectManager.openProjectNewWindow",
+        "title": "Open Git Project in a Wew Window",
+        "category": "GPM"
       },
       {
         "command": "gitProjectManager.refreshProjects",
-        "title": "GPM: Refresh Projects"
+        "title": "Refresh Projects",
+        "category": "GPM"
       },
       {
         "command": "gitProjectManager.refreshFolder",
-        "title": "GPM: Refresh specific project folder"
+        "title": "Refresh specific project folder",
+        "category": "GPM"
       },
       {
         "command": "gitProjectManager.openRecents",
-        "title": "GPM: Open Recent Git Project"
+        "title": "Open Recent Git Project",
+        "category": "GPM"
       },
       {
         "command": "gitProjectManager.openSubFolder",
-        "title": "GPM: Open project from subFolder"
+        "title": "GPM: Open project from subFolder",
+        "category": "GPM"
       }
     ],
     "keybindings": [
@@ -126,6 +137,11 @@
         "key": "alt+shift+p",
         "mac": "alt+shift+p",
         "command": "gitProjectManager.openSubFolder"
+      },
+      {
+        "key": "ctrl+alt+n",
+        "mac": "cmd+alt+n",
+        "command": "gitProjectManager.openProjectNewWindow"
       },
       {
         "key": "ctrl+shift+q",
