@@ -1,3 +1,7 @@
+##1.2.1
+  - Fixed the info about the shortcut keys in mac (PR #45 thanks to @kaiwood)
+  - Fixed #44 where **storeRepositoriesBetweenSessions** was not working to load from cache
+
 ##1.2.0
   - Added support to subfolders (#34)
   - Lots of refactorings to improve stability and performance
