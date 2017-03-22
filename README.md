@@ -7,7 +7,7 @@ Git Project Manager (GPM) is a Microsoft VSCode extension that allows you to ope
 ## Available commands
 
 Currently there are 3 avaliable commands, all of them can be accessed via **Ctrl+Shift+P** 
-*(Cmd+Shift+P on Mac)* typing **GPM**
+*(Cmd+Alt+P on Mac)* typing **GPM**
 
 ### GPM: Open Git Project *(Defaults to: Ctrl+Alt+P)*
 Show a list of the available git repositories in all folders configured in **gitProjectManager.baseProjectsFolders**.
