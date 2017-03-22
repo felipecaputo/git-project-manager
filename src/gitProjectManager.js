@@ -56,27 +56,47 @@ class GitProjectManager {
         return vscode.workspace.getConfiguration('gitProjectManager')
             .get('storeRepositoriesBetweenSessions', false);
     }
+    saveListToDisc() {
+        if (!this.storeDataBetweenSessions)
+            return;
+
+        let lists = {};
+        this.storedLists.forEach((value, key) => { lists[key] = value })
+        fs.writeFileSync(this.gpmRepoListFile, JSON.stringify(lists), {
+            encoding: 'utf8'
+        });
+    }
+    loadlListFromDisc() {
+        if (!this.storeDataBetweenSessions)
+            return false;
+
+        if (!fs.existsSync(this.gpmRepoListFile))
+            return false;
+
+        let list = JSON.parse(fs.readFileSync(this.gpmRepoListFile, 'utf8'));
+        if (list instanceof Array) {
+            fs.unlinkSync(this.gpmRepoListFile);
+            return false;
+        }
+
+        this.storedLists = new Map();
+        for (let key in list)
+            this.storedLists.set(key, list[key]);
+
+        this.loadedRepoListFromFile = true;
+        return true;
+    }
     saveRepositoryInfo(directories) {
         this.storedLists.set(this.getDirectoriesHash(directories), this.repoList);
-
-        if (this.storeDataBetweenSessions) {
-            fs.writeFileSync(this.gpmRepoListFile, JSON.stringify(this.storedLists), {
-                encoding: 'utf8'
-            });
-        }
+        this.saveListToDisc();
     }
+
     loadRepositoryInfo() {
         if (this.loadedRepoListFromFile) {
             return false;
         }
 
-        if ((this.storeDataBetweenSessions) && (fs.existsSync(this.gpmRepoListFile))) {
-            this.storedLists = JSON.parse(fs.readFileSync(this.gpmRepoListFile, 'utf8'));
-            this.loadedRepoListFromFile = true;
-            return true;
-        } else {
-            return false;
-        }
+        return this.loadlListFromDisc();
     }
 
     addRepoInRepoList(repoInfo) {
@@ -180,8 +200,11 @@ class GitProjectManager {
 
                 this.clearProjectList()
                 if (this.loadRepositoryInfo()) {
-                    resolve(this.getQuickPickList());
-                    return;
+                    this.repoList = this.storedLists.get(this.getDirectoriesHash(directories));
+                    if (this.repoList) {
+                        resolve(this.getQuickPickList());
+                        return;
+                    }
                 }
 
                 projectLocator.locateGitProjects(directories)
@@ -340,7 +363,7 @@ class GitProjectManager {
      * @memberOf GitProjectManager
      */
     getDirectoriesHash(directories) {
-        return SHA256(directories.join(''));
+        return SHA256(directories.join('')).toString();
     }
 
     showProjectsFromSubFolder() {
