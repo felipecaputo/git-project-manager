@@ -1,3 +1,7 @@
+##1.3.0
+  - Implemented a new configuration to stop looking deeper, after a project is found, ignoring MaxDepthRecursion (#47)
+  - Refactored GitProjectLocator and GitProjectManager classes to receive configuration via injection, making test easier.
+
 ##1.2.1
   - Fixed the info about the shortcut keys in mac (PR #45 thanks to @kaiwood)
   - Fixed #44 where **storeRepositoriesBetweenSessions** was not working to load from cache
