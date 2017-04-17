@@ -5,111 +5,114 @@ const path = require('path');
 const fs = require('fs');
 const DirList = require('./dirList');
 
-let dirList = new DirList();
-let maxDepth = -1;
-let ignoredFolders = [];
-let checkForGitRepo = false;
-let warnFoldersNotFound = false;
+class ProjectLocator {
+    constructor(config) {
+        this.dirList = new DirList();
+        this.config = config;
+    }
+    /**
+     * Returns the depth of the directory path
+     *
+     * @param {string} s The path to be processed
+     * @returns Number
+     */
+    getPathDepth(s) {
+        return s.split(path.sep).length;
+    }
+    isMaxDeptReached(currentDepth, initialDepth) {
+        return (this.config.maxDepth > 0) && ((currentDepth - initialDepth) > this.config.maxDepth);
+    }
+    isFolderIgnored(folder) {
+        return this.config.ignoredFolders.indexOf(folder) !== -1;
+    }
+    /**
+     * Returs true if the *directory* param refers to a folder that is nested to an already found project and
+     * _gitProjectManager.searchInsideProjects_ is true
+     * 
+     * @param {string} directory 
+     */
+    isNestedIgnoredFolder(directory) {
+        return !this.config.searchInsideProjects && this.dirList.directories.some(dir => directory.includes(dir))
+    }
+    checkFolderExists(folderPath) {
+        const exists = fs.existsSync(folderPath);
+        if (!exists && this.warnFoldersNotFound) {
+            vscode.window.showWarningMessage('Directory ' + folderPath + ' does not exists.');
+        }
 
-/**
- * Returns the depth of the directory path
- *
- * @param {string} s The path to be processed
- * @returns Number
- */
-function getPathDepth(s) {
-    return s.split(path.sep).length;
-}
+        return exists;
+    }
+    filterDir(dir, depth) {
+        return !(this.isFolderIgnored(path.basename(dir)) ||
+            this.isNestedIgnoredFolder(dir) ||
+            this.isMaxDeptReached(this.getPathDepth(dir), depth));
+    }
+    walkDirectory(dir) {
+        var depth = this.getPathDepth(dir);
 
-function isMaxDeptReached(currentDepth, initialDepth) {
-    return (maxDepth > 0) && ((currentDepth - initialDepth) > maxDepth);
-}
-
-function isFolderIgnored(folder) {
-     return ignoredFolders.indexOf(folder) !== -1;
-}
-
-function initializeCfg() {
-     ignoredFolders = vscode.workspace.getConfiguration('gitProjectManager').get('ignoredFolders', []);
-     maxDepth = vscode.workspace.getConfiguration('gitProjectManager').get('maxDepthRecursion', -1);
-     checkForGitRepo = vscode.workspace.getConfiguration('gitProjectManager').get('checkRemoteOrigin', true);
-     warnFoldersNotFound = vscode.workspace.getConfiguration('gitProjectManager').get('warnIfFolderNotFound', false);
- }
-
-exports.locateGitProjects = (projectsDirList) => {
-    return new Promise( (resolve, reject) => {
-        var promises = [];
-        initializeCfg();
-
-        projectsDirList.forEach((projectBasePath) => {
-            if (!fs.existsSync(projectBasePath)) {
-                if (warnFoldersNotFound)
-                    vscode.window.showWarningMessage('Directory ' + projectBasePath + ' does not exists.');
-
-                return;
+        return new Promise((resolve, reject) => {
+            try {
+                walker(dir)
+                    .filterDir((dir) => this.filterDir(dir, depth))
+                    .on('dir', absPath => this.processDirectory(absPath))
+                    .on('symlink', absPath => this.processDirectory(absPath))
+                    .on('error', e => this.handleError(e))
+                    .on('end', () => {
+                        resolve();
+                    });
+            } catch (error) {
+                reject(error);
             }
 
-            var depth = getPathDepth(projectBasePath);
+        });
+    }
+    locateGitProjects(projectsDirList) {
+        return new Promise((resolve, reject) => {
+            var promises = [];
 
-            var promise = new Promise((resolve, reject) => {
-                try {
-                    walker(projectBasePath)
-                        .filterDir(  (dir, stat) => {
-                            return !(isFolderIgnored(path.basename(dir)) ||
-                                isMaxDeptReached(getPathDepth(dir), depth));
-                        } )
-                        .on('dir', processDirectory)
-                        .on('symlink', processDirectory)
-                        .on('error', handleError)
-                        .on('end', () => {
-                            resolve();
-                        });
-                } catch (error) {
-                    reject(error);
-                }
+            projectsDirList.forEach((projectBasePath) => {
+                if (!this.checkFolderExists(projectBasePath)) return;
 
+                promises.push(this.walkDirectory(projectBasePath));
             });
-            promises.push(promise);
-        });        
 
-        Promise.all(promises)
-            .then(() => {
-                vscode.window.setStatusBarMessage('GPM: Searching folders completed', 1500);
-                resolve(dirList);
-            } )
-            .catch(reject);
-    } )
-};
+            Promise.all(promises)
+                .then(() => {
+                    vscode.window.setStatusBarMessage('GPM: Searching folders completed', 1500);
+                    resolve(this.dirList);
+                })
+                .catch(reject);
+        })
+    };
+    clearDirList() {
+        this.dirList = new DirList();
+    };
+    extractRepoInfo(basePath) {
+        if (!this.checkForGitRepo)
+            return;
 
-exports.clearDirList = () => {
-    dirList = new DirList();
-};
+        var stdout = cp.execSync('git remote show origin -n', { cwd: basePath, encoding: 'utf8' });
+        if (stdout.indexOf('Fetch URL:') === -1)
+            return;
 
-function extractRepoInfo(basePath) {
-    if (!checkForGitRepo) 
-        return;
-
-    var stdout = cp.execSync('git remote show origin -n', { cwd: basePath, encoding: 'utf8' });
-    if (stdout.indexOf('Fetch URL:') === -1)
-        return;
-
-    var arr = stdout.split('\n');
-    for (var i = 0; i < arr.length; i++) {
-        var line = arr[i];
-        var repoPath = 'Fetch URL: ';
-        var idx = line.indexOf(repoPath);
-        if (idx > -1)
-            return line.trim().replace(repoPath, '');
+        var arr = stdout.split('\n');
+        for (var i = 0; i < arr.length; i++) {
+            var line = arr[i];
+            var repoPath = 'Fetch URL: ';
+            var idx = line.indexOf(repoPath);
+            if (idx > -1)
+                return line.trim().replace(repoPath, '');
+        }
+    }
+    processDirectory(absPath) {
+        vscode.window.setStatusBarMessage(absPath, 600);
+        if (fs.existsSync(path.join(absPath, '.git', 'config'))) {
+            this.dirList.add(absPath, this.extractRepoInfo(absPath));
+        }
+    }
+    handleError(err) {
+        console.log('Error walker:', err);
     }
 }
 
-function processDirectory(absPath, fsOptions) {
-    vscode.window.setStatusBarMessage(absPath, 600);
-    if (fs.existsSync(path.join(absPath, '.git', 'config'))) {
-        dirList.add(absPath, extractRepoInfo(absPath));
-    }
-}
-
-function handleError(err) {
-    console.log('Error walker:', err);
-}
+module.exports = ProjectLocator;

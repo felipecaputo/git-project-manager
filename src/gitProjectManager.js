@@ -8,10 +8,16 @@ const os = require('os');
 const SHA256 = require('crypto-js').SHA256;
 
 const RecentItems = require('./recentItems');
-let projectLocator = require('./gitProjectLocator');
+let ProjectLocator = require('./gitProjectLocator');
 
 class GitProjectManager {
-    constructor() {
+    /**
+     * Creates an instance of GitProjectManager.
+     * 
+     * @param {object} config 
+     */
+    constructor(config) {
+        this.config = config;
         this.loadedRepoListFromFile = false;
         this.repoList = [];
         this.storedLists = new Map();
@@ -37,7 +43,6 @@ class GitProjectManager {
         }
     }
     getQuickPickList() {
-        let checkRemoteCfg = vscode.workspace.getConfiguration(EXTENSION_NAME).get('checkRemoteOrigin', false);
         this.repoList = this.repoList.sort((a, b) => {
             return a.name > b.name ? 1 : -1
         });
@@ -45,7 +50,7 @@ class GitProjectManager {
         return this.repoList.map(repo => {
             return {
                 label: repo.name,
-                description: checkRemoteCfg ? repo.repo : repo.dir
+                description: this.config.checkRemoteOrigin ? repo.repo : repo.dir
             };
         });
     }
@@ -53,8 +58,7 @@ class GitProjectManager {
         vscode.window.showErrorMessage(`Error in GPM Manager ${error}`);
     }
     get storeDataBetweenSessions() {
-        return vscode.workspace.getConfiguration('gitProjectManager')
-            .get('storeRepositoriesBetweenSessions', false);
+        return this.config.storeRepositoriesBetweenSessions;
     }
     saveListToDisc() {
         if (!this.storeDataBetweenSessions)
@@ -115,7 +119,7 @@ class GitProjectManager {
 
         return new Promise((resolve, reject) => {
             try {
-                var isFolderConfigured = vscode.workspace.getConfiguration('gitProjectManager').has('baseProjectsFolders');
+                var isFolderConfigured = this.config.baseProjectFolders.length > 0;
 
                 if (!isFolderConfigured) {
                     reject('You need to configure at least on folder in "gitProjectManager.baseProjectsFolders" before search for projects.');
@@ -178,7 +182,7 @@ class GitProjectManager {
      * @param {DirList} dirList
      */
     addUnversionedProjects(dirList) {
-        let unversioned = vscode.workspace.getConfiguration('gitProjectManager').get('unversionedProjects', []);
+        let unversioned = this.config.unversionedProjects;
         unversioned.forEach(proj => dirList.add(proj));
         return dirList.dirs;
     }
@@ -207,8 +211,9 @@ class GitProjectManager {
                     }
                 }
 
+                const projectLocator = new ProjectLocator(this.config);
                 projectLocator.locateGitProjects(directories)
-                    .then(this.addUnversionedProjects)
+                    .then(dirList => this.addUnversionedProjects(dirList))
                     .then(dirList => this.updateRepoList(dirList, directories))
                     .then()
                     .then(() => resolve(this.getQuickPickList()));
@@ -239,11 +244,7 @@ class GitProjectManager {
     openProject(pickedObj, openInNewWindow) {
         let projectPath = typeof (pickedObj) == 'string' ? pickedObj : this.getProjectPath(pickedObj),
             uri = vscode.Uri.file(projectPath),
-            newWindow = openInNewWindow || vscode.workspace.getConfiguration(
-                'gitProjectManager'
-            ).get(
-                'openInNewWindow', false
-                );
+            newWindow = openInNewWindow || this.config.openInNewWindow;
 
         this.recentList.addProject(projectPath, '');
         vscode.commands.executeCommand('vscode.openFolder', uri, newWindow);
@@ -274,7 +275,7 @@ class GitProjectManager {
     }
 
     getProjectPath(pickedObj) {
-        let checkRemoteCfg = vscode.workspace.getConfiguration('gitProjectManager').get('checkRemoteOrigin', false);
+        let checkRemoteCfg = this.config.checkRemoteOrigin;
         if (!checkRemoteCfg)
             return pickedObj.description;
 
@@ -301,7 +302,6 @@ class GitProjectManager {
 
     clearProjectList() {
         this.repoList = [];
-        projectLocator.clearDirList();
     }
 
     refreshList(suppressMessage) {
@@ -380,4 +380,4 @@ class GitProjectManager {
 
 }
 
-module.exports = new GitProjectManager();
+module.exports = GitProjectManager;
