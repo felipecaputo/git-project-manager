@@ -35,7 +35,10 @@ function activate(context) {
     });
 
     context.subscriptions.push(disposable, refreshDisposable, specificRefreshDisposable, openRecentDisposable, subFoldersDisposable, newWindowdisposable);
-    context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(projectManager.refreshList.bind(projectManager, true)));
+    context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(() => {
+        projectManager.config = new Config(vscode.workspace.getConfiguration('gitProjectManager'));
+        projectManager.refreshList.bind(projectManager, true);
+    }));
 }
 exports.activate = activate;
 

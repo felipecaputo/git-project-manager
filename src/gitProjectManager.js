@@ -304,6 +304,10 @@ class GitProjectManager {
         this.repoList = [];
     }
 
+    /**
+     * Refreshs the current list of projects
+     * @param {boolean} suppressMessage if true, no warning message will be shown.
+     */
     refreshList(suppressMessage) {
         this.clearProjectList();
         this.getProjectsFolders()

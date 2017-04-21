@@ -88,7 +88,7 @@ class ProjectLocator {
         this.dirList = new DirList();
     };
     extractRepoInfo(basePath) {
-        if (!this.checkForGitRepo)
+        if (!this.config.checkRemoteOrigin)
             return;
 
         var stdout = cp.execSync('git remote show origin -n', { cwd: basePath, encoding: 'utf8' });
