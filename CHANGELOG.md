@@ -1,3 +1,7 @@
+##1.3.1
+  - Fixed #50 where MaxDepthRecursion was not working (reported by [@Tyriar](https://github.com/Tyriar))
+  - Fixed #49 where the repository info was not shown (reported by [@Tyriar](https://github.com/Tyriar))
+
 ##1.3.0
   - Implemented a new configuration to stop looking deeper, after a project is found, ignoring MaxDepthRecursion (#47)
   - Refactored GitProjectLocator and GitProjectManager classes to receive configuration via injection, making test easier.
