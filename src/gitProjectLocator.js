@@ -20,7 +20,7 @@ class ProjectLocator {
         return s.split(path.sep).length;
     }
     isMaxDeptReached(currentDepth, initialDepth) {
-        return (this.config.maxDepth > 0) && ((currentDepth - initialDepth) > this.config.maxDepth);
+        return (this.config.maxDepthRecursion > 0) && ((currentDepth - initialDepth) > this.config.maxDepthRecursion);
     }
     isFolderIgnored(folder) {
         return this.config.ignoredFolders.indexOf(folder) !== -1;
@@ -43,9 +43,11 @@ class ProjectLocator {
         return exists;
     }
     filterDir(dir, depth) {
-        return !(this.isFolderIgnored(path.basename(dir)) ||
-            this.isNestedIgnoredFolder(dir) ||
-            this.isMaxDeptReached(this.getPathDepth(dir), depth));
+        if (this.isFolderIgnored(path.basename(dir))) return false;
+        if (this.isMaxDeptReached(this.getPathDepth(dir), depth)) return false;
+        if (this.isNestedIgnoredFolder(dir)) return false;
+
+        return true
     }
     walkDirectory(dir) {
         var depth = this.getPathDepth(dir);

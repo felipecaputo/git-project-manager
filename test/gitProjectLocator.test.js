@@ -1,4 +1,4 @@
-/* global describe, it */
+/* global describe, it, beforeEach, before, after */
 
 // 
 // Note: This example test is leveraging the Mocha test framework.
@@ -20,6 +20,8 @@ const expect = chai.expect;
 const noGitFolder = path.join(__dirname, '/noGit');
 const gitProjFolder = path.join(__dirname, '/projects');
 const bothFolders = [noGitFolder, gitProjFolder];
+const Config = require('../src/config');
+const config = new Config();
 
 const projectLocator = new ProjectLocator(config);
 
@@ -46,28 +48,59 @@ describe("gitProjectLocator Tests", function () {
     });
 
     describe("#Searching repos", function () {
-        it("Should find 2 repositories", function (done) {
-            this.timeout(20000);
 
-            [
-                path.join(gitProjFolder, 'project1/.git'),
-                path.join(gitProjFolder, 'project2/.git')
-            ].forEach(dir => {
+        const paths = [
+            path.join(gitProjFolder, 'project1/.git'),
+            path.join(gitProjFolder, 'project2/.git')
+        ]
+
+        before(() => {
+            paths.forEach(dir => {
                 if (!fs.existsSync(dir)) {
                     fs.mkdirSync(dir);
-                    fs.writeFileSync(path.join(dir, 'config'), 'fake', { encoding: 'utf8' });
                 }
+                const configPath = path.join(dir, 'config');
+                if (!fs.existsSync(configPath))
+                    fs.writeFileSync(configPath, 'fake', { encoding: 'utf8' });
             });
+        });
 
-            projectLocator.locateGitProjects(bothFolders)
+        function checkFoundCount(locator, dirs, count, done) {
+            locator.locateGitProjects(dirs)
                 .then(repoList => {
                     try {
-                        expect(repoList.dirList.length).to.be.equal(2);
+                        expect(repoList.dirList.length).to.be.equal(count);
                         done();
                     } catch (e) {
                         done(e);
                     }
                 });
+        }
+
+        it("Should find 2 repositories", function (done) {
+            this.timeout(20000);
+            const newConfig = new Config();
+            newConfig.maxDepthRecursion = 5;
+            const locator = new ProjectLocator(newConfig);
+            checkFoundCount(locator, bothFolders, 2, done)
+        });
+
+        it("Should find none", function (done) {
+            this.timeout(20000);
+            const newConfig = new Config();
+            newConfig.maxDepthRecursion = 1;
+
+            const locator = new ProjectLocator(newConfig);
+
+            locator.config = newConfig;
+            checkFoundCount(locator, [path.resolve(path.join(__dirname, '.'))], 0, done)
+        });
+
+    });
+
+    describe('MaxDepthReached', () => {
+        it('show return correct depth', () => {
+            projectLocator.isMaxDeptReached('/')
         });
     });
 
