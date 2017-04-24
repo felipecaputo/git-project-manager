@@ -122,7 +122,7 @@ class GitProjectManager {
                 var isFolderConfigured = this.config.baseProjectFolders.length > 0;
 
                 if (!isFolderConfigured) {
-                    reject('You need to configure at least on folder in "gitProjectManager.baseProjectsFolders" before search for projects.');
+                    reject('You need to configure at least one folder in "gitProjectManager.baseProjectsFolders" before searching for projects.');
                     return;
                 }
 
