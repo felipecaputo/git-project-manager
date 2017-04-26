@@ -1,19 +1,23 @@
+// @ts-check
 const cp = require('child_process');
 const vscode = require('vscode');
 const walker = require('walker');
 const path = require('path');
 const fs = require('fs');
 const DirList = require('./dirList');
+const Config = require('./config');
 
 class ProjectLocator {
     constructor(config) {
         this.dirList = new DirList();
-        this.config = config;
+        this.config = new Config();
+        if(config)
+            this.config = config;
     }
     /**
      * Returns the depth of the directory path
      *
-     * @param {string} s The path to be processed
+     * @param {String} s The path to be processed
      * @returns Number
      */
     getPathDepth(s) {
@@ -36,7 +40,7 @@ class ProjectLocator {
     }
     checkFolderExists(folderPath) {
         const exists = fs.existsSync(folderPath);
-        if (!exists && this.warnFoldersNotFound) {
+        if (!exists && this.config.warnFoldersNotFound) {
             vscode.window.showWarningMessage('Directory ' + folderPath + ' does not exists.');
         }
 
@@ -52,6 +56,7 @@ class ProjectLocator {
     walkDirectory(dir) {
         var depth = this.getPathDepth(dir);
 
+        // @ts-ignore
         return new Promise((resolve, reject) => {
             try {
                 walker(dir)
@@ -69,7 +74,9 @@ class ProjectLocator {
         });
     }
     locateGitProjects(projectsDirList) {
+        // @ts-ignore
         return new Promise((resolve, reject) => {
+            /** @type {string[]} */
             var promises = [];
 
             projectsDirList.forEach((projectBasePath) => {
@@ -78,6 +85,7 @@ class ProjectLocator {
                 promises.push(this.walkDirectory(projectBasePath));
             });
 
+            // @ts-ignore
             Promise.all(promises)
                 .then(() => {
                     vscode.window.setStatusBarMessage('GPM: Searching folders completed', 1500);

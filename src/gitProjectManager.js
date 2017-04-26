@@ -22,8 +22,8 @@ class GitProjectManager {
         this.repoList = [];
         this.storedLists = new Map();
         this.baseDir = this.getBaseDir();
-        this.gpmRepoListFile = path.join(this.baseDir, "Code/User/gpm_projects.json");
-        this.recentList = new RecentItems(path.join(this.baseDir, "Code/User/"));
+        this.gpmRepoListFile = path.join(this.baseDir, this.getChannelPath(), "User/gpm_projects.json");
+        this.recentList = new RecentItems(path.join(this.baseDir, this.getChannelPath(), "User/"));
         this.recentList.listSize = vscode.workspace.getConfiguration(EXTENSION_NAME).get('gitProjectManager.recentProjectsListSize', 5);
 
         this.updateRepoList = this.updateRepoList.bind(this);
@@ -380,6 +380,13 @@ class GitProjectManager {
                 subFolder: folder
             })
         });
+    }
+    getChannelPath() {
+        if (vscode.env.appName.indexOf("Insiders") > 0) {
+            return "Code - Insiders";
+        } else {
+            return "Code";
+        }
     }
 
 }
