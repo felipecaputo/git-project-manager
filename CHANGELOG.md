@@ -1,3 +1,7 @@
+#1.3.2
+  - Fixed typo in message from PR #51 thanks to [@aaron7](https://github.com/Tyriar))
+  - Fixed #50 Use the Insiders config directory when running VS Code Insiders (reported by [@Tyriar](https://github.com/Tyriar))
+
 ##1.3.1
   - Fixed #50 where MaxDepthRecursion was not working (reported by [@Tyriar](https://github.com/Tyriar))
   - Fixed #49 where the repository info was not shown (reported by [@Tyriar](https://github.com/Tyriar))
