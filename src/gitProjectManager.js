@@ -143,7 +143,8 @@ class GitProjectManager {
             return process.env[key];
         });
 
-        return resolvedPath.charAt(0) == '~' ? path.join(process.env.HOME, resolvedPath.substr(1)) : resolvedPath;
+        const homePath = process.env.HOME || process.env.HOMEPATH;
+        return resolvedPath.charAt(0) == '~' ? path.join(homePath, resolvedPath.substr(1)) : resolvedPath;
     };
     /**
      * Show the list of found Git projects, and open the choosed project
