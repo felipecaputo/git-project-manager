@@ -1,3 +1,7 @@
+#1.4.0
+  - Added compatibility with windows home path from PR #54 from [@DamonOehlman](https://github.com/DamonOehlman)
+  - Fixed message related on issue #56 from [@DavidDeSloovere](https://github.com/DavidDeSloovere)
+
 # 1.3.2
   - Fixed typo in message from PR #51 thanks to [@aaron7](https://github.com/aaron7)
   - Fixed #50 Use the Insiders config directory when running VS Code Insiders (reported by [@Tyriar](https://github.com/Tyriar))

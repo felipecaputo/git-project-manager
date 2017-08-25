@@ -3,7 +3,7 @@
   "displayName": "Git Project Manager",
   "description": "Allows you to change easily between git projects.",
   "icon": "img/icon.png",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "publisher": "felipecaputo",
   "galleryBanner": {
     "color": "#202040",
