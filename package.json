@@ -31,7 +31,8 @@
     "onCommand:gitProjectManager.refreshFolder",
     "onCommand:gitProjectManager.openRecents",
     "onCommand:gitProjectManager.openSubFolder",
-    "onCommand:gitProjectManager.openProjectNewWindow"
+    "onCommand:gitProjectManager.openProjectNewWindow",
+    "onCommand:gitProjectManager.legacyOpenProject"
   ],
   "main": "./src/extension",
   "contributes": {
@@ -107,6 +108,11 @@
         "category": "GPM"
       },
       {
+        "command": "gitProjectManager.legacyOpenProject",
+        "title": "Legacy Open Git Project",
+        "category": "GPM"
+      },
+      {
         "command": "gitProjectManager.openProjectNewWindow",
         "title": "Open Git Project in a New Window",
         "category": "GPM"
@@ -134,9 +140,14 @@
     ],
     "keybindings": [
       {
+        "key": "alt+shift+g",
+        "mac": "alt+shift+g",
+        "command": "gitProjectManager.openProject"
+      },
+      {
         "key": "ctrl+alt+p",
         "mac": "cmd+alt+p",
-        "command": "gitProjectManager.openProject"
+        "command": "gitProjectManager.legacyOpenProject"
       },
       {
         "key": "alt+shift+p",
@@ -169,6 +180,7 @@
     "walker": "^1.0.7"
   },
   "scripts": {
-    "test": "node ./node_modules/vscode/bin/test"
+    "test": "node ./node_modules/vscode/bin/test",
+    "postinstall": "node ./node_modules/vscode/bin/install"
   }
 }

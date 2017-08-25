@@ -14,6 +14,10 @@ function activate(context) {
         projectManager.showProjectList(false);
     });
 
+    let legacyDisposable = vscode.commands.registerCommand('gitProjectManager.legacyOpenProject', () => {
+        vscode.window.showWarningMessage('The Ctrl+Alt+P keybing is deprecated.If you want to keep the old keybind go to *Preferences: Keymaps* and map the gitProjectManager.openProject');
+    })
+
     let newWindowdisposable = vscode.commands.registerCommand('gitProjectManager.openProjectNewWindow', function () {
         projectManager.showProjectList(true);
     });
@@ -34,7 +38,9 @@ function activate(context) {
         projectManager.openRecentProjects();
     });
 
-    context.subscriptions.push(disposable, refreshDisposable, specificRefreshDisposable, openRecentDisposable, subFoldersDisposable, newWindowdisposable);
+    context.subscriptions.push(disposable, refreshDisposable, specificRefreshDisposable,
+        openRecentDisposable, subFoldersDisposable, newWindowdisposable, legacyDisposable);
+
     context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(() => {
         projectManager.config = new Config(vscode.workspace.getConfiguration('gitProjectManager'));
         projectManager.refreshList.bind(projectManager, true);
