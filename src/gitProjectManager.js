@@ -346,7 +346,7 @@ class GitProjectManager {
     openRecentProjects() {
         let self = this;
         if (this.recentList.list.length === 0) {
-            vscode.window.showInformationMessage('It seems you didn\'t opened any project using Git Project Manager yet!')
+            vscode.window.showInformationMessage('It seems you haven\'t opened any projects using Git Project Manager extension yet!')
         }
 
         vscode.window.showQuickPick(this.recentList.list.map(i => {
