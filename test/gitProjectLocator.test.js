@@ -1,4 +1,4 @@
-/* global describe, it, beforeEach, before, after */
+/* global describe, it, before, after */
 
 //
 // Note: This example test is leveraging the Mocha test framework.

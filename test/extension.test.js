@@ -1,4 +1,4 @@
-/* global suite, test */
+/* global describe it*/
 
 //
 // Note: This example test is leveraging the Mocha test framework.
@@ -10,8 +10,7 @@ var assert = require('assert');
 
 // You can import and use all API from the 'vscode' module
 // as well as import your extension to test it
-var vscode = require('vscode');
- var myExtension = require('../src/extension');
+var myExtension = require('../src/extension');
 
 // Defines a Mocha test suite to group tests of similar kind together
 describe("Extension Tests", function() {
