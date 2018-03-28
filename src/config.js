@@ -16,6 +16,8 @@ class Config {
         this.unversionedProjects = [];
         this.recentProjectListSize = 5;
         this.searchInsideProjects = true;
+        this.supportsMercurial = false;
+        this.supportsSVN = false;
 
         if (vscodeCfg)
             this.loadConfigFromVsCode(vscodeCfg)
@@ -32,6 +34,8 @@ class Config {
         this.unversionedProjects = vscodeConfig.get('unversionedProjects', []);
         this.recentProjectListSize = vscodeConfig.get('recentProjectsListSize', 5);
         this.searchInsideProjects = vscodeConfig.get('searchInsideProjects', true);
+        this.supportsMercurial = vscodeConfig.get('supportsMercurial', false);
+        this.supportsSVN = vscodeConfig.get('supportsSVN', false);
     }
 }
 
