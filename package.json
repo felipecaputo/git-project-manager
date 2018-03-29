@@ -97,6 +97,16 @@
           "type": "boolean",
           "default": true,
           "description": "Define if extension should look for Git projects inside other Git projects."
+        },
+        "gitProjectManager.supportsMercurial": {
+          "type": "boolean",
+          "default": false,
+          "description": "Define if extension should look for Mercurial projects too."
+        },
+        "gitProjectManager.supportsSVN": {
+          "type": "boolean",
+          "default": false,
+          "description": "Define if extension should look for for SVN projects too."
         }
       }
     },
