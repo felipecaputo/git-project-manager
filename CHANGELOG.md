@@ -1,3 +1,6 @@
+#1.5.0
+  - Added support to Mercurial and SVN projects (Issue #62)
+
 #1.4.0
   - Added compatibility with windows home path from PR #54 from [@DamonOehlman](https://github.com/DamonOehlman)
   - Fixed message related on issue #56 from [@DavidDeSloovere](https://github.com/DavidDeSloovere)
@@ -34,12 +37,12 @@
 
 ## 0.1.18
   - [#32](https://github.com/felipecaputo/git-project-manager/issues/32) - Extension was not following symlinks
-  
+
 ### 0.1.17
   - Hot fix for 0.1.16, that was with a publish error
 
 ### 0.1.16
-  - [#31](https://github.com/felipecaputo/git-project-manager/issues/31) - Linux tilde alinas (~) was not considered an environment variable 
+  - [#31](https://github.com/felipecaputo/git-project-manager/issues/31) - Linux tilde alinas (~) was not considered an environment variable
 
 ### 0.1.15
   - Great contribuitions from [@Tyriar](https://github.com/Tyriar) with issues. Thanks a lot Daniel:
@@ -89,8 +92,8 @@
 ### 0.1.5
   - Added two new configs to fix issue #2 and improve perfomance that are:
     - maxDepthRecursion
-    - ignoredFolders  
+    - ignoredFolders
 
 ### 0.1.4
-  - Partially fixed issue #1 (special thanks to @martinpengellyphillips) with PR #3 
+  - Partially fixed issue #1 (special thanks to @martinpengellyphillips) with PR #3
   that allow to configure the code application path

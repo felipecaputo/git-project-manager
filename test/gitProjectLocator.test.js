@@ -1,6 +1,6 @@
-/* global describe, it, beforeEach, before, after */
+/* global describe, it, before, after */
 
-// 
+//
 // Note: This example test is leveraging the Mocha test framework.
 // Please refer to their documentation on https://mochajs.org/ for help.
 //
@@ -16,6 +16,7 @@ const path = require('path');
 const fs = require('fs');
 const chai = require('chai');
 const expect = chai.expect;
+const rimraf = require('rimraf');
 
 const noGitFolder = path.join(__dirname, '/noGit');
 const gitProjFolder = path.join(__dirname, '/projects');
@@ -51,11 +52,20 @@ describe("gitProjectLocator Tests", function () {
 
         const paths = [
             path.join(gitProjFolder, 'project1/.git'),
-            path.join(gitProjFolder, 'project2/.git')
+            path.join(gitProjFolder, 'project2/.git'),
+            path.join(gitProjFolder, 'project3/.hg'),
+            path.join(gitProjFolder, 'project4/.hg'),
+            path.join(gitProjFolder, 'project5/.svn'),
+            path.join(gitProjFolder, 'project6/.svn'),
+            path.join(gitProjFolder, 'project7/.svn')
         ]
 
         before(() => {
             paths.forEach(dir => {
+                if (!fs.existsSync(path.resolve(dir, '..'))) {
+                    fs.mkdirSync(path.resolve(dir, '..'));
+                }
+
                 if (!fs.existsSync(dir)) {
                     fs.mkdirSync(dir);
                 }
@@ -64,6 +74,10 @@ describe("gitProjectLocator Tests", function () {
                     fs.writeFileSync(configPath, 'fake', { encoding: 'utf8' });
             });
         });
+
+        after(() => {
+            paths.forEach(dir => rimraf.sync(path.resolve(dir, '..')))
+        })
 
         function checkFoundCount(locator, dirs, count, done) {
             locator.locateGitProjects(dirs)
@@ -94,6 +108,34 @@ describe("gitProjectLocator Tests", function () {
 
             locator.config = newConfig;
             checkFoundCount(locator, [path.resolve(path.join(__dirname, '.'))], 0, done)
+        });
+
+        it("Should find 4 repositories", function (done) {
+            this.timeout(20000);
+            const newConfig = new Config();
+            newConfig.maxDepthRecursion = 5;
+            newConfig.supportsMercurial = true;
+            const locator = new ProjectLocator(newConfig);
+            checkFoundCount(locator, bothFolders, 4, done)
+        });
+
+        it("Should find 5 repositories", function (done) {
+            this.timeout(20000);
+            const newConfig = new Config();
+            newConfig.maxDepthRecursion = 5;
+            newConfig.supportsSVN = true;
+            const locator = new ProjectLocator(newConfig);
+            checkFoundCount(locator, bothFolders, 5, done)
+        });
+
+        it("Should find 7 repositories", function (done) {
+            this.timeout(20000);
+            const newConfig = new Config();
+            newConfig.maxDepthRecursion = 5;
+            newConfig.supportsSVN = true;
+            newConfig.supportsMercurial = true;
+            const locator = new ProjectLocator(newConfig);
+            checkFoundCount(locator, bothFolders, 7, done)
         });
 
     });

@@ -2,7 +2,6 @@
 
 var assert = require('assert');
 
-const vscode = require('vscode');
 const ProjectManager = require('../src/gitProjectManager');
 const Config = require('../src/config');
 const config = new Config();

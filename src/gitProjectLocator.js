@@ -32,8 +32,8 @@ class ProjectLocator {
     /**
      * Returs true if the *directory* param refers to a folder that is nested to an already found project and
      * _gitProjectManager.searchInsideProjects_ is true
-     * 
-     * @param {string} directory 
+     *
+     * @param {string} directory
      */
     isNestedIgnoredFolder(directory) {
         return !this.config.searchInsideProjects && this.dirList.directories.some(dir => directory.includes(dir))
@@ -118,6 +118,10 @@ class ProjectLocator {
         vscode.window.setStatusBarMessage(absPath, 600);
         if (fs.existsSync(path.join(absPath, '.git', 'config'))) {
             this.dirList.add(absPath, this.extractRepoInfo(absPath));
+        } else if (this.config.supportsMercurial && fs.existsSync(path.join(absPath, '.hg'))) {
+            this.dirList.add(absPath, undefined);
+        } else if (this.config.supportsSVN && fs.existsSync(path.join(absPath, '.svn'))) {
+            this.dirList.add(absPath, undefined);
         }
     }
     handleError(err) {
