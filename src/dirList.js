@@ -8,7 +8,7 @@ module.exports = class DirList {
     }
     /**
      * Returns an array with all current directories
-     * 
+     *
      * @returns {[]string} An array that contains all directories
      * @readonly
      */
@@ -16,10 +16,13 @@ module.exports = class DirList {
         return this.dirs.map(x => x.dir);
     }
     concat(aDirList) {
-        this.dirs = this.dirList.concat(aDirList.dirList);
+        aDirList.dirList.forEach(e => this.add(e.dir, e.repo));
     }
     add(dirPath, repositoryName) {
         const dirName = path.basename(dirPath);
+
+        if (this.exists(dirPath)) return;
+
         this.dirs.push({
             dir: dirPath,
             name: dirName,
@@ -27,7 +30,7 @@ module.exports = class DirList {
         })
     }
     exists(dirPath) {
-        return this.dirs.some(info => info.dir == dirPath);
+        return this.dirs.find(e => e.dir == dirPath) !== undefined;
     }
     clear() {
         this.dirs = [];
