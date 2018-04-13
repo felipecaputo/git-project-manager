@@ -19,7 +19,7 @@ The first time it searchs all folders, after that it uses a cached repository in
 This commands refresh the cached repositories info for all configured folders.
 
 ### GPM: Refresh specific project folder
-This commands allows you to select a specific foledr to refresh its repositories, without
+This commands allows you to select a specific folder to refresh its repositories, without
 refreshing all folders.
 
 ### GPM: Open Recent Git Project *(Defaults to Ctrl+Shift+Q)*
