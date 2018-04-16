@@ -12,6 +12,7 @@ Currently there are 3 avaliable commands, all of them can be accessed via **Ctrl
 ### GPM: Open Git Project *(Defaults to: Ctrl+Alt+P)*
 Show a list of the available git repositories in all folders configured in **gitProjectManager.baseProjectsFolders**.
 The first time it searchs all folders, after that it uses a cached repository info.
+
 ![open Git Project](/img/openProject.gif)
 
 
