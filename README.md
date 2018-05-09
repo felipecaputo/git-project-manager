@@ -90,7 +90,7 @@ To improve performance there are 2 new and important configurations that are:
         "gitProjectManager.ignoredFolders": ["node_modules"]
     }
 
-**maxDepthRecursion**: indicates the maximum recursion depth that will be searched starting in the configured folder
+**maxDepthRecursion**: indicates the maximum recursion depth that will be searched starting in the configured folder (default: `2`)
 
     {
         "gitProjectManager.maxDepthRecursion": 4
