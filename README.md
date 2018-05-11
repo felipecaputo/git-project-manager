@@ -1,4 +1,4 @@
-# Git Project Manager 
+# Git Project Manager
 
 [![Build Status](https://travis-ci.org/felipecaputo/git-project-manager.svg?branch=master)](https://travis-ci.org/felipecaputo/git-project-manager)
 
@@ -6,7 +6,7 @@ Git Project Manager (GPM) is a Microsoft VSCode extension that allows you to ope
 
 ## Available commands
 
-Currently there are 3 avaliable commands, all of them can be accessed via **Ctrl+Shift+P** 
+Currently there are 3 avaliable commands, all of them can be accessed via **Ctrl+Shift+P**
 *(Cmd+Alt+P on Mac)* typing **GPM**
 
 ### GPM: Open Git Project *(Defaults to: Ctrl+Alt+P)*
@@ -30,7 +30,7 @@ The size of the list if configured in `gitProjectManager.recentProjectsListSize`
 ## Available settings
 
 Before start using GPM you need to configure the base folders that the extension will
-search for git repositories. you need to open **File -> Preferences -> User Settings**  
+search for git repositories. you need to open **File -> Preferences -> User Settings**
 
 
     {
@@ -58,12 +58,12 @@ This configuration can be defined in 3 formats (*this was done to solve issue #7
     {
         "gitProjectManager.codePath": "C:\\Program Files (x86)\\Microsoft VS Code\\bin\\code.cmd"
     }
-    
+
     //Linux
     {
         "gitProjectManager.codePath": "/usr/local/bin/code"
     }
-    
+
 **Second:** Use a object notation to define the path to code path on each platform
 
     {
@@ -72,7 +72,7 @@ This configuration can be defined in 3 formats (*this was done to solve issue #7
             "linux": "/usr/local/bin/code"
         }
     }
-    
+
 **Third:** An array of file paths, where at least one is a valid path
 
     {
@@ -81,8 +81,8 @@ This configuration can be defined in 3 formats (*this was done to solve issue #7
             "/usr/local/bin/code"
         ]
     }
-    
-To improve performance there are 2 new and important configurations that are:  
+
+To improve performance there are 2 new and important configurations that are:
 **ignoredFolders**: an array of folder names that will be ignored (*node_modules for example*)
 
     {
@@ -94,23 +94,23 @@ To improve performance there are 2 new and important configurations that are:
     {
         "gitProjectManager.maxDepthRecursion": 4
     }
-    
 
-In version 0.1.10 we also added the **"gitProjectManager.checkRemoteOrigin"** 
-configuration that allows users to not check remote repository origin 
+
+In version 0.1.10 we also added the **"gitProjectManager.checkRemoteOrigin"**
+configuration that allows users to not check remote repository origin
 to improve performance
 
     {
         "gitProjectManager.checkRemoteOrigin": false
     }
-    
+
 Added in version 0.1.12, you can configure the behavior when opening a project if it'll be opened in the same window
-or in a new window:
+or in a new window. (*this option is ignored if there aren't any opened folders in current window*)):
 
     {
         "gitProjectManager.openInNewWindow": false
     }
-    
+
 
 ## Participate
 
