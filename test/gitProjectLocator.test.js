@@ -39,7 +39,7 @@ describe("gitProjectLocator Tests", function () {
 
     describe("#Searching without repos", function () {
         it("Shouldn't find any repositories", function (done) {
-            this.timeout(20000);
+            this.timeout(30000);
             projectLocator.locateGitProjects([noGitFolder])
                 .then(repoList => {
                     expect(repoList.dirList.length).to.be.equal(0);

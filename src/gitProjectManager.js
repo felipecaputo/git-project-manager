@@ -13,8 +13,8 @@ let ProjectLocator = require('./gitProjectLocator');
 class GitProjectManager {
     /**
      * Creates an instance of GitProjectManager.
-     * 
-     * @param {object} config 
+     *
+     * @param {object} config
      */
     constructor(config) {
         this.config = config;
@@ -31,8 +31,8 @@ class GitProjectManager {
 
     }
     /**
-     * Get the base user cfg directory 
-     * 
+     * Get the base user cfg directory
+     *
      * @returns {string}
      */
     getBaseDir() {
@@ -148,10 +148,10 @@ class GitProjectManager {
     };
     /**
      * Show the list of found Git projects, and open the choosed project
-     * 
+     *
      * @param {Object} opts Aditional options, currently supporting only subfolders
      * @param {boolean} openInNewWindow If true, will open the selected project in a new windows, regardless of the OpenInNewWindow configuration
-     * 
+     *
      * @memberOf GitProjectManager
      */
     showProjectList(openInNewWindow, opts = {}) {
@@ -179,7 +179,7 @@ class GitProjectManager {
 
     /**
      * Adds all projects added as unversioned in vsCode config
-     * 
+     *
      * @param {DirList} dirList
      */
     addUnversionedProjects(dirList) {
@@ -245,7 +245,7 @@ class GitProjectManager {
     openProject(pickedObj, openInNewWindow) {
         let projectPath = typeof (pickedObj) == 'string' ? pickedObj : this.getProjectPath(pickedObj),
             uri = vscode.Uri.file(projectPath),
-            newWindow = openInNewWindow || this.config.openInNewWindow;
+            newWindow = (openInNewWindow || this.config.openInNewWindow) && (vscode.workspace.workspaceFolders);
 
         this.recentList.addProject(projectPath, '');
         vscode.commands.executeCommand('vscode.openFolder', uri, newWindow);
@@ -256,7 +256,7 @@ class GitProjectManager {
             'gitProjectManager'
         ).get(
             'codePath', 'code'
-            );
+        );
 
         let codePath = 'code'
         if (typeof cfg === 'string') {
@@ -361,10 +361,10 @@ class GitProjectManager {
 
     /**
      * Calculate a hash of directories list
-     * 
-     * @param {String[]} directories 
+     *
+     * @param {String[]} directories
      * @returns {string} The hash of directories list
-     * 
+     *
      * @memberOf GitProjectManager
      */
     getDirectoriesHash(directories) {

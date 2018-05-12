@@ -170,7 +170,7 @@
         "mocha": "^2.4.5",
         "rimraf": "^2.6.2",
         "rmdir": "^1.2.0",
-        "sinon": "^1.17.6",
+        "sinon": "^5.0.7",
         "vscode": "^1.1.14"
     },
     "dependencies": {
