@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.5.2
+
+- Closed #71 - When configured to open in new window, if there isn't a folder in current workspace, open in the current window
+- Added the default value of max depth recursion to readme - PR #74 br @andys8
+- Improved screen shot presentation - PR #70 by @Tyriar
+- Fixed a typo in Readme - PR #69 from @a-sync
+
 ## 1.5.1
 
 - Fixed duplication when the same project is found in different base project paths - #68 by Tyriar
