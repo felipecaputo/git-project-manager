@@ -56,7 +56,7 @@ describe("gitProjectManager", function () {
     })
 
     it('should call open project with new windows if vscode has an open folder', () => {
-        let mockFolders = sandbox.stub(vscode.workspace, 'workspaceFolders').callsFake(['a']);;
+        sandbox.stub(vscode.workspace, 'workspaceFolders').callsFake(['a']);;
         let mockCommand = sandbox.stub(vscode.commands, 'executeCommand');
         projectManager.openProject('test', true);
         mockCommand.getCall(0).calledWith('vscode.openFolder', 'test', true);

@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.5.2
+## 1.6.0
 
 - Closed #71 - When configured to open in new window, if there isn't a folder in current workspace, open in the current window
 - Added the default value of max depth recursion to readme - PR #74 br @andys8

@@ -245,7 +245,7 @@ class GitProjectManager {
     openProject(pickedObj, openInNewWindow) {
         let projectPath = typeof (pickedObj) == 'string' ? pickedObj : this.getProjectPath(pickedObj),
             uri = vscode.Uri.file(projectPath),
-            newWindow = (openInNewWindow || this.config.openInNewWindow) && (vscode.workspace.workspaceFolders);
+            newWindow = openInNewWindow || (this.config.openInNewWindow && !!vscode.workspace.workspaceFolders);
 
         this.recentList.addProject(projectPath, '');
         vscode.commands.executeCommand('vscode.openFolder', uri, newWindow);
