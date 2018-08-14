@@ -26,7 +26,7 @@ class RecentItems {
     }
     loadFromFile() {
         const filePath = this.getPathToFile();
-        if (fs.existsSync(filePath) && typeof filepath !== 'undefined') {
+        if (fs.existsSync(filePath) && typeof filePath !== 'undefined') {
             this.list = JSON.parse(fs.readFileSync(filePath, 'utf8'));
         }
     }
