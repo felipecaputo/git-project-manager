@@ -11,22 +11,22 @@ class RecentItems {
      * @param {string} pathToSave Path where the RecentItems file will be saved
      */
     constructor(pathToSave) {
-            this.pathToSave = pathToSave;
-            this.listSize = 5;
-            this.list = [];
-            this.loadFromFile();
-        }
-        /**
-         * Returns the full path to recent projects file
-         * 
-         * @returns {string}
-         */
+        this.pathToSave = pathToSave;
+        this.listSize = 5;
+        this.list = [];
+        this.loadFromFile();
+    }
+    /**
+     * Returns the full path to recent projects file
+     * 
+     * @returns {string}
+     */
     getPathToFile() {
         return path.join(this.pathToSave, RECENT_FILE_NAME);
     }
     loadFromFile() {
         const filePath = this.getPathToFile();
-        if (fs.existsSync(filePath)) {
+        if (fs.existsSync(filePath) && typeof filepath !== 'undefined') {
             this.list = JSON.parse(fs.readFileSync(filePath, 'utf8'));
         }
     }
