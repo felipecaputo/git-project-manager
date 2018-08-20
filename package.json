@@ -160,7 +160,7 @@
             },
             {
                 "key": "ctrl+shift+q",
-                "mac": "cmd+shift+q",
+                "mac": "cmd+alt+q",
                 "command": "gitProjectManager.openRecents"
             }
         ]
