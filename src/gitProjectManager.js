@@ -10,6 +10,9 @@ const SHA256 = require('crypto-js').SHA256;
 const RecentItems = require('./recentItems');
 let ProjectLocator = require('./gitProjectLocator');
 
+const FOLDER = '\uD83D\uDCC2';
+const GLOBE = '\uD83C\uDF10';
+
 class GitProjectManager {
     /**
      * Creates an instance of GitProjectManager.
@@ -48,9 +51,21 @@ class GitProjectManager {
         });
 
         return this.repoList.map(repo => {
+            let description = '';
+            if (this.config.displayProjectPath || !this.config.checkRemoteOrigin) {
+                let homeDir = process.env.HOME.replace(new RegExp(`${path.sep}$`), '') + path.sep;
+                let repoDir = repo.dir;
+                if (repoDir.startsWith(homeDir)) {
+                    repoDir = '~/' + repoDir.substring(homeDir.length);
+                }
+                description = `${FOLDER} ${repoDir}`;
+            }
+            if (this.config.checkRemoteOrigin) {
+                description = `${GLOBE} ${repo.repo} ` + description;
+            }
             return {
                 label: repo.name,
-                description: this.config.checkRemoteOrigin ? repo.repo : repo.dir
+                description: description.trim(),
             };
         });
     }
