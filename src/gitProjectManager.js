@@ -65,7 +65,7 @@ class GitProjectManager {
             }
             return {
                 label: repo.name,
-                description: description,
+                description: description.trim(),
             };
         });
     }
