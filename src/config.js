@@ -18,6 +18,7 @@ class Config {
         this.searchInsideProjects = true;
         this.supportsMercurial = false;
         this.supportsSVN = false;
+        this.displayProjectPath = false;
 
         if (vscodeCfg)
             this.loadConfigFromVsCode(vscodeCfg)
@@ -36,6 +37,7 @@ class Config {
         this.searchInsideProjects = vscodeConfig.get('searchInsideProjects', true);
         this.supportsMercurial = vscodeConfig.get('supportsMercurial', false);
         this.supportsSVN = vscodeConfig.get('supportsSVN', false);
+        this.displayProjectPath = vscodeConfig.get('displayProjectPath', false);
     }
 }
 

@@ -10,6 +10,9 @@ const SHA256 = require('crypto-js').SHA256;
 const RecentItems = require('./recentItems');
 let ProjectLocator = require('./gitProjectLocator');
 
+const FOLDER = '\uD83D\uDCC2';
+const GLOBE = '\uD83C\uDF10';
+
 class GitProjectManager {
     /**
      * Creates an instance of GitProjectManager.
@@ -48,9 +51,17 @@ class GitProjectManager {
         });
 
         return this.repoList.map(repo => {
+            let description;
+            if (this.config.checkRemoteOrigin && this.config.displayProjectPath) {
+                description = `${GLOBE} ${repo.repo} ${FOLDER} ${repo.dir}`;
+            } else if (this.config.checkRemoteOrigin) {
+                description = `${GLOBE} ${repo.repo}`;
+            } else {
+                description = `${FOLDER} ${repo.dir}`;
+            }
             return {
                 label: repo.name,
-                description: this.config.checkRemoteOrigin ? repo.repo : repo.dir
+                description: description,
             };
         });
     }
