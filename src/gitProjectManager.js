@@ -398,11 +398,7 @@ class GitProjectManager {
         });
     }
     getChannelPath() {
-        if (vscode.env.appName.indexOf("Insiders") > 0) {
-            return "Code - Insiders";
-        } else {
-            return "Code";
-        }
+        return vscode.env.appName.replace("Visual Studio ", "");
     }
 
 }
