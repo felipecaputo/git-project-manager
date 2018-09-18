@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.7.0
+
+  - Issue #78 - Extension was pointing to the wrong config folder on VSCode-OSS - PR #79 by [@alyyasser](https://github.com/alyyasser)
+  - Changed the shortcut to `gitProjectManager.openRecents` that overlaps with logout shortcut on MacOS - PR #82 by [@timlogemann](https://github.com/timlogemann)
+  - Fixed the error that extension wasn't loading in some cases - PR #83 by [@Tedyst](https://github.com/Tedyst)
+  - Isse #80 - Added option `displayProjectPath` that enables displaying project paths regardless of `checkRemoteOrigin value` - PR #84 bt [@KyrychukD](https://github.com/KyrychukD)
+
 ## 1.6.0
 
 - Closed #71 - When configured to open in new window, if there isn't a folder in current workspace, open in the current window
