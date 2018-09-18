@@ -51,13 +51,17 @@ class GitProjectManager {
         });
 
         return this.repoList.map(repo => {
-            let description;
-            if (this.config.checkRemoteOrigin && this.config.displayProjectPath) {
-                description = `${GLOBE} ${repo.repo} ${FOLDER} ${repo.dir}`;
-            } else if (this.config.checkRemoteOrigin) {
-                description = `${GLOBE} ${repo.repo}`;
-            } else {
-                description = `${FOLDER} ${repo.dir}`;
+            let description = '';
+            if (this.config.displayProjectPath || !this.config.checkRemoteOrigin) {
+                let homeDir = process.env.HOME.replace(new RegExp(`${path.sep}$`), '') + path.sep;
+                let repoDir = repo.dir;
+                if (repoDir.startsWith(homeDir)) {
+                    repoDir = '~/' + repoDir.substring(homeDir.length);
+                }
+                description = `${FOLDER} ${repoDir}`;
+            }
+            if (this.config.checkRemoteOrigin) {
+                description = `${GLOBE} ${repo.repo} ` + description;
             }
             return {
                 label: repo.name,
