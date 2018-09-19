@@ -109,9 +109,9 @@
                     "description": "Define if extension should look for for SVN projects too."
                 },
                 "gitProjectManager.displayProjectPath": {
-                  "type": "boolean",
-                  "default": false,
-                  "description": "Indicates if project path will be displayed in project picker."
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Indicates if project path will be displayed in project picker."
                 }
             }
         },
@@ -176,7 +176,7 @@
         "rimraf": "^2.6.2",
         "rmdir": "^1.2.0",
         "sinon": "^5.0.7",
-        "vscode": "^1.1.14"
+        "vscode": "^1.1.21"
     },
     "dependencies": {
         "crypto-js": "^3.1.9-1",

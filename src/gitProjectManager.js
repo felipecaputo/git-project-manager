@@ -50,10 +50,11 @@ class GitProjectManager {
             return a.name > b.name ? 1 : -1
         });
 
+
+        let homeDir = this.getHomePath().replace(new RegExp(`${path.sep}$`), '') + path.sep;
         return this.repoList.map(repo => {
             let description = '';
             if (this.config.displayProjectPath || !this.config.checkRemoteOrigin) {
-                let homeDir = process.env.HOME.replace(new RegExp(`${path.sep}$`), '') + path.sep;
                 let repoDir = repo.dir;
                 if (repoDir.startsWith(homeDir)) {
                     repoDir = '~/' + repoDir.substring(homeDir.length);
@@ -152,13 +153,17 @@ class GitProjectManager {
         });
     }
 
+    getHomePath() {
+        return process.env.HOME || process.env.HOMEPATH
+    }
+
     resolveEnvironmentVariables(processPlatform, aPath) {
         var envVarMatcher = processPlatform === 'win32' ? /%([^%]+)%/g : /\$([^\/]+)/g;
         let resolvedPath = aPath.replace(envVarMatcher, function (_, key) {
             return process.env[key];
         });
 
-        const homePath = process.env.HOME || process.env.HOMEPATH;
+        const homePath = this.getHomePath();
         return resolvedPath.charAt(0) == '~' ? path.join(homePath, resolvedPath.substr(1)) : resolvedPath;
     };
     /**
@@ -292,13 +297,22 @@ class GitProjectManager {
 
     getProjectPath(pickedObj) {
         let checkRemoteCfg = this.config.checkRemoteOrigin;
-        if (!checkRemoteCfg)
-            return pickedObj.description;
+        let description = pickedObj.description;
+        let folderIndex = description.indexOf(FOLDER);
+        let repoIndex = description.indexOf(GLOBE);
 
-        let map = this.repoList.map(proj => {
-            return checkRemoteCfg ? `${proj.name}.${proj.repo}` : `${proj.name}.${proj.dir}`
-        });
-        return this.repoList[map.indexOf(`${pickedObj.label}.${pickedObj.description}`)].dir;
+        if (folderIndex != -1) { //has the path on description
+            return description.substring(folderIndex + 2).trim()
+        }
+
+        if (repoIndex != -1 && folderIndex == -1) { //has only repo info
+            let map = this.repoList.map(proj => {
+                return checkRemoteCfg ? `${proj.name}.${proj.repo}` : `${proj.name}.${proj.dir}`
+            });
+            return this.repoList[map.indexOf(`${pickedObj.label}.${description.substring(2).trim()}`)].dir;
+        }
+
+        throw 'Invalid project path info';
     }
 
     internalRefresh(folders, suppressMessage) {
