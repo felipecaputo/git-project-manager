@@ -1,11 +1,16 @@
 # Changelog
 
+## 1.7.1
+
+- Workaround for #88 where there were erros loading projects from home dir on Ubuntu
+- Optimization to getProjectPath - PR #87 by [@KyrychukD](https://github.com/KyrychukD)
+
 ## 1.7.0
 
-  - Issue #78 - Extension was pointing to the wrong config folder on VSCode-OSS - PR #79 by [@alyyasser](https://github.com/alyyasser)
-  - Changed the shortcut to `gitProjectManager.openRecents` that overlaps with logout shortcut on MacOS - PR #82 by [@timlogemann](https://github.com/timlogemann)
-  - Fixed the error that extension wasn't loading in some cases - PR #83 by [@Tedyst](https://github.com/Tedyst)
-  - Isse #80 - Added option `displayProjectPath` that enables displaying project paths regardless of `checkRemoteOrigin value` - PR #84 bt [@KyrychukD](https://github.com/KyrychukD)
+- Issue #78 - Extension was pointing to the wrong config folder on VSCode-OSS - PR #79 by [@alyyasser](https://github.com/alyyasser)
+- Changed the shortcut to `gitProjectManager.openRecents` that overlaps with logout shortcut on MacOS - PR #82 by [@timlogemann](https://github.com/timlogemann)
+- Fixed the error that extension wasn't loading in some cases - PR #83 by [@Tedyst](https://github.com/Tedyst)
+- Isse #80 - Added option `displayProjectPath` that enables displaying project paths regardless of `checkRemoteOrigin value` - PR #84 by [@KyrychukD](https://github.com/KyrychukD)
 
 ## 1.6.0
 
