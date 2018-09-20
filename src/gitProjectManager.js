@@ -51,14 +51,14 @@ class GitProjectManager {
         });
 
 
-        let homeDir = this.getHomePath().replace(new RegExp(`${path.sep}$`), '') + path.sep;
+        // let homeDir = this.getHomePath().replace(new RegExp(`${path.sep}$`), '') + path.sep;
         return this.repoList.map(repo => {
             let description = '';
             if (this.config.displayProjectPath || !this.config.checkRemoteOrigin) {
                 let repoDir = repo.dir;
-                if (repoDir.startsWith(homeDir)) {
-                    repoDir = '~/' + repoDir.substring(homeDir.length);
-                }
+                // if (repoDir.startsWith(homeDir)) {
+                //     repoDir = '~/' + repoDir.substring(homeDir.length);
+                // }
                 description = `${FOLDER} ${repoDir}`;
             }
             if (this.config.checkRemoteOrigin) {
