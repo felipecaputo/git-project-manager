@@ -67,6 +67,7 @@ class GitProjectManager {
             return {
                 label: repo.name,
                 description: description.trim(),
+                dir: repo.dir,
             };
         });
     }
@@ -296,22 +297,9 @@ class GitProjectManager {
     }
 
     getProjectPath(pickedObj) {
-        let checkRemoteCfg = this.config.checkRemoteOrigin;
-        let description = pickedObj.description;
-        let folderIndex = description.indexOf(FOLDER);
-        let repoIndex = description.indexOf(GLOBE);
-
-        if (folderIndex != -1) { //has the path on description
-            return description.substring(folderIndex + 2).trim()
+        if (pickedObj.hasOwnProperty('dir')) {
+            return pickedObj.dir;
         }
-
-        if (repoIndex != -1 && folderIndex == -1) { //has only repo info
-            let map = this.repoList.map(proj => {
-                return checkRemoteCfg ? `${proj.name}.${proj.repo}` : `${proj.name}.${proj.dir}`
-            });
-            return this.repoList[map.indexOf(`${pickedObj.label}.${description.substring(2).trim()}`)].dir;
-        }
-
         throw 'Invalid project path info';
     }
 
