@@ -39,6 +39,10 @@ class Config {
         this.supportsSVN = vscodeConfig.get('supportsSVN', false);
         this.displayProjectPath = vscodeConfig.get('displayProjectPath', false);
     }
+
+    get(param, defaultValue = undefined) {
+        return this.hasOwnProperty(param) ? this[param] : defaultValue;
+    }
 }
 
 module.exports = Config;
