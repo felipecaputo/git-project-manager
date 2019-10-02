@@ -31,8 +31,8 @@ The size of the list if configured in `gitProjectManager.recentProjectsListSize`
 ## Available settings
 
 Before start using GPM you need to configure the base folders that the extension will
-search for git repositories. you need to open **File -> Preferences -> User Settings**
-
+search for git repositories. Edit settings.json from the **File -> Preferences -> Settings** and add the
+following config
 
     {
         "gitProjectManager.baseProjectsFolders": [
@@ -44,7 +44,6 @@ search for git repositories. you need to open **File -> Preferences -> User Sett
 Another available configuration is **gitProjectManager.storeRepositoriesBetweenSessions** that allows
 git repositories information to be stored between sessions, avoiding the waiting time in the first
 time you load the repositories list. It's **false** by default.
-
 
     {
         "gitProjectManager.storeRepositoriesBetweenSessions": true
