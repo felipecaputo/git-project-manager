@@ -1,39 +1,14 @@
-const path = require('path');
-const fs = require('fs');
-
-
-const RECENT_FILE_NAME = 'gpm-recentItems.json';
-
 class RecentItems {
     /**
      * Creates an instance of RecentItems.
-     * 
-     * @param {string} pathToSave Path where the RecentItems file will be saved
+     *
+     * @param {Memento} state Global extension state.
+     * @param {number} [listSize=5] Recent items list size.
      */
-    constructor(pathToSave) {
-        this.pathToSave = pathToSave;
-        this.listSize = 5;
-        this.list = [];
-        this.loadFromFile();
-    }
-    /**
-     * Returns the full path to recent projects file
-     * 
-     * @returns {string}
-     */
-    getPathToFile() {
-        return path.join(this.pathToSave, RECENT_FILE_NAME);
-    }
-    loadFromFile() {
-        const filePath = this.getPathToFile();
-        if (fs.existsSync(filePath) && typeof filePath !== 'undefined') {
-            this.list = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-        }
-    }
-    saveToFile() {
-        fs.writeFileSync(this.getPathToFile(), JSON.stringify(this.list), {
-            encoding: 'utf8'
-        });
+    constructor(state, listSize = 5) {
+        this.state = state;
+        this.listSize = listSize;
+        this.list = this.state.get('recent', []);
     }
     addProject(projectPath, gitRepo) {
         const idx = this.list.findIndex(p => p.projectPath === projectPath);
@@ -48,7 +23,7 @@ class RecentItems {
         };
 
         this.sortList();
-        this.saveToFile();
+        this.state.update('recent', this.list);
     }
     sortList() {
         this.list = this.list.sort((a, b) => b.lastUsed - a.lastUsed);

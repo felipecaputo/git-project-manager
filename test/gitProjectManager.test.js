@@ -6,8 +6,8 @@ const vscode = require('vscode');
 
 const ProjectManager = require('../src/gitProjectManager');
 const Config = require('../src/config');
-const config = new Config();
-const projectManager = new ProjectManager(config)
+const StateMock = require('./stateMock');
+const projectManager = new ProjectManager(new Config(), new StateMock());
 
 describe("gitProjectManager", function () {
     var sandbox;

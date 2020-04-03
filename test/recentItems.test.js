@@ -2,12 +2,10 @@
 
 const RecentItems = require('../src/recentItems');
 const expect = require('chai').expect;
-const path = require('path');
-const fs = require('fs');
 const rmdir = require('rmdir');
 const sinon = require('sinon');
 
-const TESTING_PATH = path.join(__dirname, 'recents');
+const StateMock = require('./stateMock');
 
 function addProjectsToList(recentList, size) {
     switch (size) {
@@ -27,19 +25,10 @@ function addProjectsToList(recentList, size) {
 }
 
 describe('RecentItems', () => {
-    let recentItems = new RecentItems(TESTING_PATH);
+    let recentItems;
 
     beforeEach(() => {
-        if (fs.existsSync(TESTING_PATH)) {
-            fs.rmdirSync(TESTING_PATH);
-        }
-        fs.mkdirSync(TESTING_PATH);
-        recentItems = new RecentItems(TESTING_PATH);
-
-    });
-
-    afterEach((done) => {
-        rmdir(TESTING_PATH, {}, () => done())
+        recentItems = new RecentItems(new StateMock());
     });
 
     it('should start with an empty list', () => {
@@ -53,7 +42,7 @@ describe('RecentItems', () => {
 
     it('should load projects on create', () => {
         addProjectsToList(recentItems, 2);
-        const secondInstance = new RecentItems(TESTING_PATH);
+        const secondInstance = new RecentItems(recentItems.state);
         expect(secondInstance.list.length).to.be.equals(2);
     })
 

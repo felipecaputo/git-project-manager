@@ -4,11 +4,11 @@ const vscode = require('vscode');
 const ProjectManager = require('./gitProjectManager');
 const Config = require('./config');
 const cfg = new Config(vscode.workspace.getConfiguration('gitProjectManager'))
-const projectManager = new ProjectManager(cfg);
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 function activate(context) {
+    const projectManager = new ProjectManager(cfg, context.globalState);
 
     let disposable = vscode.commands.registerCommand('gitProjectManager.openProject', function () {
         projectManager.showProjectList(false);

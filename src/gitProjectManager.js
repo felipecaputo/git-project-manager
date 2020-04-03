@@ -1,5 +1,3 @@
-const EXTENSION_NAME = 'gitProjectManager';
-
 const fs = require('fs');
 const vscode = require('vscode');
 const path = require('path');
@@ -18,32 +16,18 @@ class GitProjectManager {
      * Creates an instance of GitProjectManager.
      *
      * @param {object} config
+     * @param {Memento} state
      */
-    constructor(config) {
+    constructor(config, state) {
         this.config = config;
+        this.state = state;
         this.loadedRepoListFromFile = false;
         this.repoList = [];
         this.storedLists = new Map();
-        this.baseDir = this.getBaseDir();
-        this.gpmRepoListFile = path.join(this.baseDir, this.getChannelPath(), "User/gpm_projects.json");
-        this.recentList = new RecentItems(path.join(this.baseDir, this.getChannelPath(), "User/"));
-        this.recentList.listSize = vscode.workspace.getConfiguration(EXTENSION_NAME).get('gitProjectManager.recentProjectsListSize', 5);
+        this.recentList = new RecentItems(this.state, this.config.get('gitProjectManager.recentProjectsListSize', 5));
 
         this.updateRepoList = this.updateRepoList.bind(this);
         this.addRepoInRepoList = this.addRepoInRepoList.bind(this);
-
-    }
-    /**
-     * Get the base user cfg directory
-     *
-     * @returns {string}
-     */
-    getBaseDir() {
-        if (process.platform == "linux") {
-            return path.join(os.homedir(), '.config');
-        } else {
-            return process.env.APPDATA || (process.platform === 'darwin' ? process.env.HOME + '/Library/Application Support' : '/var/local');
-        }
     }
     getQuickPickList() {
         this.repoList = this.repoList.sort((a, b) => {
@@ -77,39 +61,32 @@ class GitProjectManager {
     get storeDataBetweenSessions() {
         return this.config.storeRepositoriesBetweenSessions;
     }
-    saveListToDisc() {
+    saveList() {
         if (!this.storeDataBetweenSessions)
             return;
 
-        let lists = {};
-        this.storedLists.forEach((value, key) => { lists[key] = value })
-        fs.writeFileSync(this.gpmRepoListFile, JSON.stringify(lists), {
-            encoding: 'utf8'
-        });
+        const lists = Array.from(this.storedLists.entries()).reduce(
+            (storage, [hash, repos]) => ({ ...storage, [hash]: repos }),
+            {},
+        );
+        this.state.update('lists', lists);
     }
-    loadlListFromDisc() {
+    loadList() {
         if (!this.storeDataBetweenSessions)
             return false;
 
-        if (!fs.existsSync(this.gpmRepoListFile))
+        const list = this.state.get('lists', false);
+        if (!list)
             return false;
 
-        let list = JSON.parse(fs.readFileSync(this.gpmRepoListFile, 'utf8'));
-        if (list instanceof Array) {
-            fs.unlinkSync(this.gpmRepoListFile);
-            return false;
-        }
-
-        this.storedLists = new Map();
-        for (let key in list)
-            this.storedLists.set(key, list[key]);
+        this.storedLists = new Map(Array.from(Object.entries(list)));
 
         this.loadedRepoListFromFile = true;
         return true;
     }
     saveRepositoryInfo(directories) {
         this.storedLists.set(this.getDirectoriesHash(directories), this.repoList);
-        this.saveListToDisc();
+        this.saveList();
     }
 
     loadRepositoryInfo() {
@@ -117,7 +94,7 @@ class GitProjectManager {
             return false;
         }
 
-        return this.loadlListFromDisc();
+        return this.loadList();
     }
 
     addRepoInRepoList(repoInfo) {
