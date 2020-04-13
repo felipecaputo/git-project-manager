@@ -1,4 +1,7 @@
 class RecentItems {
+    state: any;
+    listSize: number;
+    list: any;
     /**
      * Creates an instance of RecentItems.
      *
@@ -10,7 +13,7 @@ class RecentItems {
         this.listSize = listSize;
         this.list = this.state.get('recent', []);
     }
-    addProject(projectPath, gitRepo) {
+    addProject(projectPath: string, gitRepo) {
         const idx = this.list.findIndex(p => p.projectPath === projectPath);
         if (idx >= 0) {
             this.list[idx].lastUsed = new Date().getTime();
