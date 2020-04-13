@@ -1,18 +1,19 @@
-// @ts-check
-const cp = require('child_process');
-const vscode = require('vscode');
-const walker = require('walker');
-const path = require('path');
-const fs = require('fs');
-const DirList = require('./dirList');
-const Config = require('./config');
+import Config from "./domain/config";
 
-class ProjectLocator {
-    constructor(config) {
+// @ts-check
+import * as cp from 'child_process';
+import * as vscode from 'vscode';
+import walker from 'walker';
+import * as path from 'path';
+import { existsSync } from 'fs';
+import DirList from './domain/dirList';
+
+export default class ProjectLocator {
+    dirList: DirList;
+    config: Config;
+    constructor(config: Config) {
         this.dirList = new DirList();
-        this.config = new Config();
-        if(config)
-            this.config = config;
+        this.config = config || new Config();
     }
     /**
      * Returns the depth of the directory path
@@ -20,13 +21,13 @@ class ProjectLocator {
      * @param {String} s The path to be processed
      * @returns Number
      */
-    getPathDepth(s) {
+    getPathDepth(s: string): number {
         return s.split(path.sep).length;
     }
-    isMaxDeptReached(currentDepth, initialDepth) {
+    isMaxDeptReached(currentDepth: number, initialDepth: number) {
         return (this.config.maxDepthRecursion > 0) && ((currentDepth - initialDepth) > this.config.maxDepthRecursion);
     }
-    isFolderIgnored(folder) {
+    isFolderIgnored(folder: string) {
         return this.config.ignoredFolders.indexOf(folder) !== -1;
     }
     /**
@@ -35,37 +36,36 @@ class ProjectLocator {
      *
      * @param {string} directory
      */
-    isNestedIgnoredFolder(directory) {
-        return !this.config.searchInsideProjects && this.dirList.directories.some(dir => directory.includes(dir))
+    isNestedIgnoredFolder(directory: string) {
+        return !this.config.searchInsideProjects && this.dirList.directories.some(dir => directory.includes(dir));
     }
-    checkFolderExists(folderPath) {
-        const exists = fs.existsSync(folderPath);
-        if (!exists && this.config.warnFoldersNotFound) {
-            vscode.window.showWarningMessage('Directory ' + folderPath + ' does not exists.');
+    checkFolderExists(folderPath: string) {
+        const exists = existsSync(folderPath);
+        if (!exists && this.config.warnIfFolderNotFound) {
+            vscode.window.showWarningMessage(`Directory ${folderPath} does not exists.`);
         }
 
         return exists;
     }
-    filterDir(dir, depth) {
-        if (this.isFolderIgnored(path.basename(dir))) return false;
-        if (this.isMaxDeptReached(this.getPathDepth(dir), depth)) return false;
-        if (this.isNestedIgnoredFolder(dir)) return false;
+    filterDir(dir: string, depth: number) {
+        if (this.isFolderIgnored(path.basename(dir))) { return false; };
+        if (this.isMaxDeptReached(this.getPathDepth(dir), depth)) { return false; };
+        if (this.isNestedIgnoredFolder(dir)) { return false; };
 
-        return true
+        return true;
     }
-    walkDirectory(dir) {
+    walkDirectory(dir: string): Promise<DirList> {
         var depth = this.getPathDepth(dir);
 
-        // @ts-ignore
         return new Promise((resolve, reject) => {
             try {
                 walker(dir)
-                    .filterDir((dir) => this.filterDir(dir, depth))
-                    .on('dir', absPath => this.processDirectory(absPath))
-                    .on('symlink', absPath => this.processDirectory(absPath))
-                    .on('error', e => this.handleError(e))
+                    .filterDir((dir: string) => this.filterDir(dir, depth))
+                    .on('dir', (absPath: string) => this.processDirectory(absPath))
+                    .on('symlink', (absPath: string) => this.processDirectory(absPath))
+                    .on('error', (e: string) => this.handleError(e))
                     .on('end', () => {
-                        resolve();
+                        resolve(this.dirList);
                     });
             } catch (error) {
                 reject(error);
@@ -73,60 +73,59 @@ class ProjectLocator {
 
         });
     }
-    locateGitProjects(projectsDirList) {
-        // @ts-ignore
-        return new Promise((resolve, reject) => {
-            /** @type {string[]} */
-            var promises = [];
+    async locateGitProjects(projectsDirList: string[]): Promise<DirList> {
 
-            projectsDirList.forEach((projectBasePath) => {
-                if (!this.checkFolderExists(projectBasePath)) return;
+        /** @type {string[]} */
+        var promises: Promise<DirList>[] = [];
 
-                promises.push(this.walkDirectory(projectBasePath));
-            });
+        projectsDirList.forEach((projectBasePath) => {
+            if (!this.checkFolderExists(projectBasePath)) {
+                return;
+            }
 
-            // @ts-ignore
-            Promise.all(promises)
-                .then(() => {
-                    vscode.window.setStatusBarMessage('GPM: Searching folders completed', 1500);
-                    resolve(this.dirList);
-                })
-                .catch(reject);
-        })
+            promises.push(this.walkDirectory(projectBasePath));
+        });
+
+        await Promise.all(promises);
+
+        return this.dirList;
     };
+
     clearDirList() {
         this.dirList = new DirList();
     };
-    extractRepoInfo(basePath) {
-        if (!this.config.checkRemoteOrigin)
+
+    extractRepoInfo(basePath: string): string | undefined {
+        if (!this.config.checkRemoteOrigin) {
             return;
+        }
 
         var stdout = cp.execSync('git remote show origin -n', { cwd: basePath, encoding: 'utf8' });
-        if (stdout.indexOf('Fetch URL:') === -1)
+        if (stdout.indexOf('Fetch URL:') === -1) {
             return;
+        }
 
         var arr = stdout.split('\n');
         for (var i = 0; i < arr.length; i++) {
             var line = arr[i];
             var repoPath = 'Fetch URL: ';
             var idx = line.indexOf(repoPath);
-            if (idx > -1)
+            if (idx > -1) {
                 return line.trim().replace(repoPath, '');
+            }
         }
     }
-    processDirectory(absPath) {
+    processDirectory(absPath: string) {
         vscode.window.setStatusBarMessage(absPath, 600);
-        if (fs.existsSync(path.join(absPath, '.git', 'config'))) {
+        if (existsSync(path.join(absPath, '.git', 'config'))) {
             this.dirList.add(absPath, this.extractRepoInfo(absPath));
-        } else if (this.config.supportsMercurial && fs.existsSync(path.join(absPath, '.hg'))) {
+        } else if (this.config.supportsMercurial && existsSync(path.join(absPath, '.hg'))) {
             this.dirList.add(absPath, undefined);
-        } else if (this.config.supportsSVN && fs.existsSync(path.join(absPath, '.svn'))) {
+        } else if (this.config.supportsSVN && existsSync(path.join(absPath, '.svn'))) {
             this.dirList.add(absPath, undefined);
         }
     }
-    handleError(err) {
+    handleError(err: string) {
         console.log('Error walker:', err);
     }
 }
-
-module.exports = ProjectLocator;

@@ -1,6 +1,6 @@
 /* eslint-env node, mocha */
 
-const RecentItems = require('../src/recentItems');
+const RecentItems = require('../../recentItems');
 const expect = require('chai').expect;
 const rmdir = require('rmdir');
 const sinon = require('sinon');

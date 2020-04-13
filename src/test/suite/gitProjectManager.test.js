@@ -4,7 +4,7 @@ var assert = require('assert');
 const sinon = require('sinon');
 const vscode = require('vscode');
 
-const ProjectManager = require('../src/gitProjectManager');
+const ProjectManager = require('../../gitProjectManager');
 const Config = require('../src/config');
 const StateMock = require('./stateMock');
 const projectManager = new ProjectManager(new Config(), new StateMock());

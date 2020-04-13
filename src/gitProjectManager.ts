@@ -1,37 +1,44 @@
-const fs = require('fs');
-const vscode = require('vscode');
-const path = require('path');
-const cp = require('child_process');
-const os = require('os');
-const SHA256 = require('crypto-js').SHA256;
+import * as vscode from 'vscode';
+import * as path from 'path';
+import { SHA256 } from 'crypto-js';
+import Config from './domain/config';
+import ProjectRepository from './domain/ProjectRepository';
 
-const RecentItems = require('./recentItems');
-let ProjectLocator = require('./gitProjectLocator');
+import RecentItems from './recentItems';
+import ProjectLocator from './gitProjectLocator';
+import DirList from './domain/dirList';
+import ProjectQuickPick from './domain/ProjectQuickPick';
 
 const FOLDER = '\uD83D\uDCC2';
 const GLOBE = '\uD83C\uDF10';
 
-class GitProjectManager {
+export default class GitProjectManager {
+    config: Config;
+    state: vscode.Memento;
+    loadedRepoListFromFile: boolean;
+    repoList: ProjectRepository[];
+    storedLists: Map<any, any>;
+    recentList: RecentItems;
     /**
      * Creates an instance of GitProjectManager.
      *
      * @param {object} config
      * @param {Memento} state
      */
-    constructor(config, state) {
+    constructor(config: Config, state: vscode.Memento) {
         this.config = config;
         this.state = state;
         this.loadedRepoListFromFile = false;
         this.repoList = [];
         this.storedLists = new Map();
-        this.recentList = new RecentItems(this.state, this.config.get('gitProjectManager.recentProjectsListSize', 5));
+        this.recentList = new RecentItems(this.state, config.recentProjectListSize);
 
         this.updateRepoList = this.updateRepoList.bind(this);
         this.addRepoInRepoList = this.addRepoInRepoList.bind(this);
     }
-    getQuickPickList() {
+    getQuickPickList(): ProjectQuickPick[] {
         this.repoList = this.repoList.sort((a, b) => {
-            return a.name > b.name ? 1 : -1
+            return a.name > b.name ? 1 : -1;
         });
 
 
@@ -39,31 +46,33 @@ class GitProjectManager {
         return this.repoList.map(repo => {
             let description = '';
             if (this.config.displayProjectPath || !this.config.checkRemoteOrigin) {
-                let repoDir = repo.dir;
+                let repoDir = repo.directory;
                 // if (repoDir.startsWith(homeDir)) {
                 //     repoDir = '~/' + repoDir.substring(homeDir.length);
                 // }
                 description = `${FOLDER} ${repoDir}`;
             }
             if (this.config.checkRemoteOrigin) {
-                description = `${GLOBE} ${repo.repo} ` + description;
+                description = `${GLOBE} ${repo.repository} ` + description;
             }
-            return {
-                label: repo.name,
-                description: description.trim(),
-                dir: repo.dir,
-            };
+            var item = new ProjectQuickPick();
+            item.label = repo.name;
+            item.description = description.trim();
+            item.directory = repo.directory;
+            return item;
         });
     }
-    handleError(error) {
+    handleError(error: Error): Error {
         vscode.window.showErrorMessage(`Error in GPM Manager ${error}`);
+        return error;
     }
     get storeDataBetweenSessions() {
         return this.config.storeRepositoriesBetweenSessions;
     }
     saveList() {
-        if (!this.storeDataBetweenSessions)
+        if (!this.storeDataBetweenSessions) {
             return;
+        }
 
         const lists = Array.from(this.storedLists.entries()).reduce(
             (storage, [hash, repos]) => ({ ...storage, [hash]: repos }),
@@ -72,19 +81,21 @@ class GitProjectManager {
         this.state.update('lists', lists);
     }
     loadList() {
-        if (!this.storeDataBetweenSessions)
+        if (!this.storeDataBetweenSessions) {
             return false;
+        }
 
         const list = this.state.get('lists', false);
-        if (!list)
+        if (!list) {
             return false;
+        }
 
         this.storedLists = new Map(Array.from(Object.entries(list)));
 
         this.loadedRepoListFromFile = true;
         return true;
     }
-    saveRepositoryInfo(directories) {
+    saveRepositoryInfo(directories: string[]) {
         this.storedLists.set(this.getDirectoriesHash(directories), this.repoList);
         this.saveList();
     }
@@ -97,52 +108,41 @@ class GitProjectManager {
         return this.loadList();
     }
 
-    addRepoInRepoList(repoInfo) {
+    addRepoInRepoList(repoInfo: ProjectRepository) {
         let map = this.repoList.map((info) => {
-            return info.dir;
+            return info.directory;
         });
-        if (map.indexOf(repoInfo.dir) === -1) {
+        if (map.indexOf(repoInfo.directory) === -1) {
             this.repoList.push(repoInfo);
         }
     }
 
-    getProjectsFolders(opts) {
-        let options = Object.assign({
-            subFolder: ''
-        }, opts);
+    async getProjectsFolders(subFolder: string = ''): Promise<string[]> {
 
-        return new Promise((resolve, reject) => {
-            try {
-                var isFolderConfigured = this.config.baseProjectFolders.length > 0;
+        var isFolderConfigured = this.config.baseProjectFolders.length > 0;
 
-                if (!isFolderConfigured) {
-                    reject('You need to configure at least one folder in "gitProjectManager.baseProjectsFolders" before searching for projects.');
-                    return;
-                }
+        if (!isFolderConfigured) {
+            throw new Error('You need to configure at least one folder in "gitProjectManager.baseProjectsFolders" before searching for projects.');
+        }
 
-                var baseProjectsFolders = options.subFolder == '' ? vscode.workspace.getConfiguration('gitProjectManager').get('baseProjectsFolders') : [options.subFolder];
-                var resolvedProjectsFolders = baseProjectsFolders.map(path => {
-                    return this.resolveEnvironmentVariables(process.platform, path);
-                })
-                resolve(resolvedProjectsFolders);
-            } catch (error) {
-                reject(error);
-            }
+        var baseProjectsFolders: string[] = subFolder === '' ? vscode.workspace.getConfiguration('gitProjectManager').get('baseProjectsFolders') || [] : [subFolder];
+        var resolvedProjectsFolders = baseProjectsFolders.map(path => {
+            return this.resolveEnvironmentVariables(process.platform, path);
         });
+
+        return resolvedProjectsFolders;
     }
 
     getHomePath() {
-        return process.env.HOME || process.env.HOMEPATH
+        return process.env.HOME || process.env.HOMEPATH;
     }
 
-    resolveEnvironmentVariables(processPlatform, aPath) {
+    resolveEnvironmentVariables(processPlatform: string, aPath: string) {
         var envVarMatcher = processPlatform === 'win32' ? /%([^%]+)%/g : /\$([^\/]+)/g;
-        let resolvedPath = aPath.replace(envVarMatcher, function (_, key) {
-            return process.env[key];
-        });
+        let resolvedPath = aPath.replace(envVarMatcher, (_, key) => process.env[key] || '');
 
-        const homePath = this.getHomePath();
-        return resolvedPath.charAt(0) == '~' ? path.join(homePath, resolvedPath.substr(1)) : resolvedPath;
+        const homePath = this.getHomePath() || '';
+        return resolvedPath.charAt(0) === '~' ? path.join(homePath, resolvedPath.substr(1)) : resolvedPath;
     };
     /**
      * Show the list of found Git projects, and open the choosed project
@@ -152,27 +152,22 @@ class GitProjectManager {
      *
      * @memberOf GitProjectManager
      */
-    showProjectList(openInNewWindow, opts = {}) {
+    async showProjectList(openInNewWindow: boolean, baseFolder?: string) {
+        try {
+            var options = {
+                placeHolder: 'Select a folder to open:      (it may take a few seconds to search the folders the first time)'
+            };
 
-        const onResolve = selected => {
+            var projectsPromise = this.getProjectsList(await this.getProjectsFolders(baseFolder));
+
+            var selected = await vscode.window.showQuickPick<ProjectQuickPick>(projectsPromise, options);
+
             if (selected) {
                 this.openProject(selected, openInNewWindow);
             }
+        } catch (e) {
+            vscode.window.showInformationMessage(`Error while showing Project list: ${e}`);
         }
-
-        const onReject = reason => {
-            vscode.window.showInformationMessage(`Error while showing Project list: ${reason}`);
-        }
-
-        var options = {
-            placeHolder: 'Select a folder to open:      (it may take a few seconds to search the folders the first time)'
-        };
-
-        var projectsPromise = this.getProjectsFolders(opts)
-            .then(folders => this.getProjectsList(folders))
-            .catch(this.handleError);
-
-        vscode.window.showQuickPick(projectsPromise, options).then(onResolve, onReject);
     };
 
     /**
@@ -180,68 +175,44 @@ class GitProjectManager {
      *
      * @param {DirList} dirList
      */
-    addUnversionedProjects(dirList) {
+    addUnversionedProjects(dirList: DirList) {
         let unversioned = this.config.unversionedProjects;
         unversioned.forEach(proj => dirList.add(proj));
         return dirList.dirs;
     }
 
-    updateRepoList(dirList, directories) {
+    updateRepoList(dirList: ProjectRepository[], directories: string[]) {
         dirList.forEach(this.addRepoInRepoList);
         this.saveRepositoryInfo(directories);
         return dirList;
     }
 
-    getProjectsList(directories) {
-        return new Promise((resolve, reject) => {
-            try {
-                this.repoList = this.storedLists.get(this.getDirectoriesHash(directories));
-                if (this.repoList) {
-                    resolve(this.getQuickPickList());
-                    return;
-                }
+    async getProjectsList(directories: string[]): Promise<ProjectQuickPick[]> {
 
-                this.clearProjectList()
-                if (this.loadRepositoryInfo()) {
-                    this.repoList = this.storedLists.get(this.getDirectoriesHash(directories));
-                    if (this.repoList) {
-                        resolve(this.getQuickPickList());
-                        return;
-                    }
-                }
+        this.repoList = this.storedLists.get(this.getDirectoriesHash(directories));
+        if (this.repoList) {
+            return this.getQuickPickList();
+        }
 
-                const projectLocator = new ProjectLocator(this.config);
-                projectLocator.locateGitProjects(directories)
-                    .then(dirList => this.addUnversionedProjects(dirList))
-                    .then(dirList => this.updateRepoList(dirList, directories))
-                    .then()
-                    .then(() => resolve(this.getQuickPickList()));
-            } catch (error) {
-                reject(error);
+        this.clearProjectList();
+        if (this.loadRepositoryInfo()) {
+            this.repoList = this.storedLists.get(this.getDirectoriesHash(directories));
+            if (this.repoList) {
+                return this.getQuickPickList();
             }
-        });
+        }
+
+        const projectLocator = new ProjectLocator(this.config);
+        await projectLocator.locateGitProjects(directories)
+            .then(dirList => this.addUnversionedProjects(dirList))
+            .then(dirList => this.updateRepoList(dirList, directories));
+
+        return this.getQuickPickList();
+
     };
 
-    openProjectViaShell(projPath) {
-
-        let codePath = this.getCodePath();
-        if (codePath.indexOf(' ') !== -1)
-            codePath = `"${codePath}"`;
-
-        let cmdLine = `${codePath} ${projPath}`;
-
-        cp.exec(cmdLine, (error, stdout, stderr) => {
-            if (error) {
-                console.log(error, stdout, stderr);
-            }
-            cp.exec('cd ..', (a, b, c) => {
-                console.log('->', a, b, c);
-            });
-        });
-    }
-
-    openProject(pickedObj, openInNewWindow) {
-        let projectPath = typeof (pickedObj) == 'string' ? pickedObj : this.getProjectPath(pickedObj),
+    openProject(pickedObj: ProjectQuickPick | string, openInNewWindow: boolean = false) {
+        let projectPath = this.getProjectPath(pickedObj),
             uri = vscode.Uri.file(projectPath),
             newWindow = openInNewWindow || (this.config.openInNewWindow && !!vscode.workspace.workspaceFolders);
 
@@ -249,38 +220,15 @@ class GitProjectManager {
         vscode.commands.executeCommand('vscode.openFolder', uri, newWindow);
     }
 
-    getCodePath() {
-        let cfg = vscode.workspace.getConfiguration(
-            'gitProjectManager'
-        ).get(
-            'codePath', 'code'
-        );
-
-        let codePath = 'code'
-        if (typeof cfg === 'string') {
-            codePath = cfg;
-        } else if (cfg.toString() === '[object Object]') {
-            codePath = cfg[process.platform];
-        } else if (cfg.length) {
-            for (let i = 0; i < cfg.length; i++) {
-                if (fs.existsSync(cfg[i])) {
-                    codePath = cfg[i];
-                    break;
-                }
-            }
+    getProjectPath(pickedObj: ProjectQuickPick | string): string {
+        if (pickedObj instanceof ProjectQuickPick) {
+            return pickedObj.directory;
         }
 
-        return codePath;
+        return pickedObj;
     }
 
-    getProjectPath(pickedObj) {
-        if (pickedObj.hasOwnProperty('dir')) {
-            return pickedObj.dir;
-        }
-        throw 'Invalid project path info';
-    }
-
-    internalRefresh(folders, suppressMessage) {
+    internalRefresh(folders: string[], suppressMessage: boolean) {
         this.storedLists = new Map();
         this.getProjectsList(folders)
             .then(() => {
@@ -303,7 +251,7 @@ class GitProjectManager {
      * Refreshs the current list of projects
      * @param {boolean} suppressMessage if true, no warning message will be shown.
      */
-    refreshList(suppressMessage) {
+    refreshList(suppressMessage: boolean = false) {
         this.clearProjectList();
         this.getProjectsFolders()
             .then((folders) => {
@@ -324,11 +272,10 @@ class GitProjectManager {
             .then((list) => {
                 vscode.window.showQuickPick(list, options)
                     .then((selection) => {
-                        if (!selection) return;
-                        this.internalRefresh([selection]);
-                    })
-                    .catch((error) => {
-                        console.log(error);
+                        if (!selection) {
+                            return;
+                        }
+                        this.internalRefresh([selection], false);
                     });
             })
             .catch((error) => {
@@ -340,16 +287,18 @@ class GitProjectManager {
     openRecentProjects() {
         let self = this;
         if (this.recentList.list.length === 0) {
-            vscode.window.showInformationMessage('It seems you haven\'t opened any projects using Git Project Manager extension yet!')
+            vscode.window.showInformationMessage('It seems you haven\'t opened any projects using Git Project Manager extension yet!');
         }
 
         vscode.window.showQuickPick(this.recentList.list.map(i => {
             return {
                 label: path.basename(i.projectPath),
                 description: i.projectPath
-            }
+            };
         })).then(selected => {
-            if (selected) self.openProject(selected.description)
+            if (selected) {
+                self.openProject(selected.description);
+            }
         });
     }
 
@@ -361,19 +310,20 @@ class GitProjectManager {
      *
      * @memberOf GitProjectManager
      */
-    getDirectoriesHash(directories) {
+    getDirectoriesHash(directories: string[]) {
         return SHA256(directories.join('')).toString();
     }
 
     showProjectsFromSubFolder() {
         vscode.window.showQuickPick(this.getProjectsFolders(), {
+            canPickMany: false,
             placeHolder: 'Pick a folder to see the subfolder projects'
-        }).then(folder => {
-            if (!folder) return;
+        }).then((folder: string | undefined) => {
+            if (!folder) {
+                return;
+            }
 
-            this.showProjectList(false, {
-                subFolder: folder
-            })
+            this.showProjectList(false, folder);
         });
     }
     getChannelPath() {
@@ -381,5 +331,3 @@ class GitProjectManager {
     }
 
 }
-
-module.exports = GitProjectManager;

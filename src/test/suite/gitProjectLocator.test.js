@@ -11,7 +11,7 @@ const assert = require('assert');
 // You can import and use all API from the 'vscode' module
 // as well as import your extension to test it
 // const vscode = require('vscode');
-const ProjectLocator = require('../src/gitProjectLocator');
+const ProjectLocator = require('../../gitProjectLocator');
 const path = require('path');
 const fs = require('fs');
 const chai = require('chai');
