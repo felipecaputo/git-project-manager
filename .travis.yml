@@ -19,4 +19,5 @@ install:
   - npm install
 
 script:
-  - npm run pretest && npm run test
+  - npm run pretest 
+  - npm run test --silent
