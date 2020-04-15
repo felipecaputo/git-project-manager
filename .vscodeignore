@@ -4,3 +4,12 @@ test/**
 .gitignore
 jsconfig.json
 vsc-extension-quickstart.md
+.vscode-test/**
+out/test/**
+src/**
+.gitignore
+vsc-extension-quickstart.md
+**/tsconfig.json
+**/.eslintrc.json
+**/*.map
+**/*.ts

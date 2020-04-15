@@ -1,13 +1,12 @@
 /* eslint-env node, mocha */
 
-const RecentItems = require('../src/recentItems');
-const expect = require('chai').expect;
-const rmdir = require('rmdir');
-const sinon = require('sinon');
+import RecentItems from '../../recentItems';
+import { expect } from 'chai';
+import { useFakeTimers } from 'sinon';
 
-const StateMock = require('./stateMock');
+import StateMock from './stateMock';
 
-function addProjectsToList(recentList, size) {
+function addProjectsToList(recentList: RecentItems, size: number) {
     switch (size) {
         case 6:
             recentList.addProject('f', 'g');
@@ -24,37 +23,37 @@ function addProjectsToList(recentList, size) {
     }
 }
 
-describe('RecentItems', () => {
-    let recentItems;
+suite('RecentItems', () => {
+    let recentItems: RecentItems;
 
-    beforeEach(() => {
+    setup(() => {
         recentItems = new RecentItems(new StateMock());
     });
 
-    it('should start with an empty list', () => {
+    test('should start with an empty list', () => {
         expect(recentItems.list.length).to.be.equals(0);
     });
 
-    it('should add projects to list', () => {
+    test('should add projects to list', () => {
         addProjectsToList(recentItems, 2);
         expect(recentItems.list.length).to.be.equals(2);
-    })
+    });
 
-    it('should load projects on create', () => {
+    test('should load projects on create', () => {
         addProjectsToList(recentItems, 2);
         const secondInstance = new RecentItems(recentItems.state);
         expect(secondInstance.list.length).to.be.equals(2);
-    })
+    });
 
-    it('should not add the same project twice', () => {
+    test('should not add the same project twice', () => {
         addProjectsToList(recentItems, 2);
         expect(recentItems.list.length).to.be.equals(2);
         recentItems.addProject('a', 'b');
         expect(recentItems.list.length).to.be.equals(2);
-    })
+    });
 
-    it('should be orderer by project added time', () => {
-        let clock = sinon.useFakeTimers();
+    test('should be orderer by project added time', () => {
+        let clock = useFakeTimers();
         try {
             recentItems.addProject('first', '1');
 
@@ -73,11 +72,11 @@ describe('RecentItems', () => {
         }
 
 
-    })
+    });
 
-    it('should not add more projects than limit', () => {
+    test('should not add more projects than limit', () => {
         recentItems.listSize = 3;
         addProjectsToList(recentItems, 6);
-        addProjectsToList(recentItems, 3)
-    })
+        addProjectsToList(recentItems, 3);
+    });
 });

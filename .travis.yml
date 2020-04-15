@@ -1,7 +1,6 @@
 language: node_js
 node_js:
   - "node"
-  - "5"
 
 sudo: false
 
@@ -20,4 +19,5 @@ install:
   - npm install
 
 script:
-  - npm test --silent
+  - npm run pretest 
+  - npm run test --silent
