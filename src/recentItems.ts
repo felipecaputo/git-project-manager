@@ -1,4 +1,5 @@
 import { Memento } from "vscode";
+import RecentItem from './domain/RecentItem';
 
 export default class RecentItems {
     state: Memento;
