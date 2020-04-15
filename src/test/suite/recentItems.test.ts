@@ -37,20 +37,20 @@ suite('RecentItems', () => {
     test('should add projects to list', () => {
         addProjectsToList(recentItems, 2);
         expect(recentItems.list.length).to.be.equals(2);
-    })
+    });
 
     test('should load projects on create', () => {
         addProjectsToList(recentItems, 2);
         const secondInstance = new RecentItems(recentItems.state);
         expect(secondInstance.list.length).to.be.equals(2);
-    })
+    });
 
     test('should not add the same project twice', () => {
         addProjectsToList(recentItems, 2);
         expect(recentItems.list.length).to.be.equals(2);
         recentItems.addProject('a', 'b');
         expect(recentItems.list.length).to.be.equals(2);
-    })
+    });
 
     test('should be orderer by project added time', () => {
         let clock = useFakeTimers();
@@ -72,11 +72,11 @@ suite('RecentItems', () => {
         }
 
 
-    })
+    });
 
     test('should not add more projects than limit', () => {
         recentItems.listSize = 3;
         addProjectsToList(recentItems, 6);
-        addProjectsToList(recentItems, 3)
-    })
+        addProjectsToList(recentItems, 3);
+    });
 });
