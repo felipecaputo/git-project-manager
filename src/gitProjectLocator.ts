@@ -3,7 +3,7 @@ import Config from "./domain/config";
 // @ts-check
 import * as cp from 'child_process';
 import * as vscode from 'vscode';
-import walker from 'walker';
+import * as walker from 'walker';
 import * as path from 'path';
 import { existsSync } from 'fs';
 import DirList from './domain/dirList';
