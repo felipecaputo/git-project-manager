@@ -1,203 +1,203 @@
 {
-    "name": "git-project-manager",
-    "displayName": "Git Project Manager",
-    "description": "Allows you to change easily between git projects.",
-    "icon": "img/icon.png",
-    "version": "1.7.1",
-    "publisher": "felipecaputo",
-    "galleryBanner": {
-        "color": "#202040",
-        "theme": "dark"
-    },
-    "license": "SEE LICENSE IN LICENSE.md",
-    "bugs": {
-        "url": "https://github.com/felipecaputo/git-project-manager/issues",
-        "email": "felipe.caputo@gmail.com"
-    },
-    "homepage": "https://github.com/felipecaputo/git-project-manager/blob/master/README.md",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/felipecaputo/git-project-manager.git"
-    },
-    "engines": {
-        "vscode": "^1.44.0"
-    },
-    "categories": [
-        "Other"
-    ],
-    "activationEvents": [
-        "onCommand:gitProjectManager.openProject",
-        "onCommand:gitProjectManager.refreshProjects",
-        "onCommand:gitProjectManager.refreshFolder",
-        "onCommand:gitProjectManager.openRecents",
-        "onCommand:gitProjectManager.openSubFolder",
-        "onCommand:gitProjectManager.openProjectNewWindow"
-    ],
-    "contributes": {
-        "configuration": {
-            "type": "object",
-            "title": "Git Project Manager configuration",
-            "properties": {
-                "gitProjectManager.baseProjectsFolders": {
-                    "type": "array",
-                    "default": [],
-                    "description": "Specifies the base folders to search for git repositories"
-                },
-                "gitProjectManager.storeRepositoriesBetweenSessions": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Specifies whether saves repository folders' data between sessions"
-                },
-                "gitProjectManager.codePath": {
-                    "type": [
-                        "string",
-                        "array",
-                        "object"
-                    ],
-                    "default": "code",
-                    "description": "Specifies full path to Code command to use when opening a project."
-                },
-                "gitProjectManager.ignoredFolders": {
-                    "type": "array",
-                    "default": [],
-                    "description": "Specifies folders to be ignored. (node_modules for example), improving search performance"
-                },
-                "gitProjectManager.maxDepthRecursion": {
-                    "type": "integer",
-                    "default": 4,
-                    "description": "Indicate the maximum depth of folder recursion to search for projects. Any value below 1 means there is no limit"
-                },
-                "gitProjectManager.checkRemoteOrigin": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Indicates if extension will validate and get the remote origin of the git repository"
-                },
-                "gitProjectManager.openInNewWindow": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Define the behavior when opening a new project, if true a new VSCode will be opened with the selected project"
-                },
-                "gitProjectManager.warnIfFolderNotFound": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Define if extension should show a warn if a configured project folder is not found while searching for projects"
-                },
-                "gitProjectManager.unversionedProjects": {
-                    "type": "array",
-                    "default": [],
-                    "description": "Allows to list projects that are not versioned in \"List Repositories\" command"
-                },
-                "gitProjectManager.recentProjectsListSize": {
-                    "type": "integer",
-                    "default": 5,
-                    "description": "Number of recent projects to be kept to use with GPM - Open Recent"
-                },
-                "gitProjectManager.searchInsideProjects": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Define if extension should look for Git projects inside other Git projects."
-                },
-                "gitProjectManager.supportsMercurial": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Define if extension should look for Mercurial projects too."
-                },
-                "gitProjectManager.supportsSVN": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Define if extension should look for for SVN projects too."
-                },
-                "gitProjectManager.displayProjectPath": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Indicates if project path will be displayed in project picker."
-                }
-            }
+  "name": "git-project-manager",
+  "displayName": "Git Project Manager",
+  "description": "Allows you to change easily between git projects.",
+  "icon": "img/icon.png",
+  "version": "1.7.1",
+  "publisher": "felipecaputo",
+  "galleryBanner": {
+    "color": "#202040",
+    "theme": "dark"
+  },
+  "license": "SEE LICENSE IN LICENSE.md",
+  "bugs": {
+    "url": "https://github.com/felipecaputo/git-project-manager/issues",
+    "email": "felipe.caputo@gmail.com"
+  },
+  "homepage": "https://github.com/felipecaputo/git-project-manager/blob/master/README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/felipecaputo/git-project-manager.git"
+  },
+  "engines": {
+    "vscode": "^1.44.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:gitProjectManager.openProject",
+    "onCommand:gitProjectManager.refreshProjects",
+    "onCommand:gitProjectManager.refreshFolder",
+    "onCommand:gitProjectManager.openRecents",
+    "onCommand:gitProjectManager.openSubFolder",
+    "onCommand:gitProjectManager.openProjectNewWindow"
+  ],
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "Git Project Manager configuration",
+      "properties": {
+        "gitProjectManager.baseProjectsFolders": {
+          "type": "array",
+          "default": [],
+          "description": "Specifies the base folders to search for git repositories"
         },
-        "commands": [
-            {
-                "command": "gitProjectManager.openProject",
-                "title": "Open Git Project",
-                "category": "GPM"
-            },
-            {
-                "command": "gitProjectManager.openProjectNewWindow",
-                "title": "Open Git Project in a New Window",
-                "category": "GPM"
-            },
-            {
-                "command": "gitProjectManager.refreshProjects",
-                "title": "Refresh Projects",
-                "category": "GPM"
-            },
-            {
-                "command": "gitProjectManager.refreshFolder",
-                "title": "Refresh specific projects folder",
-                "category": "GPM"
-            },
-            {
-                "command": "gitProjectManager.openRecents",
-                "title": "Open Recent Git Project",
-                "category": "GPM"
-            },
-            {
-                "command": "gitProjectManager.openSubFolder",
-                "title": "Open Git Project from SubFolder",
-                "category": "GPM"
-            }
-        ],
-        "keybindings": [
-            {
-                "key": "ctrl+alt+p",
-                "mac": "cmd+alt+p",
-                "command": "gitProjectManager.openProject"
-            },
-            {
-                "key": "alt+shift+p",
-                "mac": "alt+shift+p",
-                "command": "gitProjectManager.openSubFolder"
-            },
-            {
-                "key": "ctrl+alt+n",
-                "mac": "cmd+alt+n",
-                "command": "gitProjectManager.openProjectNewWindow"
-            },
-            {
-                "key": "ctrl+shift+q",
-                "mac": "cmd+alt+q",
-                "command": "gitProjectManager.openRecents"
-            }
-        ]
+        "gitProjectManager.storeRepositoriesBetweenSessions": {
+          "type": "boolean",
+          "default": false,
+          "description": "Specifies whether saves repository folders' data between sessions"
+        },
+        "gitProjectManager.codePath": {
+          "type": [
+            "string",
+            "array",
+            "object"
+          ],
+          "default": "code",
+          "description": "Specifies full path to Code command to use when opening a project."
+        },
+        "gitProjectManager.ignoredFolders": {
+          "type": "array",
+          "default": [],
+          "description": "Specifies folders to be ignored. (node_modules for example), improving search performance"
+        },
+        "gitProjectManager.maxDepthRecursion": {
+          "type": "integer",
+          "default": 4,
+          "description": "Indicate the maximum depth of folder recursion to search for projects. Any value below 1 means there is no limit"
+        },
+        "gitProjectManager.checkRemoteOrigin": {
+          "type": "boolean",
+          "default": true,
+          "description": "Indicates if extension will validate and get the remote origin of the git repository"
+        },
+        "gitProjectManager.openInNewWindow": {
+          "type": "boolean",
+          "default": false,
+          "description": "Define the behavior when opening a new project, if true a new VSCode will be opened with the selected project"
+        },
+        "gitProjectManager.warnIfFolderNotFound": {
+          "type": "boolean",
+          "default": false,
+          "description": "Define if extension should show a warn if a configured project folder is not found while searching for projects"
+        },
+        "gitProjectManager.unversionedProjects": {
+          "type": "array",
+          "default": [],
+          "description": "Allows to list projects that are not versioned in \"List Repositories\" command"
+        },
+        "gitProjectManager.recentProjectsListSize": {
+          "type": "integer",
+          "default": 5,
+          "description": "Number of recent projects to be kept to use with GPM - Open Recent"
+        },
+        "gitProjectManager.searchInsideProjects": {
+          "type": "boolean",
+          "default": true,
+          "description": "Define if extension should look for Git projects inside other Git projects."
+        },
+        "gitProjectManager.supportsMercurial": {
+          "type": "boolean",
+          "default": false,
+          "description": "Define if extension should look for Mercurial projects too."
+        },
+        "gitProjectManager.supportsSVN": {
+          "type": "boolean",
+          "default": false,
+          "description": "Define if extension should look for for SVN projects too."
+        },
+        "gitProjectManager.displayProjectPath": {
+          "type": "boolean",
+          "default": false,
+          "description": "Indicates if project path will be displayed in project picker."
+        }
+      }
     },
-    "main": "./out/extension.js",
-    "devDependencies": {
-        "@types/chai": "^4.2.11",
-        "@types/crypto-js": "^3.1.44",
-        "@types/glob": "^7.1.1",
-        "@types/mocha": "^7.0.2",
-        "@types/node": "^13.11.0",
-        "@types/rimraf": "^3.0.0",
-        "@types/sinon": "^9.0.0",
-        "@types/vscode": "^1.44.0",
-        "@typescript-eslint/eslint-plugin": "^2.26.0",
-        "@typescript-eslint/parser": "^2.26.0",
-        "chai": "^4.2.0",
-        "crypto-js": "^4.0.0",
-        "eslint": "^6.8.0",
-        "mocha": "^7.1.1",
-        "rimraf": "^3.0.2",
-        "sinon": "^9.0.2",
-        "typescript": "^3.8.3",
-        "vscode-test": "^1.3.0",
-        "walker": "^1.0.7"
-    },
-    "scripts": {
-        "vscode:prepublish": "npm run compile",
-        "compile": "tsc -p ./",
-        "lint": "eslint src --ext ts",
-        "watch": "tsc -watch -p ./",
-        "pretest": "npm run compile && npm run lint",
-        "test": "node ./out/test/runTest.js"
-    },
-    "dependencies": {}
+    "commands": [
+      {
+        "command": "gitProjectManager.openProject",
+        "title": "Open Git Project",
+        "category": "GPM"
+      },
+      {
+        "command": "gitProjectManager.openProjectNewWindow",
+        "title": "Open Git Project in a New Window",
+        "category": "GPM"
+      },
+      {
+        "command": "gitProjectManager.refreshProjects",
+        "title": "Refresh Projects",
+        "category": "GPM"
+      },
+      {
+        "command": "gitProjectManager.refreshFolder",
+        "title": "Refresh specific projects folder",
+        "category": "GPM"
+      },
+      {
+        "command": "gitProjectManager.openRecents",
+        "title": "Open Recent Git Project",
+        "category": "GPM"
+      },
+      {
+        "command": "gitProjectManager.openSubFolder",
+        "title": "Open Git Project from SubFolder",
+        "category": "GPM"
+      }
+    ],
+    "keybindings": [
+      {
+        "key": "ctrl+alt+p",
+        "mac": "cmd+alt+p",
+        "command": "gitProjectManager.openProject"
+      },
+      {
+        "key": "alt+shift+p",
+        "mac": "alt+shift+p",
+        "command": "gitProjectManager.openSubFolder"
+      },
+      {
+        "key": "ctrl+alt+n",
+        "mac": "cmd+alt+n",
+        "command": "gitProjectManager.openProjectNewWindow"
+      },
+      {
+        "key": "ctrl+shift+q",
+        "mac": "cmd+alt+q",
+        "command": "gitProjectManager.openRecents"
+      }
+    ]
+  },
+  "main": "./out/extension.js",
+  "devDependencies": {
+    "@types/chai": "^4.2.22",
+    "@types/crypto-js": "^4.0.2",
+    "@types/glob": "^7.1.4",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.11.0",
+    "@types/rimraf": "^3.0.2",
+    "@types/sinon": "^10.0.4",
+    "@types/vscode": "^1.61.0",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "chai": "^4.3.4",
+    "crypto-js": "^4.1.1",
+    "eslint": "^8.0.1",
+    "mocha": "^9.1.3",
+    "rimraf": "^3.0.2",
+    "sinon": "^11.1.2",
+    "typescript": "^4.4.4",
+    "vscode-test": "^1.6.1",
+    "walker": "^1.0.7"
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "./node_modules/typescript/bin/tsc -p ./",
+    "lint": "eslint src --ext ts",
+    "watch": "./node_modules/typescript/bin/tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "test": "node ./out/test/runTest.js"
+  },
+  "dependencies": {}
 }
