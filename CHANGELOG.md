@@ -1,5 +1,9 @@
 # Changelog
 
+## Next version
+
+- Fixed error that could happen when there are no `origin` remote - #63
+
 ## 1.7.1
 
 - Workaround for #88 where there were erros loading projects from home dir on Ubuntu

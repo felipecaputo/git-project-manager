@@ -100,20 +100,17 @@ export default class ProjectLocator {
             return;
         }
 
-        var stdout = cp.execSync('git remote show origin -n', { cwd: basePath, encoding: 'utf8' });
-        if (stdout.indexOf('Fetch URL:') === -1) {
+        let originList = cp.execSync('git remote ', { cwd: basePath, encoding: 'utf8' });
+
+        let firstOrigin = originList?.split('\n').shift()?.trim();
+        if (firstOrigin === '') {
             return;
         }
 
-        var arr = stdout.split('\n');
-        for (var i = 0; i < arr.length; i++) {
-            var line = arr[i];
-            var repoPath = 'Fetch URL: ';
-            var idx = line.indexOf(repoPath);
-            if (idx > -1) {
-                return line.trim().replace(repoPath, '');
-            }
-        }
+        return cp.execSync(`git remote get-url ${firstOrigin}`, { cwd: basePath, encoding: 'utf8' })
+            ?.split('\n')
+            .shift()
+            ?.trim();
     }
     processDirectory(absPath: string) {
         vscode.window.setStatusBarMessage(absPath, 600);

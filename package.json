@@ -193,10 +193,11 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
+    "postcompile": "mkdir -p out/test/suite/repo-info-test && cp -R src/test/suite/repo-info-test/*  out/test/suite/repo-info-test",
     "compile": "./node_modules/typescript/bin/tsc -p ./",
     "lint": "eslint src --ext ts",
     "watch": "./node_modules/typescript/bin/tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
+    "pretest": "npm run compile",
     "test": "node ./out/test/runTest.js"
   },
   "dependencies": {}
