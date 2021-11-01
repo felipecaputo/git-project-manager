@@ -2,7 +2,12 @@
 
 ## Next version
 
+
+## 1.8.0
+
 - Fixed error that could happen when there are no `origin` remote - #63
+- Added publish to OpenVSX - #115
+- Updated dependencies
 
 ## 1.7.1
 
