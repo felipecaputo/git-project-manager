@@ -26,12 +26,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:gitProjectManager.openProject",
-    "onCommand:gitProjectManager.refreshProjects",
-    "onCommand:gitProjectManager.refreshFolder",
-    "onCommand:gitProjectManager.openRecents",
-    "onCommand:gitProjectManager.openSubFolder",
-    "onCommand:gitProjectManager.openProjectNewWindow"
+    "onStartupFinished"
   ],
   "contributes": {
     "configuration": {
