@@ -3,7 +3,7 @@
   "displayName": "Git Project Manager",
   "description": "Allows you to change easily between git projects.",
   "icon": "img/icon.png",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "publisher": "felipecaputo",
   "galleryBanner": {
     "color": "#202040",
@@ -26,6 +26,12 @@
     "Other"
   ],
   "activationEvents": [
+    "onCommand:gitProjectManager.openProject",
+    "onCommand:gitProjectManager.openProjectNewWindow",
+    "onCommand:gitProjectManager.refreshProjects",
+    "onCommand:gitProjectManager.refreshFolder",
+    "onCommand:gitProjectManager.openRecents",
+    "onCommand:gitProjectManager.openSubFolder",
     "onStartupFinished"
   ],
   "contributes": {
@@ -42,15 +48,6 @@
           "type": "boolean",
           "default": false,
           "description": "Specifies whether saves repository folders' data between sessions"
-        },
-        "gitProjectManager.codePath": {
-          "type": [
-            "string",
-            "array",
-            "object"
-          ],
-          "default": "code",
-          "description": "Specifies full path to Code command to use when opening a project."
         },
         "gitProjectManager.ignoredFolders": {
           "type": "array",

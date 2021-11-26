@@ -49,39 +49,6 @@ time you load the repositories list. It's **false** by default.
         "gitProjectManager.storeRepositoriesBetweenSessions": true
     }
 
-If nothing happens when trying to open a found project it could be due to the Code command being used. To work around this issue set **gitProjectManager.codePath** to the full path of the Code command to use when launching new instances.
-This configuration can be defined in 3 formats (*this was done to solve issue #7*):
-
-**First:** Define it as a simple string, with the path to code app
-
-    //Windows
-    {
-        "gitProjectManager.codePath": "C:\\Program Files (x86)\\Microsoft VS Code\\bin\\code.cmd"
-    }
-
-    //Linux
-    {
-        "gitProjectManager.codePath": "/usr/local/bin/code"
-    }
-
-**Second:** Use a object notation to define the path to code path on each platform
-
-    {
-        "gitProjectManager.codePath" : {
-            "windows": "C:\\Program Files (x86)\\Microsoft VS Code\\bin\\code.cmd",
-            "linux": "/usr/local/bin/code"
-        }
-    }
-
-**Third:** An array of file paths, where at least one is a valid path
-
-    {
-        "gitProjectManager.codePath" : [
-            "C:\\Program Files (x86)\\Microsoft VS Code\\bin\\code.cmd",
-            "/usr/local/bin/code"
-        ]
-    }
-
 To improve performance there are 2 new and important configurations that are:
 **ignoredFolders**: an array of folder names that will be ignored (*node_modules for example*)
 
