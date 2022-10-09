@@ -284,7 +284,7 @@ export default class GitProjectManager {
 
     };
 
-    openRecentProjects() {
+    openRecentProjects(openInNewWindow: boolean = false) {
         let self = this;
         if (this.recentList.list.length === 0) {
             vscode.window.showInformationMessage('It seems you haven\'t opened any projects using Git Project Manager extension yet!');
@@ -297,7 +297,7 @@ export default class GitProjectManager {
             };
         })).then(selected => {
             if (selected) {
-                self.openProject(selected.description);
+                self.openProject(selected.description, openInNewWindow);
             }
         });
     }
