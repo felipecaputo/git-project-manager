@@ -31,7 +31,7 @@ The size of the list is configured in `"gitProjectManager.recentProjectsListSize
 ## Available settings
 
 Before you can start using GPM, you need to configure the base folders that the extension will use to
-search for git repositories. Edit `settings.json` from the **Code -> Preferences -> Settings**. Then search GPM in extensions. Finally select Base Projects Folders
+search for git repositories. Edit `settings.json` from the for WindowS **File -> Preferences -> Settings**. For MAC **Code -> Preferences -> Settings**. Then search GPM in extensions. Finally select Base Projects Folders
 and add the following config:
 
 ```json
