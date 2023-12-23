@@ -191,7 +191,7 @@
     "test": "node ./out/test/runTest.js"
   },
   "dependencies": {
-    "crypto-js": "^4.1.1",
+    "crypto-js": "^4.2.0",
     "walker": "^1.0.7"
   }
 }
