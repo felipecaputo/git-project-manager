@@ -1,18 +1,14 @@
-{
-    "root": true,
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaVersion": 6,
-        "sourceType": "module"
+'use strict';
+
+module.exports = {
+    testEnvironment: 'node',
+    clearMocks: true,
+    restoreMocks: true,
+    testMatch: ['<rootDir>/tests/**/*.test.js'],
+    moduleNameMapper: {
+        '^vscode$': '<rootDir>/tests/mocks/vscode.js'
     },
-    "plugins": [
-        "@typescript-eslint"
-    ],
-    "rules": {
-        "@typescript-eslint/semi": "warn",
-        "curly": "warn",
-        "eqeqeq": "warn",
-        "no-throw-literal": "warn",
-        "semi": "off"
-    }
-}
+    collectCoverageFrom: ['src/**/*.js'],
+    coverageDirectory: 'coverage',
+    coverageReporters: ['text', 'lcov']
+};
