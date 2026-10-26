@@ -1,8 +1,32 @@
-.vscode-test
-node_modules
-*.vsix
-npm-debug.log*
-*.log
-out
-.vscode-test/
-*.vsix
+{
+  "name": "meu-projeto-typescript",
+  "version": "1.0.0",
+  "description": "Projeto Node.js com TypeScript, Husky e Lint-Staged",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "ts-node src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,js}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,css}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "dotenv-linter": "^3.3.0",
+    "eslint": "^8.56.0",
+    "husky": "^9.0.0",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.2.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
